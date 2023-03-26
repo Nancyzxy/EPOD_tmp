@@ -5,7 +5,7 @@ import Detector.NewNETS;
 import Detector.MCOD;
 import RPC.RPCFrame;
 import be.tarsos.lsh.Index;
-import be.tarsos.lsh.Vector;
+import dataStructure.Vector;
 import utils.Constants;
 import utils.DataGenerator;
 import java.util.*;
@@ -43,17 +43,16 @@ public class Device extends RPCFrame implements Runnable {
         this.allRawDataList = Collections.synchronizedMap(new HashMap<>());
     }
 
-    public Set<Vector> detectOutlier(long itr) throws Throwable {
+    public Set<Vector> detectOutlier(int itr) throws Throwable {
         //get initial data
-        this.itr = itr;
+        Constants.currentSlideID = itr;
         Date currentRealTime = new Date();
         currentRealTime.setTime(dataGenerator.firstTimeStamp.getTime() + (long) Constants.S * 10 * 1000 * itr);
-        Constants.currentTime = currentRealTime.getTime();
         this.rawData = dataGenerator.getTimeBasedIncomingData(currentRealTime, Constants.S*10);
 
         //step1: 产生指纹 + 本地先检测出outliers
         clearFingerprints();
-        this.detector.detectOutlier(this.rawData,itr);
+        this.detector.detectOutlier(this.rawData);
 
         //step2: 上传指纹
         if(itr>Constants.nS-1) {

@@ -4,7 +4,7 @@ public class Constants {
 //    public static boolean withTime = true;
 
     // Configuration
-    public static long currentTime = -1;
+    public static int currentSlideID = -1;
     public static int nn = 2;
     public static int dn = 2;
     public static int nW = 500;

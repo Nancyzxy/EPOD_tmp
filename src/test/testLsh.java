@@ -2,7 +2,7 @@ package test;
 
 import be.tarsos.lsh.Index;
 import be.tarsos.lsh.LSH;
-import be.tarsos.lsh.Vector;
+import dataStructure.Vector;
 import be.tarsos.lsh.families.EuclideanDistance;
 import be.tarsos.lsh.families.EuclidianHashFamily;
 import be.tarsos.lsh.families.HashFamily;

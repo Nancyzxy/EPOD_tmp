@@ -1,6 +1,6 @@
 package framework;
 
-import be.tarsos.lsh.Vector;
+import dataStructure.Vector;
 import utils.Constants;
 import java.io.IOException;
 import java.util.ArrayList;

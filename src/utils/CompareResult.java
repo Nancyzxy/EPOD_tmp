@@ -114,7 +114,7 @@ public class CompareResult {
         outlierFw.write("F1 array: ");
         Arrays.stream(f1s).forEach(x-> {
             try {
-                outlierFw.write(String.valueOf(x)+" ");
+                outlierFw.write(x +" ");
             } catch (IOException e) {
                 e.printStackTrace();
             }

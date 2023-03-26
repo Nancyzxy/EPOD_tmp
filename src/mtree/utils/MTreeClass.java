@@ -1,41 +1,40 @@
 package mtree.utils;
 
+import dataStructure.Vector;
 import mtree.*;
-import mtree.tests.Data;
-
 import java.util.Set;
 
-public class MTreeClass extends MTree<Data> {
+public class MTreeClass extends MTree<Vector> {
 
-    private static final PromotionFunction<Data> nonRandomPromotion = new PromotionFunction<Data>() {
+    private static final PromotionFunction<Vector> nonRandomPromotion = new PromotionFunction<Vector>() {
         @Override
-        public Pair<Data> process(Set<Data> dataSet, DistanceFunction<? super Data> distanceFunction) {
-            return Utils.minMax(dataSet);
+        public Pair<Vector> process(Set<Vector> vectorSet, DistanceFunction<? super Vector> distanceFunction) {
+            return Utils.minMax(vectorSet);
         }
     };
 
 
     public MTreeClass() {
         super(2, DistanceFunctions.EUCLIDEAN,
-                new ComposedSplitFunction<Data>(
+                new ComposedSplitFunction<Vector>(
                         nonRandomPromotion,
-                        new PartitionFunctions.BalancedPartition<Data>()
+                        new PartitionFunctions.BalancedPartition<Vector>()
                 )
         );
     }
 
-    public void add(Data data) {
-        super.add(data);
+    public void add(Vector vector) {
+        super.add(vector);
         _check();
     }
 
-    public boolean remove(Data data) {
-        boolean result = super.remove(data);
+    public boolean remove(Vector vector) {
+        boolean result = super.remove(vector);
         _check();
         return result;
     }
 
-    public DistanceFunction<? super Data> getDistanceFunction() {
+    public DistanceFunction<? super Vector> getDistanceFunction() {
         return distanceFunction;
     }
 }

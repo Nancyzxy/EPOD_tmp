@@ -1,10 +1,8 @@
 package dataStructure;
-import be.tarsos.lsh.Vector;
-import mtree.tests.Data;
 
 import java.util.ArrayList;
 
-public class MCO extends Data {
+public class MCO extends Vector {
     //全部点
     public boolean isInFilledCluster;
     public boolean isCenter;
@@ -17,7 +15,7 @@ public class MCO extends Data {
 //        public ArrayList<Integer> Rmc;
 
 
-    public MCO(Data d) {
+    public MCO(Vector d) {
         super();
         this.arrivalTime = d.arrivalTime;
         this.values = d.values;

@@ -1,8 +1,7 @@
 package Detector;
 
-import be.tarsos.lsh.Vector;
+import dataStructure.Vector;
 import framework.Device;
-
 import java.util.HashSet;
 import java.util.List;
 
@@ -11,5 +10,5 @@ public abstract class Detector {
     public Detector(Device device){
         this.device = device;
     }
-    public abstract HashSet<Vector> detectOutlier(List<Vector> data, long currentTime);
+    public abstract HashSet<Vector> detectOutlier(List<Vector> data);
 }

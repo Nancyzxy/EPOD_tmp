@@ -1,7 +1,6 @@
 package Detector;
 
-import be.tarsos.lsh.Vector;
-import be.tarsos.lsh.families.CosineDistance;
+import dataStructure.Vector;
 import dataStructure.Cell;
 import dataStructure.Tuple;
 import framework.Device;
@@ -122,12 +121,11 @@ public class NewNETS extends Detector {
 	}
 
 	@Override
-	public HashSet<Vector> detectOutlier(List<Vector> data, long itr){
+	public HashSet<Vector> detectOutlier(List<Vector> data){
 		if (data.isEmpty()) return null;
 		ArrayList<Tuple> newSlide = preprocessData(data);
-		//TODO: itr 为啥不直接用int
-		calcNetChange(newSlide, (int)itr);
-		findOutlier("NETS", (int)itr);
+		calcNetChange(newSlide, Constants.currentSlideID);
+		findOutlier("NETS", Constants.currentSlideID);
 		return outliers;
 	}
 
@@ -206,7 +204,7 @@ public class NewNETS extends Detector {
 		this.localDataBucket.values().forEach(
 				x -> x.forEach(y ->
 						{//TODO
-							if (y.arrivalRealTime.getTime() < (Constants.currentTime - 1000L * Constants.W)) {
+							if (y.arrivalRealTime.getTime() < (Constants.currentSlideID - Constants.W)) {
 								x.remove(y);
 							}
 						}

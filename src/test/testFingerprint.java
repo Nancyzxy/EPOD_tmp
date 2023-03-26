@@ -1,6 +1,6 @@
 package test;
 
-import be.tarsos.lsh.Vector;
+import dataStructure.Vector;
 import be.tarsos.lsh.families.EuclideanDistance;
 import be.tarsos.lsh.util.TestUtils;
 import framework.Device;

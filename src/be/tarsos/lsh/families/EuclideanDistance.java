@@ -23,7 +23,7 @@
 
 package be.tarsos.lsh.families;
 
-import be.tarsos.lsh.Vector;
+import dataStructure.Vector;
 
 /**
  * Calculates the <a

@@ -5,3 +5,2001 @@ Dim: 5
 dn/nn: 2/2
 R/K/W/S: 4.0/50/10000/500
 # of windows: 500
+===============================
+This is the 0 slides.
+Window 1
+Time cost for this slide is : 6
+===============================
+This is the 1 slides.
+Window 2
+Time cost for this slide is : 2
+===============================
+This is the 2 slides.
+Window 3
+Time cost for this slide is : 2
+===============================
+This is the 3 slides.
+Window 4
+Time cost for this slide is : 2
+===============================
+This is the 4 slides.
+Window 5
+Time cost for this slide is : 2
+===============================
+This is the 5 slides.
+Window 6
+Time cost for this slide is : 2
+===============================
+This is the 6 slides.
+Window 7
+Time cost for this slide is : 2
+===============================
+This is the 7 slides.
+Window 8
+Time cost for this slide is : 2
+===============================
+This is the 8 slides.
+Window 9
+Time cost for this slide is : 2
+===============================
+This is the 9 slides.
+Window 10
+Time cost for this slide is : 3
+===============================
+This is the 10 slides.
+Window 11
+Time cost for this slide is : 2
+===============================
+This is the 11 slides.
+Window 12
+Time cost for this slide is : 2
+===============================
+This is the 12 slides.
+Window 13
+Time cost for this slide is : 8
+===============================
+This is the 13 slides.
+Window 14
+Time cost for this slide is : 3
+===============================
+This is the 14 slides.
+Window 15
+Time cost for this slide is : 1
+===============================
+This is the 15 slides.
+Window 16
+Time cost for this slide is : 1
+===============================
+This is the 16 slides.
+Window 17
+Time cost for this slide is : 2
+===============================
+This is the 17 slides.
+Window 18
+Time cost for this slide is : 1
+===============================
+This is the 18 slides.
+Window 19
+Time cost for this slide is : 2
+===============================
+This is the 19 slides.
+Window 20
+Time cost for this slide is : 2
+===============================
+This is the 20 slides.
+Window 21
+Time cost for this slide is : 2
+===============================
+This is the 21 slides.
+Window 22
+Time cost for this slide is : 2
+===============================
+This is the 22 slides.
+Window 23
+Time cost for this slide is : 2
+===============================
+This is the 23 slides.
+Window 24
+Time cost for this slide is : 2
+===============================
+This is the 24 slides.
+Window 25
+Time cost for this slide is : 2
+===============================
+This is the 25 slides.
+Window 26
+Time cost for this slide is : 2
+===============================
+This is the 26 slides.
+Window 27
+Time cost for this slide is : 2
+===============================
+This is the 27 slides.
+Window 28
+Time cost for this slide is : 2
+===============================
+This is the 28 slides.
+Window 29
+Time cost for this slide is : 1
+===============================
+This is the 29 slides.
+Window 30
+Time cost for this slide is : 2
+===============================
+This is the 30 slides.
+Window 31
+Time cost for this slide is : 1
+===============================
+This is the 31 slides.
+Window 32
+Time cost for this slide is : 2
+===============================
+This is the 32 slides.
+Window 33
+Time cost for this slide is : 1
+===============================
+This is the 33 slides.
+Window 34
+Time cost for this slide is : 1
+===============================
+This is the 34 slides.
+Window 35
+Time cost for this slide is : 1
+===============================
+This is the 35 slides.
+Window 36
+Time cost for this slide is : 2
+===============================
+This is the 36 slides.
+Window 37
+Time cost for this slide is : 2
+===============================
+This is the 37 slides.
+Window 38
+Time cost for this slide is : 3
+===============================
+This is the 38 slides.
+Window 39
+Time cost for this slide is : 2
+===============================
+This is the 39 slides.
+Window 40
+Time cost for this slide is : 2
+===============================
+This is the 40 slides.
+Window 41
+Time cost for this slide is : 2
+===============================
+This is the 41 slides.
+Window 42
+Time cost for this slide is : 2
+===============================
+This is the 42 slides.
+Window 43
+Time cost for this slide is : 1
+===============================
+This is the 43 slides.
+Window 44
+Time cost for this slide is : 2
+===============================
+This is the 44 slides.
+Window 45
+Time cost for this slide is : 1
+===============================
+This is the 45 slides.
+Window 46
+Time cost for this slide is : 1
+===============================
+This is the 46 slides.
+Window 47
+Time cost for this slide is : 1
+===============================
+This is the 47 slides.
+Window 48
+Time cost for this slide is : 1
+===============================
+This is the 48 slides.
+Window 49
+Time cost for this slide is : 1
+===============================
+This is the 49 slides.
+Window 50
+Time cost for this slide is : 1
+===============================
+This is the 50 slides.
+Window 51
+Time cost for this slide is : 2
+===============================
+This is the 51 slides.
+Window 52
+Time cost for this slide is : 1
+===============================
+This is the 52 slides.
+Window 53
+Time cost for this slide is : 1
+===============================
+This is the 53 slides.
+Window 54
+Time cost for this slide is : 3
+===============================
+This is the 54 slides.
+Window 55
+Time cost for this slide is : 2
+===============================
+This is the 55 slides.
+Window 56
+Time cost for this slide is : 3
+===============================
+This is the 56 slides.
+Window 57
+Time cost for this slide is : 3
+===============================
+This is the 57 slides.
+Window 58
+Time cost for this slide is : 2
+===============================
+This is the 58 slides.
+Window 59
+Time cost for this slide is : 2
+===============================
+This is the 59 slides.
+Window 60
+Time cost for this slide is : 1
+===============================
+This is the 60 slides.
+Window 61
+Time cost for this slide is : 1
+===============================
+This is the 61 slides.
+Window 62
+Time cost for this slide is : 2
+===============================
+This is the 62 slides.
+Window 63
+Time cost for this slide is : 2
+===============================
+This is the 63 slides.
+Window 64
+Time cost for this slide is : 1
+===============================
+This is the 64 slides.
+Window 65
+Time cost for this slide is : 2
+===============================
+This is the 65 slides.
+Window 66
+Time cost for this slide is : 3
+===============================
+This is the 66 slides.
+Window 67
+Time cost for this slide is : 1
+===============================
+This is the 67 slides.
+Window 68
+Time cost for this slide is : 2
+===============================
+This is the 68 slides.
+Window 69
+Time cost for this slide is : 2
+===============================
+This is the 69 slides.
+Window 70
+Time cost for this slide is : 14
+===============================
+This is the 70 slides.
+Window 71
+Time cost for this slide is : 2
+===============================
+This is the 71 slides.
+Window 72
+Time cost for this slide is : 2
+===============================
+This is the 72 slides.
+Window 73
+Time cost for this slide is : 1
+===============================
+This is the 73 slides.
+Window 74
+Time cost for this slide is : 2
+===============================
+This is the 74 slides.
+Window 75
+Time cost for this slide is : 1
+===============================
+This is the 75 slides.
+Window 76
+Time cost for this slide is : 2
+===============================
+This is the 76 slides.
+Window 77
+Time cost for this slide is : 1
+===============================
+This is the 77 slides.
+Window 78
+Time cost for this slide is : 1
+===============================
+This is the 78 slides.
+Window 79
+Time cost for this slide is : 2
+===============================
+This is the 79 slides.
+Window 80
+Time cost for this slide is : 1
+===============================
+This is the 80 slides.
+Window 81
+Time cost for this slide is : 2
+===============================
+This is the 81 slides.
+Window 82
+Time cost for this slide is : 2
+===============================
+This is the 82 slides.
+Window 83
+Time cost for this slide is : 1
+===============================
+This is the 83 slides.
+Window 84
+Time cost for this slide is : 1
+===============================
+This is the 84 slides.
+Window 85
+Time cost for this slide is : 1
+===============================
+This is the 85 slides.
+Window 86
+Time cost for this slide is : 1
+===============================
+This is the 86 slides.
+Window 87
+Time cost for this slide is : 1
+===============================
+This is the 87 slides.
+Window 88
+Time cost for this slide is : 1
+===============================
+This is the 88 slides.
+Window 89
+Time cost for this slide is : 1
+===============================
+This is the 89 slides.
+Window 90
+Time cost for this slide is : 1
+===============================
+This is the 90 slides.
+Window 91
+Time cost for this slide is : 1
+===============================
+This is the 91 slides.
+Window 92
+Time cost for this slide is : 1
+===============================
+This is the 92 slides.
+Window 93
+Time cost for this slide is : 1
+===============================
+This is the 93 slides.
+Window 94
+Time cost for this slide is : 0
+===============================
+This is the 94 slides.
+Window 95
+Time cost for this slide is : 0
+===============================
+This is the 95 slides.
+Window 96
+Time cost for this slide is : 1
+===============================
+This is the 96 slides.
+Window 97
+Time cost for this slide is : 1
+===============================
+This is the 97 slides.
+Window 98
+Time cost for this slide is : 1
+===============================
+This is the 98 slides.
+Window 99
+Time cost for this slide is : 1
+===============================
+This is the 99 slides.
+Window 100
+Time cost for this slide is : 1
+===============================
+This is the 100 slides.
+Window 101
+Time cost for this slide is : 1
+===============================
+This is the 101 slides.
+Window 102
+Time cost for this slide is : 1
+===============================
+This is the 102 slides.
+Window 103
+Time cost for this slide is : 1
+===============================
+This is the 103 slides.
+Window 104
+Time cost for this slide is : 0
+===============================
+This is the 104 slides.
+Window 105
+Time cost for this slide is : 0
+===============================
+This is the 105 slides.
+Window 106
+Time cost for this slide is : 1
+===============================
+This is the 106 slides.
+Window 107
+Time cost for this slide is : 1
+===============================
+This is the 107 slides.
+Window 108
+Time cost for this slide is : 1
+===============================
+This is the 108 slides.
+Window 109
+Time cost for this slide is : 1
+===============================
+This is the 109 slides.
+Window 110
+Time cost for this slide is : 2
+===============================
+This is the 110 slides.
+Window 111
+Time cost for this slide is : 1
+===============================
+This is the 111 slides.
+Window 112
+Time cost for this slide is : 2
+===============================
+This is the 112 slides.
+Window 113
+Time cost for this slide is : 1
+===============================
+This is the 113 slides.
+Window 114
+Time cost for this slide is : 1
+===============================
+This is the 114 slides.
+Window 115
+Time cost for this slide is : 1
+===============================
+This is the 115 slides.
+Window 116
+Time cost for this slide is : 1
+===============================
+This is the 116 slides.
+Window 117
+Time cost for this slide is : 1
+===============================
+This is the 117 slides.
+Window 118
+Time cost for this slide is : 1
+===============================
+This is the 118 slides.
+Window 119
+Time cost for this slide is : 1
+===============================
+This is the 119 slides.
+Window 120
+Time cost for this slide is : 1
+===============================
+This is the 120 slides.
+Window 121
+Time cost for this slide is : 1
+===============================
+This is the 121 slides.
+Window 122
+Time cost for this slide is : 1
+===============================
+This is the 122 slides.
+Window 123
+Time cost for this slide is : 1
+===============================
+This is the 123 slides.
+Window 124
+Time cost for this slide is : 1
+===============================
+This is the 124 slides.
+Window 125
+Time cost for this slide is : 1
+===============================
+This is the 125 slides.
+Window 126
+Time cost for this slide is : 1
+===============================
+This is the 126 slides.
+Window 127
+Time cost for this slide is : 1
+===============================
+This is the 127 slides.
+Window 128
+Time cost for this slide is : 0
+===============================
+This is the 128 slides.
+Window 129
+Time cost for this slide is : 0
+===============================
+This is the 129 slides.
+Window 130
+Time cost for this slide is : 1
+===============================
+This is the 130 slides.
+Window 131
+Time cost for this slide is : 1
+===============================
+This is the 131 slides.
+Window 132
+Time cost for this slide is : 1
+===============================
+This is the 132 slides.
+Window 133
+Time cost for this slide is : 1
+===============================
+This is the 133 slides.
+Window 134
+Time cost for this slide is : 1
+===============================
+This is the 134 slides.
+Window 135
+Time cost for this slide is : 1
+===============================
+This is the 135 slides.
+Window 136
+Time cost for this slide is : 1
+===============================
+This is the 136 slides.
+Window 137
+Time cost for this slide is : 1
+===============================
+This is the 137 slides.
+Window 138
+Time cost for this slide is : 1
+===============================
+This is the 138 slides.
+Window 139
+Time cost for this slide is : 1
+===============================
+This is the 139 slides.
+Window 140
+Time cost for this slide is : 2
+===============================
+This is the 140 slides.
+Window 141
+Time cost for this slide is : 1
+===============================
+This is the 141 slides.
+Window 142
+Time cost for this slide is : 1
+===============================
+This is the 142 slides.
+Window 143
+Time cost for this slide is : 1
+===============================
+This is the 143 slides.
+Window 144
+Time cost for this slide is : 2
+===============================
+This is the 144 slides.
+Window 145
+Time cost for this slide is : 1
+===============================
+This is the 145 slides.
+Window 146
+Time cost for this slide is : 43
+===============================
+This is the 146 slides.
+Window 147
+Time cost for this slide is : 1
+===============================
+This is the 147 slides.
+Window 148
+Time cost for this slide is : 1
+===============================
+This is the 148 slides.
+Window 149
+Time cost for this slide is : 1
+===============================
+This is the 149 slides.
+Window 150
+Time cost for this slide is : 1
+===============================
+This is the 150 slides.
+Window 151
+Time cost for this slide is : 1
+===============================
+This is the 151 slides.
+Window 152
+Time cost for this slide is : 2
+===============================
+This is the 152 slides.
+Window 153
+Time cost for this slide is : 1
+===============================
+This is the 153 slides.
+Window 154
+Time cost for this slide is : 1
+===============================
+This is the 154 slides.
+Window 155
+Time cost for this slide is : 2
+===============================
+This is the 155 slides.
+Window 156
+Time cost for this slide is : 2
+===============================
+This is the 156 slides.
+Window 157
+Time cost for this slide is : 1
+===============================
+This is the 157 slides.
+Window 158
+Time cost for this slide is : 1
+===============================
+This is the 158 slides.
+Window 159
+Time cost for this slide is : 3
+===============================
+This is the 159 slides.
+Window 160
+Time cost for this slide is : 7
+===============================
+This is the 160 slides.
+Window 161
+Time cost for this slide is : 6
+===============================
+This is the 161 slides.
+Window 162
+Time cost for this slide is : 2
+===============================
+This is the 162 slides.
+Window 163
+Time cost for this slide is : 1
+===============================
+This is the 163 slides.
+Window 164
+Time cost for this slide is : 1
+===============================
+This is the 164 slides.
+Window 165
+Time cost for this slide is : 1
+===============================
+This is the 165 slides.
+Window 166
+Time cost for this slide is : 1
+===============================
+This is the 166 slides.
+Window 167
+Time cost for this slide is : 1
+===============================
+This is the 167 slides.
+Window 168
+Time cost for this slide is : 1
+===============================
+This is the 168 slides.
+Window 169
+Time cost for this slide is : 1
+===============================
+This is the 169 slides.
+Window 170
+Time cost for this slide is : 1
+===============================
+This is the 170 slides.
+Window 171
+Time cost for this slide is : 0
+===============================
+This is the 171 slides.
+Window 172
+Time cost for this slide is : 1
+===============================
+This is the 172 slides.
+Window 173
+Time cost for this slide is : 0
+===============================
+This is the 173 slides.
+Window 174
+Time cost for this slide is : 0
+===============================
+This is the 174 slides.
+Window 175
+Time cost for this slide is : 1
+===============================
+This is the 175 slides.
+Window 176
+Time cost for this slide is : 7
+===============================
+This is the 176 slides.
+Window 177
+Time cost for this slide is : 1
+===============================
+This is the 177 slides.
+Window 178
+Time cost for this slide is : 1
+===============================
+This is the 178 slides.
+Window 179
+Time cost for this slide is : 2
+===============================
+This is the 179 slides.
+Window 180
+Time cost for this slide is : 2
+===============================
+This is the 180 slides.
+Window 181
+Time cost for this slide is : 1
+===============================
+This is the 181 slides.
+Window 182
+Time cost for this slide is : 6
+===============================
+This is the 182 slides.
+Window 183
+Time cost for this slide is : 1
+===============================
+This is the 183 slides.
+Window 184
+Time cost for this slide is : 4
+===============================
+This is the 184 slides.
+Window 185
+Time cost for this slide is : 3
+===============================
+This is the 185 slides.
+Window 186
+Time cost for this slide is : 1
+===============================
+This is the 186 slides.
+Window 187
+Time cost for this slide is : 1
+===============================
+This is the 187 slides.
+Window 188
+Time cost for this slide is : 2
+===============================
+This is the 188 slides.
+Window 189
+Time cost for this slide is : 7
+===============================
+This is the 189 slides.
+Window 190
+Time cost for this slide is : 5
+===============================
+This is the 190 slides.
+Window 191
+Time cost for this slide is : 2
+===============================
+This is the 191 slides.
+Window 192
+Time cost for this slide is : 2
+===============================
+This is the 192 slides.
+Window 193
+Time cost for this slide is : 1
+===============================
+This is the 193 slides.
+Window 194
+Time cost for this slide is : 1
+===============================
+This is the 194 slides.
+Window 195
+Time cost for this slide is : 1
+===============================
+This is the 195 slides.
+Window 196
+Time cost for this slide is : 1
+===============================
+This is the 196 slides.
+Window 197
+Time cost for this slide is : 1
+===============================
+This is the 197 slides.
+Window 198
+Time cost for this slide is : 1
+===============================
+This is the 198 slides.
+Window 199
+Time cost for this slide is : 2
+===============================
+This is the 199 slides.
+Window 200
+Time cost for this slide is : 1
+===============================
+This is the 200 slides.
+Window 201
+Time cost for this slide is : 0
+===============================
+This is the 201 slides.
+Window 202
+Time cost for this slide is : 5
+===============================
+This is the 202 slides.
+Window 203
+Time cost for this slide is : 2
+===============================
+This is the 203 slides.
+Window 204
+Time cost for this slide is : 3
+===============================
+This is the 204 slides.
+Window 205
+Time cost for this slide is : 2
+===============================
+This is the 205 slides.
+Window 206
+Time cost for this slide is : 2
+===============================
+This is the 206 slides.
+Window 207
+Time cost for this slide is : 1
+===============================
+This is the 207 slides.
+Window 208
+Time cost for this slide is : 1
+===============================
+This is the 208 slides.
+Window 209
+Time cost for this slide is : 2
+===============================
+This is the 209 slides.
+Window 210
+Time cost for this slide is : 2
+===============================
+This is the 210 slides.
+Window 211
+Time cost for this slide is : 2
+===============================
+This is the 211 slides.
+Window 212
+Time cost for this slide is : 1
+===============================
+This is the 212 slides.
+Window 213
+Time cost for this slide is : 1
+===============================
+This is the 213 slides.
+Window 214
+Time cost for this slide is : 1
+===============================
+This is the 214 slides.
+Window 215
+Time cost for this slide is : 1
+===============================
+This is the 215 slides.
+Window 216
+Time cost for this slide is : 1
+===============================
+This is the 216 slides.
+Window 217
+Time cost for this slide is : 1
+===============================
+This is the 217 slides.
+Window 218
+Time cost for this slide is : 1
+===============================
+This is the 218 slides.
+Window 219
+Time cost for this slide is : 2
+===============================
+This is the 219 slides.
+Window 220
+Time cost for this slide is : 2
+===============================
+This is the 220 slides.
+Window 221
+Time cost for this slide is : 2
+===============================
+This is the 221 slides.
+Window 222
+Time cost for this slide is : 2
+===============================
+This is the 222 slides.
+Window 223
+Time cost for this slide is : 2
+===============================
+This is the 223 slides.
+Window 224
+Time cost for this slide is : 1
+===============================
+This is the 224 slides.
+Window 225
+Time cost for this slide is : 1
+===============================
+This is the 225 slides.
+Window 226
+Time cost for this slide is : 2
+===============================
+This is the 226 slides.
+Window 227
+Time cost for this slide is : 1
+===============================
+This is the 227 slides.
+Window 228
+Time cost for this slide is : 1
+===============================
+This is the 228 slides.
+Window 229
+Time cost for this slide is : 26
+===============================
+This is the 229 slides.
+Window 230
+Time cost for this slide is : 11
+===============================
+This is the 230 slides.
+Window 231
+Time cost for this slide is : 1
+===============================
+This is the 231 slides.
+Window 232
+Time cost for this slide is : 2
+===============================
+This is the 232 slides.
+Window 233
+Time cost for this slide is : 1
+===============================
+This is the 233 slides.
+Window 234
+Time cost for this slide is : 6
+===============================
+This is the 234 slides.
+Window 235
+Time cost for this slide is : 2
+===============================
+This is the 235 slides.
+Window 236
+Time cost for this slide is : 1
+===============================
+This is the 236 slides.
+Window 237
+Time cost for this slide is : 1
+===============================
+This is the 237 slides.
+Window 238
+Time cost for this slide is : 1
+===============================
+This is the 238 slides.
+Window 239
+Time cost for this slide is : 1
+===============================
+This is the 239 slides.
+Window 240
+Time cost for this slide is : 1
+===============================
+This is the 240 slides.
+Window 241
+Time cost for this slide is : 2
+===============================
+This is the 241 slides.
+Window 242
+Time cost for this slide is : 1
+===============================
+This is the 242 slides.
+Window 243
+Time cost for this slide is : 1
+===============================
+This is the 243 slides.
+Window 244
+Time cost for this slide is : 1
+===============================
+This is the 244 slides.
+Window 245
+Time cost for this slide is : 1
+===============================
+This is the 245 slides.
+Window 246
+Time cost for this slide is : 2
+===============================
+This is the 246 slides.
+Window 247
+Time cost for this slide is : 2
+===============================
+This is the 247 slides.
+Window 248
+Time cost for this slide is : 1
+===============================
+This is the 248 slides.
+Window 249
+Time cost for this slide is : 2
+===============================
+This is the 249 slides.
+Window 250
+Time cost for this slide is : 1
+===============================
+This is the 250 slides.
+Window 251
+Time cost for this slide is : 2
+===============================
+This is the 251 slides.
+Window 252
+Time cost for this slide is : 2
+===============================
+This is the 252 slides.
+Window 253
+Time cost for this slide is : 1
+===============================
+This is the 253 slides.
+Window 254
+Time cost for this slide is : 0
+===============================
+This is the 254 slides.
+Window 255
+Time cost for this slide is : 0
+===============================
+This is the 255 slides.
+Window 256
+Time cost for this slide is : 1
+===============================
+This is the 256 slides.
+Window 257
+Time cost for this slide is : 1
+===============================
+This is the 257 slides.
+Window 258
+Time cost for this slide is : 1
+===============================
+This is the 258 slides.
+Window 259
+Time cost for this slide is : 2
+===============================
+This is the 259 slides.
+Window 260
+Time cost for this slide is : 1
+===============================
+This is the 260 slides.
+Window 261
+Time cost for this slide is : 1
+===============================
+This is the 261 slides.
+Window 262
+Time cost for this slide is : 1
+===============================
+This is the 262 slides.
+Window 263
+Time cost for this slide is : 2
+===============================
+This is the 263 slides.
+Window 264
+Time cost for this slide is : 1
+===============================
+This is the 264 slides.
+Window 265
+Time cost for this slide is : 2
+===============================
+This is the 265 slides.
+Window 266
+Time cost for this slide is : 2
+===============================
+This is the 266 slides.
+Window 267
+Time cost for this slide is : 1
+===============================
+This is the 267 slides.
+Window 268
+Time cost for this slide is : 3
+===============================
+This is the 268 slides.
+Window 269
+Time cost for this slide is : 2
+===============================
+This is the 269 slides.
+Window 270
+Time cost for this slide is : 5
+===============================
+This is the 270 slides.
+Window 271
+Time cost for this slide is : 4
+===============================
+This is the 271 slides.
+Window 272
+Time cost for this slide is : 3
+===============================
+This is the 272 slides.
+Window 273
+Time cost for this slide is : 4
+===============================
+This is the 273 slides.
+Window 274
+Time cost for this slide is : 2
+===============================
+This is the 274 slides.
+Window 275
+Time cost for this slide is : 1
+===============================
+This is the 275 slides.
+Window 276
+Time cost for this slide is : 1
+===============================
+This is the 276 slides.
+Window 277
+Time cost for this slide is : 1
+===============================
+This is the 277 slides.
+Window 278
+Time cost for this slide is : 2
+===============================
+This is the 278 slides.
+Window 279
+Time cost for this slide is : 1
+===============================
+This is the 279 slides.
+Window 280
+Time cost for this slide is : 1
+===============================
+This is the 280 slides.
+Window 281
+Time cost for this slide is : 1
+===============================
+This is the 281 slides.
+Window 282
+Time cost for this slide is : 2
+===============================
+This is the 282 slides.
+Window 283
+Time cost for this slide is : 2
+===============================
+This is the 283 slides.
+Window 284
+Time cost for this slide is : 2
+===============================
+This is the 284 slides.
+Window 285
+Time cost for this slide is : 1
+===============================
+This is the 285 slides.
+Window 286
+Time cost for this slide is : 1
+===============================
+This is the 286 slides.
+Window 287
+Time cost for this slide is : 1
+===============================
+This is the 287 slides.
+Window 288
+Time cost for this slide is : 1
+===============================
+This is the 288 slides.
+Window 289
+Time cost for this slide is : 1
+===============================
+This is the 289 slides.
+Window 290
+Time cost for this slide is : 1
+===============================
+This is the 290 slides.
+Window 291
+Time cost for this slide is : 2
+===============================
+This is the 291 slides.
+Window 292
+Time cost for this slide is : 1
+===============================
+This is the 292 slides.
+Window 293
+Time cost for this slide is : 2
+===============================
+This is the 293 slides.
+Window 294
+Time cost for this slide is : 1
+===============================
+This is the 294 slides.
+Window 295
+Time cost for this slide is : 2
+===============================
+This is the 295 slides.
+Window 296
+Time cost for this slide is : 1
+===============================
+This is the 296 slides.
+Window 297
+Time cost for this slide is : 1
+===============================
+This is the 297 slides.
+Window 298
+Time cost for this slide is : 1
+===============================
+This is the 298 slides.
+Window 299
+Time cost for this slide is : 1
+===============================
+This is the 299 slides.
+Window 300
+Time cost for this slide is : 1
+===============================
+This is the 300 slides.
+Window 301
+Time cost for this slide is : 1
+===============================
+This is the 301 slides.
+Window 302
+Time cost for this slide is : 1
+===============================
+This is the 302 slides.
+Window 303
+Time cost for this slide is : 1
+===============================
+This is the 303 slides.
+Window 304
+Time cost for this slide is : 2
+===============================
+This is the 304 slides.
+Window 305
+Time cost for this slide is : 1
+===============================
+This is the 305 slides.
+Window 306
+Time cost for this slide is : 2
+===============================
+This is the 306 slides.
+Window 307
+Time cost for this slide is : 2
+===============================
+This is the 307 slides.
+Window 308
+Time cost for this slide is : 2
+===============================
+This is the 308 slides.
+Window 309
+Time cost for this slide is : 1
+===============================
+This is the 309 slides.
+Window 310
+Time cost for this slide is : 1
+===============================
+This is the 310 slides.
+Window 311
+Time cost for this slide is : 1
+===============================
+This is the 311 slides.
+Window 312
+Time cost for this slide is : 2
+===============================
+This is the 312 slides.
+Window 313
+Time cost for this slide is : 1
+===============================
+This is the 313 slides.
+Window 314
+Time cost for this slide is : 1
+===============================
+This is the 314 slides.
+Window 315
+Time cost for this slide is : 2
+===============================
+This is the 315 slides.
+Window 316
+Time cost for this slide is : 2
+===============================
+This is the 316 slides.
+Window 317
+Time cost for this slide is : 1
+===============================
+This is the 317 slides.
+Window 318
+Time cost for this slide is : 2
+===============================
+This is the 318 slides.
+Window 319
+Time cost for this slide is : 1
+===============================
+This is the 319 slides.
+Window 320
+Time cost for this slide is : 1
+===============================
+This is the 320 slides.
+Window 321
+Time cost for this slide is : 1
+===============================
+This is the 321 slides.
+Window 322
+Time cost for this slide is : 1
+===============================
+This is the 322 slides.
+Window 323
+Time cost for this slide is : 1
+===============================
+This is the 323 slides.
+Window 324
+Time cost for this slide is : 1
+===============================
+This is the 324 slides.
+Window 325
+Time cost for this slide is : 1
+===============================
+This is the 325 slides.
+Window 326
+Time cost for this slide is : 1
+===============================
+This is the 326 slides.
+Window 327
+Time cost for this slide is : 1
+===============================
+This is the 327 slides.
+Window 328
+Time cost for this slide is : 2
+===============================
+This is the 328 slides.
+Window 329
+Time cost for this slide is : 1
+===============================
+This is the 329 slides.
+Window 330
+Time cost for this slide is : 2
+===============================
+This is the 330 slides.
+Window 331
+Time cost for this slide is : 2
+===============================
+This is the 331 slides.
+Window 332
+Time cost for this slide is : 1
+===============================
+This is the 332 slides.
+Window 333
+Time cost for this slide is : 1
+===============================
+This is the 333 slides.
+Window 334
+Time cost for this slide is : 1
+===============================
+This is the 334 slides.
+Window 335
+Time cost for this slide is : 1
+===============================
+This is the 335 slides.
+Window 336
+Time cost for this slide is : 1
+===============================
+This is the 336 slides.
+Window 337
+Time cost for this slide is : 1
+===============================
+This is the 337 slides.
+Window 338
+Time cost for this slide is : 24
+===============================
+This is the 338 slides.
+Window 339
+Time cost for this slide is : 2
+===============================
+This is the 339 slides.
+Window 340
+Time cost for this slide is : 1
+===============================
+This is the 340 slides.
+Window 341
+Time cost for this slide is : 1
+===============================
+This is the 341 slides.
+Window 342
+Time cost for this slide is : 0
+===============================
+This is the 342 slides.
+Window 343
+Time cost for this slide is : 0
+===============================
+This is the 343 slides.
+Window 344
+Time cost for this slide is : 1
+===============================
+This is the 344 slides.
+Window 345
+Time cost for this slide is : 1
+===============================
+This is the 345 slides.
+Window 346
+Time cost for this slide is : 1
+===============================
+This is the 346 slides.
+Window 347
+Time cost for this slide is : 1
+===============================
+This is the 347 slides.
+Window 348
+Time cost for this slide is : 1
+===============================
+This is the 348 slides.
+Window 349
+Time cost for this slide is : 1
+===============================
+This is the 349 slides.
+Window 350
+Time cost for this slide is : 4
+===============================
+This is the 350 slides.
+Window 351
+Time cost for this slide is : 1
+===============================
+This is the 351 slides.
+Window 352
+Time cost for this slide is : 1
+===============================
+This is the 352 slides.
+Window 353
+Time cost for this slide is : 0
+===============================
+This is the 353 slides.
+Window 354
+Time cost for this slide is : 0
+===============================
+This is the 354 slides.
+Window 355
+Time cost for this slide is : 1
+===============================
+This is the 355 slides.
+Window 356
+Time cost for this slide is : 1
+===============================
+This is the 356 slides.
+Window 357
+Time cost for this slide is : 0
+===============================
+This is the 357 slides.
+Window 358
+Time cost for this slide is : 1
+===============================
+This is the 358 slides.
+Window 359
+Time cost for this slide is : 1
+===============================
+This is the 359 slides.
+Window 360
+Time cost for this slide is : 1
+===============================
+This is the 360 slides.
+Window 361
+Time cost for this slide is : 1
+===============================
+This is the 361 slides.
+Window 362
+Time cost for this slide is : 0
+===============================
+This is the 362 slides.
+Window 363
+Time cost for this slide is : 1
+===============================
+This is the 363 slides.
+Window 364
+Time cost for this slide is : 1
+===============================
+This is the 364 slides.
+Window 365
+Time cost for this slide is : 1
+===============================
+This is the 365 slides.
+Window 366
+Time cost for this slide is : 0
+===============================
+This is the 366 slides.
+Window 367
+Time cost for this slide is : 1
+===============================
+This is the 367 slides.
+Window 368
+Time cost for this slide is : 1
+===============================
+This is the 368 slides.
+Window 369
+Time cost for this slide is : 0
+===============================
+This is the 369 slides.
+Window 370
+Time cost for this slide is : 1
+===============================
+This is the 370 slides.
+Window 371
+Time cost for this slide is : 1
+===============================
+This is the 371 slides.
+Window 372
+Time cost for this slide is : 0
+===============================
+This is the 372 slides.
+Window 373
+Time cost for this slide is : 1
+===============================
+This is the 373 slides.
+Window 374
+Time cost for this slide is : 1
+===============================
+This is the 374 slides.
+Window 375
+Time cost for this slide is : 0
+===============================
+This is the 375 slides.
+Window 376
+Time cost for this slide is : 1
+===============================
+This is the 376 slides.
+Window 377
+Time cost for this slide is : 1
+===============================
+This is the 377 slides.
+Window 378
+Time cost for this slide is : 0
+===============================
+This is the 378 slides.
+Window 379
+Time cost for this slide is : 1
+===============================
+This is the 379 slides.
+Window 380
+Time cost for this slide is : 1
+===============================
+This is the 380 slides.
+Window 381
+Time cost for this slide is : 0
+===============================
+This is the 381 slides.
+Window 382
+Time cost for this slide is : 0
+===============================
+This is the 382 slides.
+Window 383
+Time cost for this slide is : 1
+===============================
+This is the 383 slides.
+Window 384
+Time cost for this slide is : 1
+===============================
+This is the 384 slides.
+Window 385
+Time cost for this slide is : 0
+===============================
+This is the 385 slides.
+Window 386
+Time cost for this slide is : 1
+===============================
+This is the 386 slides.
+Window 387
+Time cost for this slide is : 1
+===============================
+This is the 387 slides.
+Window 388
+Time cost for this slide is : 0
+===============================
+This is the 388 slides.
+Window 389
+Time cost for this slide is : 1
+===============================
+This is the 389 slides.
+Window 390
+Time cost for this slide is : 1
+===============================
+This is the 390 slides.
+Window 391
+Time cost for this slide is : 0
+===============================
+This is the 391 slides.
+Window 392
+Time cost for this slide is : 1
+===============================
+This is the 392 slides.
+Window 393
+Time cost for this slide is : 1
+===============================
+This is the 393 slides.
+Window 394
+Time cost for this slide is : 1
+===============================
+This is the 394 slides.
+Window 395
+Time cost for this slide is : 0
+===============================
+This is the 395 slides.
+Window 396
+Time cost for this slide is : 1
+===============================
+This is the 396 slides.
+Window 397
+Time cost for this slide is : 1
+===============================
+This is the 397 slides.
+Window 398
+Time cost for this slide is : 0
+===============================
+This is the 398 slides.
+Window 399
+Time cost for this slide is : 0
+===============================
+This is the 399 slides.
+Window 400
+Time cost for this slide is : 1
+===============================
+This is the 400 slides.
+Window 401
+Time cost for this slide is : 1
+===============================
+This is the 401 slides.
+Window 402
+Time cost for this slide is : 0
+===============================
+This is the 402 slides.
+Window 403
+Time cost for this slide is : 1
+===============================
+This is the 403 slides.
+Window 404
+Time cost for this slide is : 1
+===============================
+This is the 404 slides.
+Window 405
+Time cost for this slide is : 1
+===============================
+This is the 405 slides.
+Window 406
+Time cost for this slide is : 0
+===============================
+This is the 406 slides.
+Window 407
+Time cost for this slide is : 1
+===============================
+This is the 407 slides.
+Window 408
+Time cost for this slide is : 1
+===============================
+This is the 408 slides.
+Window 409
+Time cost for this slide is : 0
+===============================
+This is the 409 slides.
+Window 410
+Time cost for this slide is : 1
+===============================
+This is the 410 slides.
+Window 411
+Time cost for this slide is : 1
+===============================
+This is the 411 slides.
+Window 412
+Time cost for this slide is : 0
+===============================
+This is the 412 slides.
+Window 413
+Time cost for this slide is : 1
+===============================
+This is the 413 slides.
+Window 414
+Time cost for this slide is : 0
+===============================
+This is the 414 slides.
+Window 415
+Time cost for this slide is : 0
+===============================
+This is the 415 slides.
+Window 416
+Time cost for this slide is : 1
+===============================
+This is the 416 slides.
+Window 417
+Time cost for this slide is : 0
+===============================
+This is the 417 slides.
+Window 418
+Time cost for this slide is : 0
+===============================
+This is the 418 slides.
+Window 419
+Time cost for this slide is : 1
+===============================
+This is the 419 slides.
+Window 420
+Time cost for this slide is : 0
+===============================
+This is the 420 slides.
+Window 421
+Time cost for this slide is : 1
+===============================
+This is the 421 slides.
+Window 422
+Time cost for this slide is : 1
+===============================
+This is the 422 slides.
+Window 423
+Time cost for this slide is : 0
+===============================
+This is the 423 slides.
+Window 424
+Time cost for this slide is : 0
+===============================
+This is the 424 slides.
+Window 425
+Time cost for this slide is : 1
+===============================
+This is the 425 slides.
+Window 426
+Time cost for this slide is : 0
+===============================
+This is the 426 slides.
+Window 427
+Time cost for this slide is : 1
+===============================
+This is the 427 slides.
+Window 428
+Time cost for this slide is : 1
+===============================
+This is the 428 slides.
+Window 429
+Time cost for this slide is : 1
+===============================
+This is the 429 slides.
+Window 430
+Time cost for this slide is : 1
+===============================
+This is the 430 slides.
+Window 431
+Time cost for this slide is : 1
+===============================
+This is the 431 slides.
+Window 432
+Time cost for this slide is : 1
+===============================
+This is the 432 slides.
+Window 433
+Time cost for this slide is : 1
+===============================
+This is the 433 slides.
+Window 434
+Time cost for this slide is : 1
+===============================
+This is the 434 slides.
+Window 435
+Time cost for this slide is : 1
+===============================
+This is the 435 slides.
+Window 436
+Time cost for this slide is : 1
+===============================
+This is the 436 slides.
+Window 437
+Time cost for this slide is : 1
+===============================
+This is the 437 slides.
+Window 438
+Time cost for this slide is : 1
+===============================
+This is the 438 slides.
+Window 439
+Time cost for this slide is : 1
+===============================
+This is the 439 slides.
+Window 440
+Time cost for this slide is : 1
+===============================
+This is the 440 slides.
+Window 441
+Time cost for this slide is : 1
+===============================
+This is the 441 slides.
+Window 442
+Time cost for this slide is : 0
+===============================
+This is the 442 slides.
+Window 443
+Time cost for this slide is : 1
+===============================
+This is the 443 slides.
+Window 444
+Time cost for this slide is : 2
+===============================
+This is the 444 slides.
+Window 445
+Time cost for this slide is : 1
+===============================
+This is the 445 slides.
+Window 446
+Time cost for this slide is : 0
+===============================
+This is the 446 slides.
+Window 447
+Time cost for this slide is : 1
+===============================
+This is the 447 slides.
+Window 448
+Time cost for this slide is : 1
+===============================
+This is the 448 slides.
+Window 449
+Time cost for this slide is : 0
+===============================
+This is the 449 slides.
+Window 450
+Time cost for this slide is : 1
+===============================
+This is the 450 slides.
+Window 451
+Time cost for this slide is : 1
+===============================
+This is the 451 slides.
+Window 452
+Time cost for this slide is : 1
+===============================
+This is the 452 slides.
+Window 453
+Time cost for this slide is : 1
+===============================
+This is the 453 slides.
+Window 454
+Time cost for this slide is : 2
+===============================
+This is the 454 slides.
+Window 455
+Time cost for this slide is : 1
+===============================
+This is the 455 slides.
+Window 456
+Time cost for this slide is : 1
+===============================
+This is the 456 slides.
+Window 457
+Time cost for this slide is : 1
+===============================
+This is the 457 slides.
+Window 458
+Time cost for this slide is : 2
+===============================
+This is the 458 slides.
+Window 459
+Time cost for this slide is : 1
+===============================
+This is the 459 slides.
+Window 460
+Time cost for this slide is : 1
+===============================
+This is the 460 slides.
+Window 461
+Time cost for this slide is : 0
+===============================
+This is the 461 slides.
+Window 462
+Time cost for this slide is : 0
+===============================
+This is the 462 slides.
+Window 463
+Time cost for this slide is : 1
+===============================
+This is the 463 slides.
+Window 464
+Time cost for this slide is : 1
+===============================
+This is the 464 slides.
+Window 465
+Time cost for this slide is : 1
+===============================
+This is the 465 slides.
+Window 466
+Time cost for this slide is : 1
+===============================
+This is the 466 slides.
+Window 467
+Time cost for this slide is : 1
+===============================
+This is the 467 slides.
+Window 468
+Time cost for this slide is : 0
+===============================
+This is the 468 slides.
+Window 469
+Time cost for this slide is : 0
+===============================
+This is the 469 slides.
+Window 470
+Time cost for this slide is : 1
+===============================
+This is the 470 slides.
+Window 471
+Time cost for this slide is : 1
+===============================
+This is the 471 slides.
+Window 472
+Time cost for this slide is : 0
+===============================
+This is the 472 slides.
+Window 473
+Time cost for this slide is : 1
+===============================
+This is the 473 slides.
+Window 474
+Time cost for this slide is : 1
+===============================
+This is the 474 slides.
+Window 475
+Time cost for this slide is : 0
+===============================
+This is the 475 slides.
+Window 476
+Time cost for this slide is : 1
+===============================
+This is the 476 slides.
+Window 477
+Time cost for this slide is : 1
+===============================
+This is the 477 slides.
+Window 478
+Time cost for this slide is : 0
+===============================
+This is the 478 slides.
+Window 479
+Time cost for this slide is : 1
+===============================
+This is the 479 slides.
+Window 480
+Time cost for this slide is : 1
+===============================
+This is the 480 slides.
+Window 481
+Time cost for this slide is : 0
+===============================
+This is the 481 slides.
+Window 482
+Time cost for this slide is : 0
+===============================
+This is the 482 slides.
+Window 483
+Time cost for this slide is : 1
+===============================
+This is the 483 slides.
+Window 484
+Time cost for this slide is : 1
+===============================
+This is the 484 slides.
+Window 485
+Time cost for this slide is : 0
+===============================
+This is the 485 slides.
+Window 486
+Time cost for this slide is : 1
+===============================
+This is the 486 slides.
+Window 487
+Time cost for this slide is : 1
+===============================
+This is the 487 slides.
+Window 488
+Time cost for this slide is : 0
+===============================
+This is the 488 slides.
+Window 489
+Time cost for this slide is : 1
+===============================
+This is the 489 slides.
+Window 490
+Time cost for this slide is : 1
+===============================
+This is the 490 slides.
+Window 491
+Time cost for this slide is : 0
+===============================
+This is the 491 slides.
+Window 492
+Time cost for this slide is : 1
+===============================
+This is the 492 slides.
+Window 493
+Time cost for this slide is : 1
+===============================
+This is the 493 slides.
+Window 494
+Time cost for this slide is : 0
+===============================
+This is the 494 slides.
+Window 495
+Time cost for this slide is : 1
+===============================
+This is the 495 slides.
+Window 496
+Time cost for this slide is : 0
+===============================
+This is the 496 slides.
+Window 497
+Time cost for this slide is : 1
+===============================
+This is the 497 slides.
+Window 498
+Time cost for this slide is : 1
+===============================
+This is the 498 slides.
+Window 499
+Time cost for this slide is : 0
+Ended!
+Average time cost is: 1.5050100200400802

@@ -21,8 +21,8 @@
 * 
 */
 
-package be.tarsos.lsh;
-
+package dataStructure;
+import mtree.DistanceFunctions.EuclideanCoordinate;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
@@ -34,7 +34,7 @@ import java.util.Random;
  * 
  * @author Joren Six
  */
-public class Vector  implements Serializable,Comparable<Vector> {
+public class Vector  implements Serializable,Comparable<Vector>,EuclideanCoordinate {
 	
 	private static final long serialVersionUID = 5169504339456492327L;
 
@@ -43,12 +43,9 @@ public class Vector  implements Serializable,Comparable<Vector> {
 	 * Values are stored here.
 	 */
 	public double[] values;
+	public final int hashCode;
 	public int arrivalTime;
 	public Date arrivalRealTime;
-
-	public Vector(double... values){
-            this.values = values;
-	}
       
 	/**
 	 * An optional key, identifier for the vector.
@@ -62,8 +59,11 @@ public class Vector  implements Serializable,Comparable<Vector> {
 	public Vector(int dimensions) {
 		this(null,new double[dimensions]);
 	}
-	
-	
+
+	public Vector(double... values){
+		this.values = values;
+		this.hashCode = generateHashCode(values);
+	}
 	/**
 	 * Copy constructor.
 	 * @param other The other vector.
@@ -73,11 +73,10 @@ public class Vector  implements Serializable,Comparable<Vector> {
 		this(other.getKey(),Arrays.copyOf(other.values, other.values.length));
 	}
         
-        public Vector(double[] v, int arrivalTime){
+	public Vector(double[] v, int arrivalTime){
             this.values = v;
             this.arrivalTime = arrivalTime;
-//            this.hashCode = d.hashCode;
-            
+            this.hashCode = generateHashCode(v);
         }
 	
 	/**
@@ -85,11 +84,79 @@ public class Vector  implements Serializable,Comparable<Vector> {
 	 * @param key The key of the vector.
 	 * @param values The values of the vector.
 	 */
-	public Vector(String key,double[] values){
+	public Vector(String key, double[] values){
 		this.values = values;
 		this.key = key;
+		this.hashCode = generateHashCode(values);
 	}
-	
+
+
+	@Override
+	public int dimensions() {
+		return values.length;
+	}
+
+	@Override
+	public double get(int index) {
+		return values[index];
+	}
+
+	public int generateHashCode(double[] values){
+		int hashCode2 = 1;
+		for(double value : values) {
+			hashCode2 = 31*hashCode2 + (int)value + (new Random()).nextInt(100000);
+		}
+		return hashCode2;
+	}
+	@Override
+	public int hashCode() {
+		return hashCode;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Vector) {
+			Vector that = (Vector) obj;
+			if(this.arrivalTime != that.arrivalTime) return false;
+			if(this.dimensions() != that.dimensions()) {
+				return false;
+			}
+			for(int i = 0; i < this.dimensions(); i++) {
+				if(this.values[i] != that.values[i]) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public int compareTo(Vector that) {
+		int dimensions = Math.min(this.getDimensions(), that.getDimensions());
+		for(int i = 0; i < dimensions; i++) {
+			double v1 = this.values[i];
+			double v2 = that.values[i];
+			if(v1 > v2) {
+				return +1;
+			}
+			if(v1 < v2) {
+				return -1;
+			}
+		}
+
+		if(this.getDimensions() > dimensions) {
+			return +1;
+		}
+
+		if(that.getDimensions() > dimensions) {
+			return -1;
+		}
+
+		return 0;
+	}
+
 	/**
 	 * Moves the vector slightly, adds a value selected from -radius to +radius to each element.
 	 * @param radius The radius determines the amount to change the vector.
@@ -103,8 +170,6 @@ public class Vector  implements Serializable,Comparable<Vector> {
 			set(d, point);
 		}
 	}
-	
-	
 
 	/**
 	 * Set a value at a certain dimension d.
@@ -115,15 +180,6 @@ public class Vector  implements Serializable,Comparable<Vector> {
 		values[dimension] = value;
 	}
 
-	/**
-	 * Returns the value at the requested dimension.
-	 * @param dimension The dimension, index for the value.
-	 * @return Returns the value at the requested dimension.
-	 */
-	public double get(int dimension) {
-		return values[dimension];
-	}
-	
 	/**
 	 * @return The number of dimensions this vector has.
 	 */
@@ -155,31 +211,6 @@ public class Vector  implements Serializable,Comparable<Vector> {
 
 	public String getKey() {
 		return key;
-	}
-
-	@Override
-	public int compareTo(Vector that) {
-		int dimensions = Math.min(this.getDimensions(), that.getDimensions());
-		for(int i = 0; i < dimensions; i++) {
-			double v1 = this.values[i];
-			double v2 = that.values[i];
-			if(v1 > v2) {
-				return +1;
-			}
-			if(v1 < v2) {
-				return -1;
-			}
-		}
-
-		if(this.getDimensions() > dimensions) {
-			return +1;
-		}
-
-		if(that.getDimensions() > dimensions) {
-			return -1;
-		}
-
-		return 0;
 	}
 	
 	public String toString(){

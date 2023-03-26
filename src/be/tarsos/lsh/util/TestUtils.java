@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import be.tarsos.lsh.Vector;
+import dataStructure.Vector;
 
 /**
  * Makes it easy to generate random test data sets.

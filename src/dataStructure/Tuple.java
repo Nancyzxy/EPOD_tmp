@@ -1,5 +1,4 @@
 package dataStructure;
-import be.tarsos.lsh.Vector;
 
 import java.util.ArrayList;
 import java.util.HashMap;

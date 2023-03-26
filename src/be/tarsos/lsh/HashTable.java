@@ -29,6 +29,7 @@ import java.util.List;
 
 import be.tarsos.lsh.families.HashFamily;
 import be.tarsos.lsh.families.HashFunction;
+import dataStructure.Vector;
 
 /**
  * An index contains one or more locality sensitive hash tables. These hash

@@ -1,6 +1,6 @@
 package utils;
 
-import be.tarsos.lsh.Vector;
+import dataStructure.Vector;
 import dataStructure.Tuple;
 import java.io.BufferedReader;
 import java.io.FileReader;

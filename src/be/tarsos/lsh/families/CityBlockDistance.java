@@ -23,7 +23,7 @@
 
 package be.tarsos.lsh.families;
 
-import be.tarsos.lsh.Vector;
+import dataStructure.Vector;
 
 /**
  * This distance measure calculates the city block distance between two vectors. This distance metric also known as the Manhattan distance or L<sub>1</sub> distance.

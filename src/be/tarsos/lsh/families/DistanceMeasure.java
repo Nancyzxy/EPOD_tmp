@@ -23,7 +23,7 @@
 
 package be.tarsos.lsh.families;
 
-import be.tarsos.lsh.Vector;
+import dataStructure.Vector;
 
 /**
  * A distance measure defines how distance is calculated, measured as it were, between two vectors.

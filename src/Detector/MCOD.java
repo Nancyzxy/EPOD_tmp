@@ -1,14 +1,12 @@
 package Detector;
 
 import java.util.*;
-
-import be.tarsos.lsh.Vector;
+import dataStructure.Vector;
 import framework.Device;
-import mtree.tests.Data;
 import mtree.utils.MTreeClass;
 import utils.Constants;
 import mtree.utils.Utils;
-import dataStructure.MCO;
+import dataStructure.*;
 
 public class MCOD extends Detector {
     public static HashMap<double[], MCO> map_to_MCO = new HashMap<>();
@@ -37,14 +35,14 @@ public class MCOD extends Detector {
 
     // 预处理入口函数
     @Override
-    public HashSet<Data> detectOutlier(List<Data> data) {
+    public HashSet<Vector> detectOutlier(List<Vector> data) {
         // 1.去除过期点
-        HashSet<Data> result = new HashSet<>();
+        HashSet<Vector> result = new HashSet<>();
         if (Constants.S != Constants.W) {
             // 1.1 除去internal过期的点
             for (int i = internal_dataList.size() - 1; i >= 0; i--) {
                 MCO d = internal_dataList.get(i);
-                if (d.arrivalTime <= Constants.currentTime - Constants.W) {
+                if (d.arrivalTime <= Constants.currentSlideID - Constants.W) {
                     //remove d from data List
                     internal_dataList.remove(i);
 
@@ -334,9 +332,9 @@ public class MCOD extends Detector {
         return min_center_id;
     }
 
-    private void processNewData(Data data) {
+    private void processNewData(Vector vector) {
 
-        MCO d = new MCO(data);
+        MCO d = new MCO(vector);
 
         //add to datalist
         internal_dataList.add(d);
@@ -404,10 +402,10 @@ public class MCOD extends Detector {
     private void process_event_queue() {
         MCO x = eventQueue.peek();
 
-        while (x != null && x.ev <= Constants.currentTime) {
+        while (x != null && x.ev <= Constants.currentSlideID) {
 
             x = eventQueue.poll();
-            while (x.exps.get(0) <= Constants.currentTime) {
+            while (x.exps.get(0) <= Constants.currentSlideID) {
                 x.exps.remove(0);
                 if (x.exps.isEmpty()) {
                     x.ev = 0;
@@ -470,7 +468,7 @@ public class MCOD extends Detector {
         for (HashMap<Object, ArrayList<MCO>> time_value : external_data.values()) {
             for (ArrayList<MCO> time_cluster_value : time_value.values()) {
                 for (MCO mco : time_cluster_value) {
-                    if (mco.arrivalTime <= Constants.currentTime - Constants.W) {
+                    if (mco.arrivalTime <= Constants.currentSlideID - Constants.W) {
                         time_cluster_value.remove(mco);
                         int cnt = external_info.get(mco.center.values);
                         external_info.put(mco.center.values, cnt - 1);
@@ -482,7 +480,7 @@ public class MCOD extends Detector {
 
     //更新external_info至最新状态
     public void update_external_info() {
-        HashMap<Object, ArrayList<MCO>> last_arrive_data = external_data.get(Constants.currentTime);
+        HashMap<Object, ArrayList<MCO>> last_arrive_data = external_data.get(Constants.currentSlideID);
         for (ArrayList<MCO> data : last_arrive_data.values()) {
             for (MCO mco : data) {
                 int cnt = external_info.get(mco.center.values);
@@ -500,7 +498,7 @@ public class MCOD extends Detector {
             if (reply == 1) {
                 inliers.add(o);
                 // 是在device端就确定为inlier的情况,没有精确的最早的neighbor过期的时间 更新不了相应proceding和succeeding
-                o.ev = Constants.currentTime + 1;
+                o.ev = Constants.currentSlideID + 1;
                 eventQueue.add(o);
             }
             //确定为outlier的点不用做操作
@@ -517,7 +515,7 @@ public class MCOD extends Detector {
                         sum += value;
                         if (sum >= Constants.K) {
                             inliers.add(o);
-                            o.ev = Constants.currentTime + 1;
+                            o.ev = Constants.currentSlideID + 1;
                             eventQueue.add(o);
                             flag = true;
                             break;
@@ -541,7 +539,7 @@ public class MCOD extends Detector {
                         if (o.last_calculate_time == -1 || o.last_calculate_time < Constants.K - Constants.W) {
                             o.last_calculate_time = Constants.K - Constants.W;
                         }
-                        while (o.last_calculate_time <= Constants.currentTime) {
+                        while (o.last_calculate_time <= Constants.currentSlideID) {
                             //HashMap<Object, ArrayList<MCO>>
                             HashMap<Object, ArrayList<MCO>> cur_data = external_data.get(o.last_calculate_time);
                             if (cur_data != null) {
