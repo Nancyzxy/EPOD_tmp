@@ -14,7 +14,7 @@ public class NewNETS extends Detector {
 	public boolean subDimFlag;
 
 	public Map<ArrayList<?>,ArrayList<Vector>> externalData;
-	public HashMap<ArrayList<?>,ArrayList<Vector>> localDataBucket;
+	public HashMap<ArrayList<?>,ArrayList<Vector>> localDataBucket; //TODO: ╪сио SlideID
 	public double neighCellIdxDist;
 	public double neighCellFullDimIdxDist;
 	public double[] maxValues;

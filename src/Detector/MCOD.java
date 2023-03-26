@@ -1,14 +1,13 @@
 package Detector;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
+import dataStructure.MCO;
 import dataStructure.Vector;
 import framework.Device;
 import mtree.utils.MTreeClass;
-import utils.Constants;
 import mtree.utils.Utils;
-import dataStructure.*;
+import utils.Constants;
+
+import java.util.*;
 
 public class MCOD extends Detector {
     public static HashMap<double[], MCO> map_to_MCO = new HashMap<>();
