@@ -1,0 +1,7 @@
+started!
+# Dataset: RC
+Method: LSH
+Dim: 5
+dn/nn: 2/2
+R/K/W/S: 4.0/50/10000/500
+# of windows: 500
