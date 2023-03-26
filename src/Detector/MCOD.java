@@ -1,6 +1,8 @@
 package Detector;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
 import dataStructure.Vector;
 import framework.Device;
 import mtree.utils.MTreeClass;
@@ -35,7 +37,7 @@ public class MCOD extends Detector {
 
     // 预处理入口函数
     @Override
-    public HashSet<Vector> detectOutlier(List<Vector> data) {
+    public void detectOutlier(List<Vector> data) {
         // 1.去除过期点
         HashSet<Vector> result = new HashSet<>();
         if (Constants.S != Constants.W) {
@@ -79,7 +81,7 @@ public class MCOD extends Detector {
         //add result
         outlierList.forEach(result::add);
 //        printStatistic();
-        return result;
+        return;
     }
 
     private void removeFromFilledCluster(MCO d) {
@@ -534,7 +536,7 @@ public class MCOD extends Detector {
                     if (sum < Constants.K) {
                         continue;
                     }
-                    //注意，在本地存储外来点时按照arrivaltime存，本地点的pre和succ包括本地邻居和部分外来邻居。并且需要记录上次计算的arrivaltime信息（last_calculated），在下次需要寻找邻居时，在arrivaltime+1及以后继续寻找并更新pre，succ
+                    //注意，在本地存储外来点时按照arrivalTime存，本地点的pre和succ包括本地邻居和部分外来邻居。并且需要记录上次计算的arrivaltime信息（last_calculated），在下次需要寻找邻居时，在arrivaltime+1及以后继续寻找并更新pre，succ
                     else {
                         if (o.last_calculate_time == -1 || o.last_calculate_time < Constants.K - Constants.W) {
                             o.last_calculate_time = Constants.K - Constants.W;

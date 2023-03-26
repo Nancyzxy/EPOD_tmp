@@ -10,5 +10,5 @@ public abstract class Detector {
     public Detector(Device device){
         this.device = device;
     }
-    public abstract HashSet<Vector> detectOutlier(List<Vector> data);
+    public abstract void detectOutlier(List<Vector> data);
 }
