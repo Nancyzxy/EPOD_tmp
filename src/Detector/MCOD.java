@@ -1,14 +1,17 @@
 package Detector;
 
 import java.util.*;
+
 import be.tarsos.lsh.Vector;
 import framework.Device;
+import mtree.tests.Data;
 import mtree.utils.MTreeClass;
-import mtree.utils.Constants;
+import utils.Constants;
 import mtree.utils.Utils;
 import dataStructure.MCO;
 
 public class MCOD extends Detector {
+    public static HashMap<double[], MCO> map_to_MCO = new HashMap<>();
     public static ArrayList<MCO> internal_dataList = new ArrayList<>();
 
     //--------------------------------------------------------------------------------
@@ -26,7 +29,7 @@ public class MCOD extends Detector {
     public static HashMap<MCO, Integer> rec_msg; //-1: outlier 0:not sure 1:inlier
     //    public static HashMap<device_id, ArrayList<cluster_id/MCO>> answer_list;
     //D2D
-    public static HashMap<MCO, ArrayList<MCO>> rec_cluster;
+//    public static HashMap<MCO, ArrayList<MCO>> rec_cluster;
 
     public MCOD(Device device) {
         super(device);
@@ -34,14 +37,14 @@ public class MCOD extends Detector {
 
     // 预处理入口函数
     @Override
-    public HashSet<Vector> detectOutlier(List<Vector> data, long currentTime) {
+    public HashSet<Data> detectOutlier(List<Data> data) {
         // 1.去除过期点
-        HashSet<Vector> result = new HashSet<>();
-        if (Constants.slide != Constants.W) {
+        HashSet<Data> result = new HashSet<>();
+        if (Constants.S != Constants.W) {
             // 1.1 除去internal过期的点
             for (int i = internal_dataList.size() - 1; i >= 0; i--) {
                 MCO d = internal_dataList.get(i);
-                if (d.arrivalTime <= currentTime - Constants.W) {
+                if (d.arrivalTime <= Constants.currentTime - Constants.W) {
                     //remove d from data List
                     internal_dataList.remove(i);
 
@@ -52,12 +55,12 @@ public class MCOD extends Detector {
                     } else removeFromUnfilledCluster(d);
 
                     //process event queue
-                    process_event_queue(currentTime);
+                    process_event_queue();
                 }
             }
 
             // 1.2 除去external过期的点
-            clean_expired_external_data(currentTime);
+            clean_expired_external_data();
 
         } else {
             internal_dataList.clear();
@@ -70,7 +73,6 @@ public class MCOD extends Detector {
             mtree = null;
             mtree = new MTreeClass();
             outlierList.clear();
-            last_calculate_time=currentTime;
         }
 
         // 2.process new data
@@ -96,13 +98,12 @@ public class MCOD extends Detector {
         ArrayList<MCO> cluster = unfilled_clusters.get(d.center);
         if (cluster != null) {
             cluster.remove(d);
-            if (cluster.size() ==0){
+            if (cluster.size() == 0) {
                 unfilled_clusters.remove(d.center);
-            }
-            else unfilled_clusters.put(d.center, cluster);
+            } else unfilled_clusters.put(d.center, cluster);
 
         }
-        if (d.numberOfSucceeding + d.exps.size() < Constants.k) {
+        if (d.numberOfSucceeding + d.exps.size() < Constants.K) {
             outlierList.remove(d);
         }
 
@@ -216,6 +217,7 @@ public class MCOD extends Detector {
         d.isCenter = true;
         d.isInFilledCluster = false;
         d.center = d;
+        map_to_MCO.put(d.values, d);
 
         ArrayList<MCO> cluster = new ArrayList<>();
         cluster.add(d);
@@ -230,7 +232,7 @@ public class MCOD extends Detector {
 
     private void check_filled(MCO center) {
         ArrayList<MCO> cluster = unfilled_clusters.get(center);
-        if (cluster.size() >= Constants.k) {
+        if (cluster.size() >= Constants.K) {
 //            MCO center = dataList_set.get(center_id);
             unfilled_clusters.remove(center);
             filled_clusters.put(center, cluster);
@@ -244,7 +246,7 @@ public class MCOD extends Detector {
 
     private void check_shrink(MCO center) {
         ArrayList<MCO> cluster = filled_clusters.get(center);
-        if (cluster.size() < Constants.k) {
+        if (cluster.size() < Constants.K) {
             //更新cluster的状态
             filled_clusters.remove(center);
             unfilled_clusters.put(center, cluster);
@@ -302,9 +304,9 @@ public class MCOD extends Detector {
     }
 
     public int isSameSlide(MCO o1, MCO o2) {
-        if ((o1.arrivalTime - 1) / Constants.slide == (o2.arrivalTime - 1) / Constants.slide) {
+        if ((o1.arrivalTime - 1) / Constants.S == (o2.arrivalTime - 1) / Constants.S) {
             return 0;
-        } else if ((o1.arrivalTime - 1) / Constants.slide < (o2.arrivalTime - 1) / Constants.slide) {
+        } else if ((o1.arrivalTime - 1) / Constants.S < (o2.arrivalTime - 1) / Constants.S) {
             return -1;
         } else {
             return 1;
@@ -332,7 +334,7 @@ public class MCOD extends Detector {
         return min_center_id;
     }
 
-    private void processNewData(Vector data) {
+    private void processNewData(Data data) {
 
         MCO d = new MCO(data);
 
@@ -369,7 +371,7 @@ public class MCOD extends Detector {
     private void checkInlier(MCO inPD) {
         Collections.sort(inPD.exps);
 
-        while (inPD.exps.size() > Constants.k - inPD.numberOfSucceeding && inPD.exps.size() > 0) {
+        while (inPD.exps.size() > Constants.K - inPD.numberOfSucceeding && inPD.exps.size() > 0) {
             inPD.exps.remove(0);
         }
         if (inPD.exps.size() > 0) {
@@ -378,8 +380,8 @@ public class MCOD extends Detector {
             inPD.ev = 0;
         }
 
-        if (inPD.exps.size() + inPD.numberOfSucceeding >= Constants.k) {
-            if (inPD.numberOfSucceeding >= Constants.k) {
+        if (inPD.exps.size() + inPD.numberOfSucceeding >= Constants.K) {
+            if (inPD.numberOfSucceeding >= Constants.K) {
                 eventQueue.remove(inPD);
                 outlierList.remove(inPD);
             } else {
@@ -399,13 +401,13 @@ public class MCOD extends Detector {
         }
     }
 
-    private void process_event_queue(long currentTime) {
+    private void process_event_queue() {
         MCO x = eventQueue.peek();
 
-        while (x != null && x.ev <= currentTime) {
+        while (x != null && x.ev <= Constants.currentTime) {
 
             x = eventQueue.poll();
-            while (x.exps.get(0) <= currentTime) {
+            while (x.exps.get(0) <= Constants.currentTime) {
                 x.exps.remove(0);
                 if (x.exps.isEmpty()) {
                     x.ev = 0;
@@ -415,10 +417,10 @@ public class MCOD extends Detector {
 
                 }
             }
-            if (x.exps.size() + x.numberOfSucceeding < Constants.k) {
+            if (x.exps.size() + x.numberOfSucceeding < Constants.K) {
                 outlierList.add(x);
 
-            } else if (x.numberOfSucceeding < Constants.k && x.exps.size() + x.numberOfSucceeding >= Constants.k) {
+            } else if (x.numberOfSucceeding < Constants.K && x.exps.size() + x.numberOfSucceeding >= Constants.K) {
                 eventQueue.add(x);
             }
 
@@ -454,18 +456,24 @@ public class MCOD extends Detector {
     }
 
     //-------------------------------------------------------------------------------------------------------
-    public static HashMap<ArrayList<Short>, Integer> external_info = new HashMap<>();
+    public static HashMap<Object, Integer> external_info = new HashMap<>();
     //HashMap<时间戳, HashMap<外部cluster中心点坐标,ArrayList<点>>>
-    public static HashMap<Long, HashMap<ArrayList<Short>, ArrayList<MCO>>> external_data = new HashMap<>();
-    long last_calculate_time;
+    public static HashMap<Long, HashMap<Object, ArrayList<MCO>>> external_data = new HashMap<>();
 
-    public static void clean_expired_external_data(long currentTime) {
-        for (HashMap<ArrayList<Short>, ArrayList<MCO>> time_value : external_data.values()) {
+    public void process_outliers(){
+        //        external_data.put()
+        update_external_info();
+        check_local_outliers();
+    }
+
+    public void clean_expired_external_data() {
+        for (HashMap<Object, ArrayList<MCO>> time_value : external_data.values()) {
             for (ArrayList<MCO> time_cluster_value : time_value.values()) {
                 for (MCO mco : time_cluster_value) {
-                    if (mco.arrivalTime <= currentTime - Constants.W) {
+                    if (mco.arrivalTime <= Constants.currentTime - Constants.W) {
                         time_cluster_value.remove(mco);
-                        external_info.get(mco.center.values)--;
+                        int cnt = external_info.get(mco.center.values);
+                        external_info.put(mco.center.values, cnt - 1);
                     }
                 }
             }
@@ -473,57 +481,92 @@ public class MCOD extends Detector {
     }
 
     //更新external_info至最新状态
-    public static void update_external_info(long current_time) {
-        HashMap<ArrayList<Short>, ArrayList<MCO>> last_arrive_data = external_data.get(current_time);
+    public void update_external_info() {
+        HashMap<Object, ArrayList<MCO>> last_arrive_data = external_data.get(Constants.currentTime);
         for (ArrayList<MCO> data : last_arrive_data.values()) {
             for (MCO mco : data) {
-                external_info.get(mco.center)++;
+                int cnt = external_info.get(mco.center.values);
+                external_info.put(mco.center.values, cnt + 1);
             }
         }
     }
 
-
     //先写着后面再提取公共函数
     public void check_local_outliers() {
         ArrayList<MCO> inliers = new ArrayList<>();
-        outlierList.forEach(o -> {
+        for (MCO o : outlierList) {
             int reply = rec_msg.get(o.center);
+            //首先我们需要prunning掉被判断为安全的以及被判断成outlier的点，加入event queue，event time 设为下一个时间点
             if (reply == 1) {
                 inliers.add(o);
                 // 是在device端就确定为inlier的情况,没有精确的最早的neighbor过期的时间 更新不了相应proceding和succeeding
-                o.ev = 现在时间 + 1;
+                o.ev = Constants.currentTime + 1;
                 eventQueue.add(o);
-            } else if (reply == -1) {
-                // 好像不用做什么
-            } else {
+            }
+            //确定为outlier的点不用做操作
+            //不确定的点：
+            else if (reply == 0) {
                 int sum = 0;
+                boolean flag = false;
                 ArrayList<MCO> cluster3R_2 = new ArrayList<>();
-                rec_cluster.forEach((key, value) -> {
-                    if (mtree.getDistanceFunction().calculate(key, o) < Constants.R / 2) {
-                        // 感觉得讨论一下下， 就是这里如果想算proceed和succeed的话，就涉及到了具体的距离计算，感觉跟不prun没啥区别
-                        // 所以我先写根据size来剪枝的，然后把ev设成了下一个时间
-//                        value.forEach();
-                        sum += value.size();
-                        if (sum >= Constants.k) {
+                for (Map.Entry<Object, Integer> entry : external_info.entrySet()) {
+                    Object key = entry.getKey();
+                    Integer value = entry.getValue();
+                    MCO c = map_to_MCO.get(key); //不知道有没有问题
+                    if (mtree.getDistanceFunction().calculate(c, o) < Constants.R / 2) {
+                        sum += value;
+                        if (sum >= Constants.K) {
                             inliers.add(o);
-                            o.ev = 现在时间 + 1;
+                            o.ev = Constants.currentTime + 1;
                             eventQueue.add(o);
+                            flag = true;
                             break;
                         }
-                    } else if (mtree.getDistanceFunction().calculate(key, o) < Constants.R * 3 / 2) {
-                        cluster3R_2.add(key);
+                    } else if (mtree.getDistanceFunction().calculate(c, o) < Constants.R * 3 / 2) {
+                        cluster3R_2.add(c);
                     }
-                });
-                if (sum < Constants.k) {
-                    cluster3R_2.forEach(c -> sum += rec_cluster.get(c).size());
                 }
-                if (sum < Constants.k) {
-                    //outlier
-                } else {
+                inliers.forEach(i -> outlierList.remove(i));
 
+                if (!flag) {
+                    for (MCO c : cluster3R_2) {
+                        sum += external_info.get(c.center.values);
+                    }
+                    //否则，在所有3R/2内cluster（外部）的点，若和本地相加小于k，则判断成为Outlier,
+                    if (sum < Constants.K) {
+                        continue;
+                    }
+                    //注意，在本地存储外来点时按照arrivaltime存，本地点的pre和succ包括本地邻居和部分外来邻居。并且需要记录上次计算的arrivaltime信息（last_calculated），在下次需要寻找邻居时，在arrivaltime+1及以后继续寻找并更新pre，succ
+                    else {
+                        if (o.last_calculate_time == -1 || o.last_calculate_time < Constants.K - Constants.W) {
+                            o.last_calculate_time = Constants.K - Constants.W;
+                        }
+                        while (o.last_calculate_time <= Constants.currentTime) {
+                            //HashMap<Object, ArrayList<MCO>>
+                            HashMap<Object, ArrayList<MCO>> cur_data = external_data.get(o.last_calculate_time);
+                            if (cur_data != null) {
+                                for (MCO c : cluster3R_2) {
+                                    ArrayList<MCO> cur_cluster_data = cur_data.get(c.center.values);
+                                    if (cur_cluster_data != null) {
+                                        for (MCO mco : cur_cluster_data) {
+                                            if (mtree.getDistanceFunction().calculate(mco, o) < Constants.R) {
+                                                if (isSameSlide(o, mco) <= 0) {
+                                                    o.numberOfSucceeding++;
+                                                } else {
+                                                    //p is preceeding neighbor
+                                                    o.exps.add(mco.arrivalTime + Constants.W);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            o.last_calculate_time++;
+                            checkInlier(o);
+                        }
+                    }
                 }
             }
-            inliers.forEach(i -> outlierList.remove(i));
-        });
+        }
     }
 }
