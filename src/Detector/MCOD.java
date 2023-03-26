@@ -1,6 +1,7 @@
 package Detector;
 
 import java.util.*;
+
 import dataStructure.Vector;
 import framework.Device;
 import mtree.utils.MTreeClass;
@@ -9,7 +10,7 @@ import mtree.utils.Utils;
 import dataStructure.*;
 
 public class MCOD extends Detector {
-    public static HashMap<double[], MCO> map_to_MCO = new HashMap<>();
+    public static HashMap<ArrayList<?>, MCO> map_to_MCO = new HashMap<>();
     public static ArrayList<MCO> internal_dataList = new ArrayList<>();
 
     //--------------------------------------------------------------------------------
@@ -90,6 +91,8 @@ public class MCOD extends Detector {
             filled_clusters.put(d.center, cluster);
             check_shrink(d.center);
         }
+        Integer origin = this.device.fullCellDelta.get(new ArrayList<>(Arrays.asList(d.center.values)));
+        this.device.fullCellDelta.put(new ArrayList<>(Arrays.asList(d.center.values)), origin-1);
     }
 
     private void removeFromUnfilledCluster(MCO d) {
@@ -98,8 +101,12 @@ public class MCOD extends Detector {
             cluster.remove(d);
             if (cluster.size() == 0) {
                 unfilled_clusters.remove(d.center);
-            } else unfilled_clusters.put(d.center, cluster);
-
+                this.device.fullCellDelta.put(new ArrayList<>(Arrays.asList(d.center.values)), Integer.MIN_VALUE);
+            } else {
+                unfilled_clusters.put(d.center, cluster);
+                Integer origin = this.device.fullCellDelta.get(new ArrayList<>(Arrays.asList(d.center.values)));
+                this.device.fullCellDelta.put(new ArrayList<>(Arrays.asList(d.center.values)), origin-1);
+            }
         }
         if (d.numberOfSucceeding + d.exps.size() < Constants.K) {
             outlierList.remove(d);
@@ -115,7 +122,6 @@ public class MCOD extends Detector {
                 }
             }
         });
-
     }
 
     private void resetObject(MCO o, boolean isInFilledCluster) {
@@ -202,6 +208,10 @@ public class MCOD extends Detector {
         cluster.add(d);
         unfilled_clusters.put(nearest_center, cluster);
 
+        //update fullCellDelta
+        Integer origin = this.device.fullCellDelta.get(new ArrayList<>(Arrays.asList(d.center.values)));
+        this.device.fullCellDelta.put(new ArrayList<>(Arrays.asList(d.center.values)), origin+1);
+
         //这两步顺序不能换，因为是在update_info_filled里checkInlier(d)
         //update self and others secceeding and preceeding in unfilled_cluster
         update_info_unfilled(d, false);
@@ -215,12 +225,14 @@ public class MCOD extends Detector {
         d.isCenter = true;
         d.isInFilledCluster = false;
         d.center = d;
-        map_to_MCO.put(d.values, d);
+        map_to_MCO.put(new ArrayList<>(Arrays.asList(d.values)), d);
 
         ArrayList<MCO> cluster = new ArrayList<>();
         cluster.add(d);
         unfilled_clusters.put(d, cluster);
 //        dataList_set.put(d.arrivalTime, d);
+
+        this.device.fullCellDelta.put(new ArrayList<>(Arrays.asList(d.center.values)), 1);
 
         update_info_unfilled(d, false);
         update_info_filled(d);
@@ -277,6 +289,10 @@ public class MCOD extends Detector {
         ArrayList<MCO> cluster = filled_clusters.get(nearest_center);
         cluster.add(d);
         filled_clusters.put(nearest_center, cluster);
+
+        // update finger print
+        Integer origin = this.device.fullCellDelta.get(new ArrayList<>(Arrays.asList(d.center.values)));
+        this.device.fullCellDelta.put(new ArrayList<>(Arrays.asList(d.center.values)), origin+1);
 
         //update for points in PD that has Rmc list contains center
         // filled 里的自己不用存succeeding和preceeding，只用更新别人
