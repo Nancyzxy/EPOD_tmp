@@ -1,6 +1,7 @@
 package Detector;
 
 import be.tarsos.lsh.Vector;
+import be.tarsos.lsh.families.CosineDistance;
 import dataStructure.Cell;
 import dataStructure.Tuple;
 import framework.Device;
@@ -12,6 +13,9 @@ import java.util.*;
 public class NewNETS extends Detector {
 	public int subDim;
 	public boolean subDimFlag;
+
+	public Map<ArrayList<Short>,ArrayList<Vector>> externalData;
+	public HashMap<ArrayList<Short>,ArrayList<Vector>> localDataBucket;
 	public double neighCellIdxDist;
 	public double neighCellFullDimIdxDist;
 	public double[] maxValues;
@@ -48,6 +52,7 @@ public class NewNETS extends Detector {
 			default -> {
 			}
 		}
+		this.externalData = Collections.synchronizedMap(new HashMap<>());
 		this.subDimFlag = Constants.dim != subDim;
 		this.random = random;
 		this.neighCellIdxDist = Math.sqrt(subDim)*2;
@@ -197,7 +202,16 @@ public class NewNETS extends Detector {
 	}
 	public void indexingSlide(ArrayList<Tuple> slideTuples){
 		slideIn = new HashMap<>();
-		fullDimCellSlideInCnt = new HashMap<Integer,Integer>();
+		fullDimCellSlideInCnt = new HashMap<>();
+		this.localDataBucket.values().forEach(
+				x -> x.forEach(y ->
+						{//TODO
+							if (y.arrivalRealTime.getTime() < (Constants.currentTime - 1000L * Constants.W)) {
+								x.remove(y);
+							}
+						}
+				)
+		);
 		for(Tuple t:slideTuples) {
 			ArrayList<Short> fullDimCellIdx = new ArrayList<>();
 			ArrayList<Short> subDimCellIdx = new ArrayList<>();
@@ -216,7 +230,11 @@ public class NewNETS extends Detector {
 
 			t.fullDimCellIdx = fullDimCellIdx;
 			t.subDimCellIdx = subDimCellIdx;
-
+			//add bucket for transfer data
+			if (!this.localDataBucket.containsKey(fullDimCellIdx)){
+				this.localDataBucket.put(fullDimCellIdx,new ArrayList<>());
+			}
+			this.localDataBucket.get(fullDimCellIdx).add(t);
 
 			if(!idxEncoder.containsKey(fullDimCellIdx)) {
 				int id = idxEncoder.size();
@@ -257,7 +275,7 @@ public class NewNETS extends Detector {
 			slideOut = slides.poll();
 			fullDimCellSlideOutCnt = fullDimCellSlidesCnt.poll();
 		}
-		slideDelta = new HashMap<Integer, Integer>(); //子空间的cellID -> Number
+		slideDelta = new HashMap<>(); //子空间的cellID -> Number
 
 		/* Update window */
 		for(Integer key:slideIn.keySet()) {
@@ -303,6 +321,9 @@ public class NewNETS extends Detector {
 		}
 	}
 
+	public void processOutliers(){
+		//pruning + 后续处理
+	}
 	public void getInfCellIndices() {
 		influencedCells = new HashSet<Integer>();
 		for (Integer cellIdxWin:windowCnt.keySet()) {
