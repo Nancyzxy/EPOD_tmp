@@ -19,7 +19,7 @@ public class MCOD extends Detector {
     //    public static HashMap<Integer, MCO> dataList_set = new HashMap<>();
     // 全局的--------------------------------------------------------------
     public static MTreeClass mtree = new MTreeClass();
-    public static ArrayList<MCO> outlierList = new ArrayList<>();
+    public static HashSet<MCO> outliers = new HashSet<>();
     public static PriorityQueue<MCO> eventQueue = new PriorityQueue<>(new MCComparator());
     //---------------------------------------------------------------------------------------------
     //D2E
@@ -71,14 +71,14 @@ public class MCOD extends Detector {
             eventQueue.clear();
             mtree = null;
             mtree = new MTreeClass();
-            outlierList.clear();
+            outliers.clear();
         }
 
         // 2.process new data
         data.forEach(this::processNewData);
 
         //add result
-        outlierList.forEach(result::add);
+        result.addAll(outliers);
 //        printStatistic();
         return;
     }
@@ -109,10 +109,10 @@ public class MCOD extends Detector {
             }
         }
         if (d.numberOfSucceeding + d.exps.size() < Constants.K) {
-            outlierList.remove(d);
+            outliers.remove(d);
         }
 
-        outlierList.forEach((data) -> {
+        outliers.forEach((data) -> {
             while (data.exps.size() > 0 && data.exps.get(0) <= d.arrivalTime + Constants.W) {
                 data.exps.remove(0);
                 if (data.exps.isEmpty()) {
@@ -247,7 +247,7 @@ public class MCOD extends Detector {
             unfilled_clusters.remove(center);
             filled_clusters.put(center, cluster);
             cluster.forEach(p -> {
-                outlierList.remove(p);
+                outliers.remove(p);
                 eventQueue.remove(p);
                 resetObject(p, true);
             });
@@ -397,9 +397,9 @@ public class MCOD extends Detector {
         if (inPD.exps.size() + inPD.numberOfSucceeding >= Constants.K) {
             if (inPD.numberOfSucceeding >= Constants.K) {
                 eventQueue.remove(inPD);
-                outlierList.remove(inPD);
+                outliers.remove(inPD);
             } else {
-                outlierList.remove(inPD);
+                outliers.remove(inPD);
                 if (!eventQueue.contains(inPD)) {
                     // 还是没懂这个计时
                     long startTime3 = Utils.getCPUTime();
@@ -409,8 +409,8 @@ public class MCOD extends Detector {
 
         } else {
             eventQueue.remove(inPD);
-            if (!outlierList.contains(inPD)) {
-                outlierList.add(inPD);
+            if (!outliers.contains(inPD)) {
+                outliers.add(inPD);
             }
         }
     }
@@ -432,7 +432,7 @@ public class MCOD extends Detector {
                 }
             }
             if (x.exps.size() + x.numberOfSucceeding < Constants.K) {
-                outlierList.add(x);
+                outliers.add(x);
 
             } else if (x.numberOfSucceeding < Constants.K && x.exps.size() + x.numberOfSucceeding >= Constants.K) {
                 eventQueue.add(x);
@@ -481,6 +481,7 @@ public class MCOD extends Detector {
         //        external_data.put()
         update_external_info();
         check_local_outliers();
+        this.device.outlierVector = outliers;
     }
 
     public void clean_expired_external_data() {
@@ -511,7 +512,7 @@ public class MCOD extends Detector {
     //先写着后面再提取公共函数
     public void check_local_outliers() {
         ArrayList<MCO> inliers = new ArrayList<>();
-        for (MCO o : outlierList) {
+        for (MCO o : outliers) {
             int reply = rec_msg.get(o.center);
             //首先我们需要prunning掉被判断为安全的以及被判断成outlier的点，加入event queue，event time 设为下一个时间点
             if (reply == 1) {
@@ -543,7 +544,7 @@ public class MCOD extends Detector {
                         cluster3R_2.add(c);
                     }
                 }
-                inliers.forEach(i -> outlierList.remove(i));
+                inliers.forEach(i -> outliers.remove(i));
 
                 if (!flag) {
                     for (MCO c : cluster3R_2) {

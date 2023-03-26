@@ -43,7 +43,7 @@ public class Device extends RPCFrame implements Runnable {
         this.allRawDataList = Collections.synchronizedMap(new HashMap<>());
     }
 
-    public Set<Vector> detectOutlier(int itr) throws Throwable {
+    public Set<? extends Vector> detectOutlier(int itr) throws Throwable {
         //get initial data
         Constants.currentSlideID = itr;
         Date currentRealTime = new Date();
