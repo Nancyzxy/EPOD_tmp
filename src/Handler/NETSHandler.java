@@ -42,7 +42,8 @@ public class NETSHandler extends Handler{
         }
 
     }
-    public boolean neighboringSet(ArrayList<Short> c1, ArrayList<Short> c2) {
+
+    public static boolean neighboringSet(ArrayList<Short> c1, ArrayList<Short> c2) {
         double ss = 0;
         double cellIdxDist = Math.sqrt(Constants.dim)*2;
         double threshold =cellIdxDist*cellIdxDist;
