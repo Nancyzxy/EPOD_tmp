@@ -13,8 +13,8 @@ public class NewNETS extends Detector {
 	public int subDim;
 	public boolean subDimFlag;
 
-	public Map<ArrayList<?>,ArrayList<Vector>> externalData;
-	public HashMap<ArrayList<?>,ArrayList<Vector>> localDataBucket; //TODO: 加上 SlideID
+	public Map<ArrayList<?>,ArrayList<Tuple>> externalData;
+	public HashMap<ArrayList<?>,ArrayList<Tuple>> localDataBucket; //TODO: 加上 SlideID
 	public double neighCellIdxDist;
 	public double neighCellFullDimIdxDist;
 	public double[] maxValues;
@@ -304,7 +304,8 @@ public class NewNETS extends Detector {
 			}
 			fullDimCellWindowCnt.put(key, fullDimCellWindowCnt.get(key) + fullDimCellSlideInCnt.get(key));
 			//更新指纹
-		 	device.fullCellDelta.put(idxDecoder.get(key),fullDimCellSlideInCnt.get(key));
+		 	device.fullCellDelta.put(idxDecoder.get(key),
+					device.fullCellDelta.get(idxDecoder.get(key)) + fullDimCellSlideInCnt.get(key));
 		}
 		
 		for(Integer key:fullDimCellSlideOutCnt.keySet()) {

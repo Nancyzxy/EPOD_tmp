@@ -45,8 +45,9 @@ public class EdgeNode extends RPCFrame implements Runnable {
 
         count.incrementAndGet();
         boolean flag = count.compareAndSet(edgeDevices.size(), 0);
-        if (flag) { //node has finished uploading data, entering into the N-N phase
-            this.flag = true;
+        if (flag) {
+            //node has finished collecting data, entering into the N-N phase, only one thread go into this loop
+            this.flag = true; //indicate to other nodes I am ready
             for (UnitInNode unitInNode : unitsStatusMap.values()) {
                 unitInNode.updateSafeness();
             }
@@ -58,7 +59,6 @@ public class EdgeNode extends RPCFrame implements Runnable {
                         .filter(x -> NETSHandler.neighboringSet(unsafeUnit,x.unitID)).toList();
                 unitResultInfo.put(unsafeUnit,unitInNodeList);
             }
-
 
             for (EdgeNode node : EdgeNodeNetwork.nodeHashMap.values()) {
                 if (node == this)

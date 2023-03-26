@@ -5,6 +5,7 @@ import Detector.NewNETS;
 import Detector.MCOD;
 import RPC.RPCFrame;
 import be.tarsos.lsh.Index;
+import dataStructure.Tuple;
 import dataStructure.Vector;
 import utils.Constants;
 import utils.DataGenerator;
@@ -22,7 +23,6 @@ public class Device extends RPCFrame implements Runnable {
     public DataGenerator dataGenerator;
     public EdgeNode nearestNode;
     public Detector detector;
-    public long itr;
 
     public HashMap<ArrayList<?>, Integer> status;
 
@@ -87,7 +87,7 @@ public class Device extends RPCFrame implements Runnable {
                 Thread t =new Thread(()->{
                     Object[] parameters = new Object[]{result.get(edgeDeviceCode)};
                     try {
-                        HashMap<ArrayList<?>, List<Vector>> data = (HashMap<ArrayList<?>, List<Vector>>)
+                        HashMap<ArrayList<?>, List<Tuple>> data = (HashMap<ArrayList<?>, List<Tuple>>)
                                 invoke("localhost", EdgeNodeNetwork.deviceHashMap.get(edgeDeviceCode).port,
                                         Device.class.getMethod("sendData", HashSet.class), parameters);
                         NewNETS newNETS = (NewNETS) this.detector;

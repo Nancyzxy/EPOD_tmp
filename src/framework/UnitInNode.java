@@ -8,7 +8,7 @@ public class UnitInNode {
     public ArrayList<Short> unitID; //unit中心点的坐标
     public int pointCnt; //unit中点的数量
     public int isSafe; //unit的安全状态 0-outlier 1-undetermined 2-safe
-    public HashMap<Integer, Integer> isUpdated; //unit的更新状态 DeviceHashCode -> 1/0
+    public HashMap<Integer, Integer> isUpdated; //unit的更新状态 nodeHashCode -> 1/0
     public Set<Integer> belongedDevices;
 
     public UnitInNode(ArrayList<Short> unitID, int pointCnt) {

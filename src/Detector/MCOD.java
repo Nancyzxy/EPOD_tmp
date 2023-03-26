@@ -32,6 +32,7 @@ public class MCOD extends Detector {
 
     public MCOD(Device device) {
         super(device);
+        //TODO
     }
 
     // 预处理入口函数
