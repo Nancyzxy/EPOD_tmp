@@ -443,6 +443,9 @@ public class MCOD extends Detector {
         }
     }
 
+    public void processOutliers(){
+        //pruning + 后续处理
+    }
     static class MCComparator implements Comparator<MCO> {
         @Override
         public int compare(MCO o1, MCO o2) {
