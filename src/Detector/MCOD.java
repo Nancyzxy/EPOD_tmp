@@ -481,7 +481,7 @@ public class MCOD extends Detector {
         //        external_data.put()
         update_external_info();
         check_local_outliers();
-        this.device.outlierVector = outliers;
+        this.outlierVector = outliers;
     }
 
     public void clean_expired_external_data() {
