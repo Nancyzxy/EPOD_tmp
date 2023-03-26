@@ -10,29 +10,37 @@ import mtree.utils.Utils;
 import utils.Constants;
 
 public class MCOD extends Detector {
-    public static HashMap<ArrayList<?>, MCO> map_to_MCO = new HashMap<>();
-    public static ArrayList<MCO> internal_dataList = new ArrayList<>();
+    public static HashMap<ArrayList<?>, MCO> map_to_MCO;
+    public static ArrayList<MCO> internal_dataList;
 
     //--------------------------------------------------------------------------------
-    public static HashMap<MCO, ArrayList<MCO>> filled_clusters = new HashMap<>(); //{d.center(d.arrivalTime), cluster}
-    public static HashMap<MCO, ArrayList<MCO>> unfilled_clusters = new HashMap<>();
-    //    public static HashMap<Integer, MCO> dataList_set = new HashMap<>();
+    public static HashMap<MCO, ArrayList<MCO>> filled_clusters; //{d.center(d.arrivalTime), cluster}
+    public static HashMap<MCO, ArrayList<MCO>> unfilled_clusters;
     // 全局的--------------------------------------------------------------
-    public static MTreeClass mtree = new MTreeClass();
-    public static HashSet<MCO> outliers = new HashSet<>();
-    public static PriorityQueue<MCO> eventQueue = new PriorityQueue<>(new MCComparator());
+    public static MTreeClass mtree;
+    public static HashSet<MCO> outliers;
+    public static PriorityQueue<MCO> eventQueue;
     //---------------------------------------------------------------------------------------------
-    //D2E
-    public static HashMap<MCO, Integer> send_msg = new HashMap<>();
     //E2D
     public static HashMap<MCO, Integer> rec_msg; //-1: outlier 0:not sure 1:inlier
-    //    public static HashMap<device_id, ArrayList<cluster_id/MCO>> answer_list;
-    //D2D
-//    public static HashMap<MCO, ArrayList<MCO>> rec_cluster;
+
+    //-------------------------------------------------------------------------------------------------------
+    public static HashMap<Object, Integer> external_info;
+    //HashMap<时间戳, HashMap<外部cluster中心点坐标,ArrayList<点>>>
+    public static HashMap<Long, HashMap<Object, ArrayList<MCO>>> external_data;
 
     public MCOD(Device device) {
         super(device);
-        //TODO
+        map_to_MCO = new HashMap<>();
+        internal_dataList = new ArrayList<>();
+        filled_clusters = new HashMap<>();
+        unfilled_clusters = new HashMap<>();
+        mtree = new MTreeClass();
+        outliers = new HashSet<>();
+        eventQueue = new PriorityQueue<>(new MCComparator());
+        rec_msg = new HashMap<>();
+        external_info = new HashMap<>();//需要synchorized吗
+        external_data = new HashMap<>();
     }
 
     // 预处理入口函数
@@ -473,11 +481,6 @@ public class MCOD extends Detector {
         }
     }
 
-    //-------------------------------------------------------------------------------------------------------
-    public static HashMap<Object, Integer> external_info = new HashMap<>();
-    //HashMap<时间戳, HashMap<外部cluster中心点坐标,ArrayList<点>>>
-    public static HashMap<Long, HashMap<Object, ArrayList<MCO>>> external_data = new HashMap<>();
-
     public void process_outliers(){
         //        external_data.put()
         update_external_info();
@@ -602,5 +605,11 @@ public class MCOD extends Detector {
             }
         }
         return result;
+    }
+    @Override
+    public boolean neighboringSet(ArrayList<?> c1, ArrayList<?> c2) {
+        // 1.看使用环境，如果是map_to_MCO有的，可以映射回原点用distance.calculate
+        // 2.暴力计算
+        return true;
     }
 }
