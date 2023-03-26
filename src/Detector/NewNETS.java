@@ -121,12 +121,11 @@ public class NewNETS extends Detector {
 	}
 
 	@Override
-	public HashSet<Vector> detectOutlier(List<Vector> data){
-		if (data.isEmpty()) return null;
+	public void detectOutlier(List<Vector> data){
+		if (data.isEmpty()) return;
 		ArrayList<Tuple> newSlide = preprocessData(data);
 		calcNetChange(newSlide, Constants.currentSlideID);
 		findOutlier("NETS", Constants.currentSlideID);
-		return outliers;
 	}
 
 	public ArrayList<Tuple> preprocessData(List<Vector> data){
@@ -311,7 +310,8 @@ public class NewNETS extends Detector {
 		for(Integer key:fullDimCellSlideOutCnt.keySet()) {
 			fullDimCellWindowCnt.put(key, fullDimCellWindowCnt.get(key) - fullDimCellSlideOutCnt.get(key));
 			//¸üÐÂÖ¸ÎÆ
-			device.fullCellDelta.put(idxDecoder.get(key),-1 * fullDimCellSlideInCnt.get(key));
+			device.fullCellDelta.put(idxDecoder.get(key),
+					device.fullCellDelta.get(idxDecoder.get(key)) - fullDimCellSlideInCnt.get(key));
 			if(fullDimCellWindowCnt.get(key) < 1) {
 				fullDimCellWindowCnt.remove(key);
 				device.fullCellDelta.put(idxDecoder.get(key),Integer.MIN_VALUE);
