@@ -96,7 +96,11 @@ public class MCOD extends Detector {
         ArrayList<MCO> cluster = unfilled_clusters.get(d.center);
         if (cluster != null) {
             cluster.remove(d);
-            unfilled_clusters.put(d.center, cluster);
+            if (cluster.size() ==0){
+                unfilled_clusters.remove(d.center);
+            }
+            else unfilled_clusters.put(d.center, cluster);
+
         }
         if (d.numberOfSucceeding + d.exps.size() < Constants.k) {
             outlierList.remove(d);
@@ -112,6 +116,7 @@ public class MCOD extends Detector {
                 }
             }
         });
+
     }
 
     private void resetObject(MCO o, boolean isInFilledCluster) {
@@ -460,7 +465,7 @@ public class MCOD extends Detector {
                 for (MCO mco : time_cluster_value) {
                     if (mco.arrivalTime <= currentTime - Constants.W) {
                         time_cluster_value.remove(mco);
-                        external_info.get(mco.center.values);
+                        external_info.get(mco.center.values)--;
                     }
                 }
             }
@@ -472,7 +477,7 @@ public class MCOD extends Detector {
         HashMap<ArrayList<Short>, ArrayList<MCO>> last_arrive_data = external_data.get(current_time);
         for (ArrayList<MCO> data : last_arrive_data.values()) {
             for (MCO mco : data) {
-                //external_info.get(mco.center)++;  有问题，因为MCOD里面的center存的是id不是具体点
+                external_info.get(mco.center)++;
             }
         }
     }
@@ -520,6 +525,5 @@ public class MCOD extends Detector {
             }
             inliers.forEach(i -> outlierList.remove(i));
         });
-
     }
 }
