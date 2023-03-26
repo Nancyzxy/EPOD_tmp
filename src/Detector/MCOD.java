@@ -583,4 +583,19 @@ public class MCOD extends Detector {
             }
         }
     }
+
+    @Override
+    public HashMap<ArrayList<?>, List<? extends Vector>> sendData(HashSet<ArrayList<?>> bucketIds){
+        HashMap<ArrayList<?>, List<? extends Vector>> result = new HashMap<>();
+        for (ArrayList<?> bucketId : bucketIds) {
+            MCO center = map_to_MCO.get(bucketId);
+            if (filled_clusters.get(center) == null) {
+                result.put(bucketId, unfilled_clusters.get(center));
+            }
+            else {
+                result.put(bucketId, filled_clusters.get(center));
+            }
+        }
+        return result;
+    }
 }
