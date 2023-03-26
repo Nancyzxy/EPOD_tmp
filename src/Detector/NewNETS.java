@@ -30,7 +30,7 @@ public class NewNETS extends Detector {
 	public HashMap<Integer,ArrayList<Short>> idxDecoder;
 	public HashMap<ArrayList<Short>,Integer> idxEncoder;
 	public HashMap<Integer,Integer> slideDelta;
-	public HashSet<Vector> outliers;
+	public HashSet<Tuple> outliers;
 	public HashMap<Integer,Integer> fullDimCellWindowCnt;
 	public LinkedList<HashMap<Integer,Cell>> slides;
 	public HashMap<Integer,Integer> fullDimCellSlideInCnt;
@@ -383,9 +383,9 @@ public class NewNETS extends Detector {
 
 	public void findOutlier(String type, int itr) {
 		// Remove expired or outdated outliers
-		Iterator<Vector> it = outliers.iterator();
+		Iterator<Tuple> it = outliers.iterator();
 		while (it.hasNext()) {
-			Tuple outlier = (Tuple) it.next();
+			Tuple outlier = it.next();
 			if(slideOut.containsKey(idxEncoder.get(outlier.subDimCellIdx)) && slideOut.get(idxEncoder.get(outlier.subDimCellIdx)).tuples.contains(outlier)) {  
 				it.remove();
 			}else if(fullDimCellWindowCnt.get(idxEncoder.get(outlier.fullDimCellIdx))>Constants.K){
