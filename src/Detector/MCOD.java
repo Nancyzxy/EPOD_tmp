@@ -516,7 +516,7 @@ public class MCOD extends Detector {
         for (MCO o : outliers) {
             int reply = rec_msg.get(o.center);
             //首先我们需要prunning掉被判断为安全的以及被判断成outlier的点，加入event queue，event time 设为下一个时间点
-            if (reply == 1) {
+            if (reply == 2) {
                 inliers.add(o);
                 // 是在device端就确定为inlier的情况,没有精确的最早的neighbor过期的时间 更新不了相应proceding和succeeding
                 o.ev = Constants.currentSlideID + 1;
@@ -524,7 +524,7 @@ public class MCOD extends Detector {
             }
             //确定为outlier的点不用做操作
             //不确定的点：
-            else if (reply == 0) {
+            else if (reply == 1) {
                 int sum = 0;
                 boolean flag = false;
                 ArrayList<MCO> cluster3R_2 = new ArrayList<>();
