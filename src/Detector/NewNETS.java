@@ -322,6 +322,16 @@ public class NewNETS extends Detector {
 	public void processOutliers(){
 		//pruning + 后续处理
 	}
+
+	@Override
+	public HashMap<ArrayList<?>, List<? extends Vector>> sendData(HashSet<ArrayList<?>> bucketIds) {
+		HashMap<ArrayList<?>, List<? extends Vector>> data = new HashMap<>();
+		for (ArrayList<?> id: bucketIds){
+			data.put(id,localDataBucket.get(id));
+		}
+		return data;
+	}
+
 	public void getInfCellIndices() {
 		influencedCells = new HashSet<Integer>();
 		for (Integer cellIdxWin:windowCnt.keySet()) {

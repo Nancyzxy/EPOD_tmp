@@ -74,13 +74,8 @@ public class Device extends RPCFrame implements Runnable {
     public void clearFingerprints(){
         this.fullCellDelta = new HashMap<>();
     }
-    public HashMap<ArrayList<?>,List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds){
-        HashMap<ArrayList<?>, List<Vector>> data = new HashMap<>();
-        NewNETS newNETS = (NewNETS)this.detector;
-        for (ArrayList<?> id: bucketIds){
-            data.put(id, newNETS.localDataBucket.get(id));
-        }
-        return data;
+    public HashMap<ArrayList<?>,List<? extends Vector>> sendData(HashSet<ArrayList<?>> bucketIds){
+        return this.detector.sendData(bucketIds);
     }
 
     public void getExternalData(HashMap<ArrayList<?>, Integer> status,HashMap<Integer,HashSet<ArrayList<?>>> result) throws InterruptedException {
