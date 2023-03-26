@@ -10,7 +10,7 @@ import java.util.Objects;
 public class testNetwork {
 
     public static void main(String[] args) throws Throwable {
-        PrintStream ps ;
+        PrintStream ps;
         DeviceFactory edgeDeviceFactory;
         if (Objects.equals(Constants.methodToGenerateFingerprint,"LSH")){
             double p1=0.8;

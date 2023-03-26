@@ -13,8 +13,8 @@ public class NewNETS extends Detector {
 	public int subDim;
 	public boolean subDimFlag;
 
-	public Map<ArrayList<Short>,ArrayList<Vector>> externalData;
-	public HashMap<ArrayList<Short>,ArrayList<Vector>> localDataBucket;
+	public Map<ArrayList<?>,ArrayList<Vector>> externalData;
+	public HashMap<ArrayList<?>,ArrayList<Vector>> localDataBucket;
 	public double neighCellIdxDist;
 	public double neighCellFullDimIdxDist;
 	public double[] maxValues;

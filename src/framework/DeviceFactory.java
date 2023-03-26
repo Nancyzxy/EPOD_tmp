@@ -31,8 +31,8 @@ public class DeviceFactory {
 
     public DeviceFactory(){}
 
-    public Device createEdgeDevice(int deviceId) throws Throwable {
-        Device device  = new Device(deviceId);
+    public Device createEdgeDevice(int deviceId) {
+        Device device = new Device(deviceId);
         if (Objects.equals(Constants.methodToGenerateFingerprint, "LSH")){
             device.setNumberOfHashTables(NumberOfHashTables);
             device.setIndex(index);

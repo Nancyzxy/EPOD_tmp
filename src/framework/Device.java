@@ -17,14 +17,14 @@ public class Device extends RPCFrame implements Runnable {
     public Index index;
     public List<Vector> rawData=new ArrayList<>();
 
-    public HashMap<ArrayList<Short>,Integer> fullCellDelta;
+    public HashMap<ArrayList<?>,Integer> fullCellDelta; //fingerprint 
     public Map<Long,List<Vector>> allRawDataList;
     public DataGenerator dataGenerator;
     public EdgeNode nearestNode;
     public Detector detector;
     public long itr;
 
-    public HashMap<ArrayList<Short>, Integer> status;
+    public HashMap<ArrayList<?>, Integer> status;
 
     /* used for LSH method */
     public Map<Long,List<Vector>> aggFingerprints;
@@ -65,7 +65,7 @@ public class Device extends RPCFrame implements Runnable {
     }
 
 
-    public void sendAggFingerprints(HashMap<ArrayList<Short>,Integer> aggFingerprints) throws Throwable {
+    public void sendAggFingerprints(HashMap<ArrayList<?>,Integer> aggFingerprints) throws Throwable {
         Object[] parameters = new Object[]{aggFingerprints,this.hashCode()};
         invoke("localhost",this.nearestNode.port,
                 EdgeNode.class.getMethod("upload", HashMap.class, Integer.class),parameters);
@@ -74,16 +74,16 @@ public class Device extends RPCFrame implements Runnable {
     public void clearFingerprints(){
         this.fullCellDelta = new HashMap<>();
     }
-    public HashMap<ArrayList<Short>,List<Vector>> sendData(HashSet<ArrayList<Short>> bucketIds){
-        HashMap<ArrayList<Short>, List<Vector>> data = new HashMap<>();
+    public HashMap<ArrayList<?>,List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds){
+        HashMap<ArrayList<?>, List<Vector>> data = new HashMap<>();
         NewNETS newNETS = (NewNETS)this.detector;
-        for (ArrayList<Short> id: bucketIds){
+        for (ArrayList<?> id: bucketIds){
             data.put(id, newNETS.localDataBucket.get(id));
         }
         return data;
     }
 
-    public void getExternalData(HashMap<ArrayList<Short>, Integer> status,HashMap<Integer,HashSet<ArrayList<Short>>> result) throws InterruptedException {
+    public void getExternalData(HashMap<ArrayList<?>, Integer> status,HashMap<Integer,HashSet<ArrayList<?>>> result) throws InterruptedException {
         this.status = status;
         ArrayList<Thread> threads = new ArrayList<>();
         for (Integer edgeDeviceCode :EdgeNodeNetwork.deviceHashMap.keySet()){
@@ -92,7 +92,7 @@ public class Device extends RPCFrame implements Runnable {
                 Thread t =new Thread(()->{
                     Object[] parameters = new Object[]{result.get(edgeDeviceCode)};
                     try {
-                        HashMap<ArrayList<Short>, List<Vector>> data = (HashMap<ArrayList<Short>, List<Vector>>)
+                        HashMap<ArrayList<?>, List<Vector>> data = (HashMap<ArrayList<?>, List<Vector>>)
                                 invoke("localhost", EdgeNodeNetwork.deviceHashMap.get(edgeDeviceCode).port,
                                         Device.class.getMethod("sendData", HashSet.class), parameters);
                         NewNETS newNETS = (NewNETS) this.detector;
@@ -121,7 +121,7 @@ public class Device extends RPCFrame implements Runnable {
         this.nearestNode = nearestNode;
     }
 
-    // The method is only used in LSH
+    // Below methods are only used in LSH
     public void generateAggFingerprints(List<Vector> data) {
 
         if (Objects.equals(Constants.methodToGenerateFingerprint, "LSH")) {

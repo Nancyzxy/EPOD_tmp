@@ -56,6 +56,7 @@ public class EdgeNodeNetwork {
         int itr=0;
         long time = 0;
         while (itr < Constants.nS+Constants.nW-1) {
+            //per slide
             System.out.println("===============================");
             System.out.println("This is the "+itr + " slides.");
             if(itr>=Constants.nS-1) {
