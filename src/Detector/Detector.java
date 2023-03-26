@@ -18,5 +18,5 @@ public abstract class Detector {
     //pruning + 后续处理
     public abstract void processOutliers();
 
-    public abstract HashMap<ArrayList<?>,List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds);
+    public abstract HashMap<ArrayList<?>,List<? extends Vector>> sendData(HashSet<ArrayList<?>> bucketIds);
 }

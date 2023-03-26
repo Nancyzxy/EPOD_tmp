@@ -74,7 +74,7 @@ public class Device extends RPCFrame implements Runnable {
     public void clearFingerprints(){
         this.fullCellDelta = new HashMap<>();
     }
-    public HashMap<ArrayList<?>,List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds){
+    public HashMap<ArrayList<?>,List<? extends Vector>> sendData(HashSet<ArrayList<?>> bucketIds){
         return this.detector.sendData(bucketIds);
     }
 
