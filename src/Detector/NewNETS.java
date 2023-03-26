@@ -320,6 +320,7 @@ public class NewNETS extends Detector {
 	}
 
 	public void processOutliers(){
+		this.outlierVector = outliers;
 		//pruning + 后续处理
 	}
 

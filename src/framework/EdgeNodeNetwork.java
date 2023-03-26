@@ -68,7 +68,7 @@ public class EdgeNodeNetwork {
                 int finalItr = itr;
                 Thread t = new Thread(() -> {
                     try {
-                        Set<Vector> outlier = device.detectOutlier(finalItr);
+                        Set<? extends Vector> outlier = device.detectOutlier(finalItr);
                     } catch (Throwable e) {
                         e.printStackTrace();
                     }

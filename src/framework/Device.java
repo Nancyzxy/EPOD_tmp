@@ -15,7 +15,7 @@ public class Device extends RPCFrame implements Runnable {
     public int deviceId;
     private int numberOfHashTables;
     public Index index;
-    public List<Vector> rawData=new ArrayList<>();
+    public List<Vector> rawData = new ArrayList<>();
 
     public HashMap<ArrayList<?>,Integer> fullCellDelta; //fingerprint 
     public Map<Long,List<Vector>> allRawDataList;
@@ -43,7 +43,7 @@ public class Device extends RPCFrame implements Runnable {
         this.allRawDataList = Collections.synchronizedMap(new HashMap<>());
     }
 
-    public Set<Vector> detectOutlier(int itr) throws Throwable {
+    public Set<? extends Vector> detectOutlier(int itr) throws Throwable {
         //get initial data
         Constants.currentSlideID = itr;
         Date currentRealTime = new Date();
@@ -60,8 +60,8 @@ public class Device extends RPCFrame implements Runnable {
         }
 
         //本地获取数据 + 处理outliers
-        ((NewNETS)this.detector).processOutliers();
-        return ((NewNETS)this.detector).outliers;
+        this.detector.processOutliers();
+        return this.detector.outlierVector;
     }
 
 
