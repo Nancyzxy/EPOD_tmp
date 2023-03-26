@@ -3,12 +3,10 @@ package Detector;
 import dataStructure.Vector;
 import framework.Device;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public abstract class Detector {
+    public Set<? extends Vector> outlierVector; // This field is only used to return to the global network
     Device device;
     public Detector(Device device){
         this.device = device;
