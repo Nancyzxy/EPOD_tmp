@@ -7,17 +7,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class EdgeNode extends RPCFrame implements Runnable {
     public ArrayList<Integer> edgeDevices;
-//    public Map<ArrayList<Integer>,ArrayList<Integer>> unitDevicesMap;
     public Map<ArrayList<Short>,List<UnitInNode>> unitResultInfo; //primly used for pruning
     public Map<ArrayList<Short>, UnitInNode> unitsStatusMap; // used to maintain the status of the unit in a node
-//    public Map<Integer,HashMap<Integer,ArrayList<ArrayList<Short>>>> deviceResultMap; // each device need to ask certain device for a set of units
     public Handler handler;
     public EdgeNode(){
         this.port = new Random().nextInt(50000)+10000;
         this.unitsStatusMap = Collections.synchronizedMap(new HashMap<>());
-//        this.unitDevicesMap = Collections.synchronizedMap(new HashMap<>());
         this.unitResultInfo = Collections.synchronizedMap(new HashMap<>());
-//        this.deviceResultMap = Collections.synchronizedMap(new HashMap<>());
         this.count= new AtomicInteger(0);
         if (Objects.equals(Constants.methodToGenerateFingerprint, "CELLID")) {
             this.handler = new NETSHandler(this);
