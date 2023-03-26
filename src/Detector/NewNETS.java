@@ -3,9 +3,9 @@ package Detector;
 import be.tarsos.lsh.Vector;
 import dataStructure.Cell;
 import dataStructure.Tuple;
+import framework.Device;
 import utils.Constants;
 
-import java.awt.print.PrinterGraphics;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
@@ -27,7 +27,6 @@ public class NewNETS extends Detector {
 	public HashMap<Integer,ArrayList<Short>> idxDecoder;
 	public HashMap<ArrayList<Short>,Integer> idxEncoder;
 	public HashMap<Integer,Integer> slideDelta;
-	public HashMap<ArrayList<Short>,Integer> fullCellDelta; // fingerprint
 	public HashSet<Vector> outliers;
 	public HashMap<Integer,Integer> fullDimCellWindowCnt;
 	public LinkedList<HashMap<Integer,Cell>> slides;
@@ -38,7 +37,8 @@ public class NewNETS extends Detector {
 
 	public int candidateCellsTupleCnt = 0;
 
-	public NewNETS(int random) {
+	public NewNETS(int random, Device device) {
+		super(device);
 		switch (Constants.dataset) {
 			case "ForestCover", "TAO" -> subDim = 3;
 			case "EM" -> subDim = 4;
@@ -53,16 +53,15 @@ public class NewNETS extends Detector {
 		this.neighCellIdxDist = Math.sqrt(subDim)*2;
 		this.neighCellFullDimIdxDist = Math.sqrt(Constants.dim)*2;
 		determineMinMax();
-		this.windowCnt = new HashMap<Integer,Integer>();
-		this.slides = new LinkedList<HashMap<Integer,Cell>>();
-		this.slideOut = new HashMap<Integer,Cell>();
-		this.idxDecoder = new HashMap<Integer, ArrayList<Short>>();
-		this.idxEncoder = new HashMap<ArrayList<Short>,Integer>();		
-		this.fullDimCellWindowCnt = new HashMap<Integer,Integer>();
-		this.fullDimCellSlidesCnt = new LinkedList<HashMap<Integer,Integer>>();
-		this.fullDimCellSlideOutCnt = new HashMap<Integer,Integer>();
-				
-		this.outliers = new HashSet<Vector>();
+		this.windowCnt = new HashMap<>();
+		this.slides = new LinkedList<>();
+		this.slideOut = new HashMap<>();
+		this.idxDecoder = new HashMap<>();
+		this.idxEncoder = new HashMap<>();
+		this.fullDimCellWindowCnt = new HashMap<>();
+		this.fullDimCellSlidesCnt = new LinkedList<>();
+		this.fullDimCellSlideOutCnt = new HashMap<>();
+		this.outliers = new HashSet<>();
 
 		//TODO: all dimension weigh equal
 		/* Cell size calculation for all dim*/
@@ -289,29 +288,18 @@ public class NewNETS extends Detector {
 				fullDimCellWindowCnt.put(key, 0);
 			}
 			fullDimCellWindowCnt.put(key, fullDimCellWindowCnt.get(key) + fullDimCellSlideInCnt.get(key));
-
 			//更新指纹
-			ArrayList<Short> fingerprint = idxDecoder.get(key);
-			if (!fullCellDelta.containsKey(fingerprint)){
-				fullCellDelta.put(fingerprint,0);
-			}
-			fullCellDelta.put(fingerprint,fullCellDelta.get(fingerprint) + fullDimCellSlideInCnt.get(key));
-
+		 	device.fullCellDelta.put(idxDecoder.get(key),fullDimCellSlideInCnt.get(key));
 		}
 		
 		for(Integer key:fullDimCellSlideOutCnt.keySet()) {
 			fullDimCellWindowCnt.put(key, fullDimCellWindowCnt.get(key) - fullDimCellSlideOutCnt.get(key));
+			//更新指纹
+			device.fullCellDelta.put(idxDecoder.get(key),-1 * fullDimCellSlideInCnt.get(key));
 			if(fullDimCellWindowCnt.get(key) < 1) {
 				fullDimCellWindowCnt.remove(key);
+				device.fullCellDelta.put(idxDecoder.get(key),Integer.MIN_VALUE);
 			}
-
-			//更新指纹
-			ArrayList<Short> fingerprint = idxDecoder.get(key);
-			if (!fullCellDelta.containsKey(fingerprint)){
-				fullCellDelta.put(fingerprint,0);
-			}
-			fullCellDelta.put(fingerprint,fullCellDelta.get(fingerprint) - fullDimCellSlideInCnt.get(key));
-
 		}
 	}
 

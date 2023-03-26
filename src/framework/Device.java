@@ -1,4 +1,4 @@
-package main;
+package framework;
 
 import Detector.Detector;
 import Detector.NewNETS;
@@ -19,6 +19,7 @@ public class Device extends RPCFrame implements Runnable {
     public Index index;
     public List<Vector> rawData=new ArrayList<>();
 
+    public HashMap<ArrayList<Short>,Integer> fullCellDelta;
     public Map<Long,List<Vector>> allRawDataList;
     public Map<Integer,ArrayList<Integer>> dependentDevice;
     public DataGenerator dataGenerator;
@@ -37,10 +38,11 @@ public class Device extends RPCFrame implements Runnable {
         this.deviceId = deviceId;
         this.dataGenerator = new DataGenerator(deviceId);
         if (Objects.equals(Constants.methodToGenerateFingerprint, "CELLID")){
-            this.detector = new NewNETS(0);
+            this.detector = new NewNETS(0,this);
         } else if (Objects.equals(Constants.methodToGenerateFingerprint, "MCOD")) {
-            this.detector = new MCOD();
+            this.detector = new MCOD(this);
         }
+        this.fullCellDelta = new HashMap<>();
         this.dependentDevice = Collections.synchronizedMap(new HashMap<>());
         this.allRawDataList = Collections.synchronizedMap(new HashMap<>());
 
@@ -54,15 +56,17 @@ public class Device extends RPCFrame implements Runnable {
         this.itr = itr;
         Date currentRealTime = new Date();
         currentRealTime.setTime(dataGenerator.firstTimeStamp.getTime() + (long) Constants.S * 10 * 1000 * itr);
+        Constants.currentTime = currentRealTime.getTime();
         this.rawData = dataGenerator.getTimeBasedIncomingData(currentRealTime, Constants.S*10);
 
-        //step1: 产生指纹 + 本地先检测出outliers TODO: 清除过期的点
+        //step1: 产生指纹 + 本地先检测出outliers
+        clearFingerprints();
+        NewNETS newNETS = (NewNETS)(this.detector);
         this.detector.detectOutlier(this.rawData,itr);
 
         //step2: 上传指纹
         if(itr>Constants.nS-1) {
-            NewNETS newNETS = (NewNETS)(this.detector);
-            sendAggFingerprints(newNETS.fullCellDelta);
+            sendAggFingerprints(fullCellDelta);
         }
 
         //本地获取数据 + 处理outliers
@@ -70,10 +74,6 @@ public class Device extends RPCFrame implements Runnable {
         return outlier;
     }
 
-    public void clearFingerprints(){
-        this.aggFingerprints = Collections.synchronizedMap(new HashMap<>());
-        this.allRawDataList = Collections.synchronizedMap(new HashMap<>());
-    }
 
     public void sendAggFingerprints(HashMap<ArrayList<Short>,Integer> aggFingerprints) throws Throwable {
         Object[] parameters = new Object[]{aggFingerprints,this.hashCode()};
@@ -83,7 +83,7 @@ public class Device extends RPCFrame implements Runnable {
 
     public void getData() throws InterruptedException {
         ArrayList<Thread> threads = new ArrayList<>();
-        for (Integer edgeDeviceCode :EdgeNodeNetwork.edgeDeviceHashMap.keySet()){
+        for (Integer edgeDeviceCode :EdgeNodeNetwork.deviceHashMap.keySet()){
             if (this.hashCode() ==edgeDeviceCode) continue;
             /*use for measurement*/
             AtomicReference<Double> recall = new AtomicReference<>((double) 0); // 正样本中被预测正确的
@@ -91,7 +91,7 @@ public class Device extends RPCFrame implements Runnable {
             HashSet<Integer> dataSet = new HashSet<>();
             HashSet<Integer> dataSet1 = new HashSet<>();
             for (Vector a: this.rawData){
-                for (Vector b: EdgeNodeNetwork.edgeDeviceHashMap.get(edgeDeviceCode).rawData){
+                for (Vector b: EdgeNodeNetwork.deviceHashMap.get(edgeDeviceCode).rawData){
                     if (new EuclideanDistance().distance(a,b)<=Constants.R){
                         dataSet.add(b.arrivalTime);
                     }
@@ -103,7 +103,7 @@ public class Device extends RPCFrame implements Runnable {
                     try {
                         HashMap<Long, List<Vector>> data = (HashMap<Long, List<Vector>>)
                                 invoke("localhost",
-                                        EdgeNodeNetwork.edgeDeviceHashMap.get(edgeDeviceCode).port,
+                                        EdgeNodeNetwork.deviceHashMap.get(edgeDeviceCode).port,
                                         Device.class.getMethod("sendData", ArrayList.class), parameters);
 
                         //cellID<坐标: arraylist> arraylist<point>
@@ -135,6 +135,9 @@ public class Device extends RPCFrame implements Runnable {
                 threads.add(t);
                 t.start();
                 continue;
+//                HashMap<Long, HashMap<ArrayList<Short>, ArrayList<Vector>>> data;
+//                HashMap<ArrayList<Short>, int> allexternaldatalist;
+//                int last_calculated; keyset.sort
             }
             System.out.println(this.hashCode()+" from "+edgeDeviceCode+" neighbor # is "+dataSet.size());
             /*end*/
@@ -147,9 +150,11 @@ public class Device extends RPCFrame implements Runnable {
             tmp.addAll(x);
         }
         outlier = detector.detectOutlier(new ArrayList<>(tmp),itr);
-//        System.out.println(deviceId+" Final data size: "+tmp.size());
     }
 
+    public void clearFingerprints(){
+        this.fullCellDelta = new HashMap<>();
+    }
     public HashMap<Long,List<Vector>> sendData(ArrayList<Long> bucketIds){
         HashMap<Long,List<Vector>> data = new HashMap<>();
         for (Long x:bucketIds){
@@ -171,7 +176,7 @@ public class Device extends RPCFrame implements Runnable {
 
     // The method is only used in LSH
     public void generateAggFingerprints(List<Vector> data) {
-        clearFingerprints();
+//        clearFingerprints();
 
         if (Objects.equals(Constants.methodToGenerateFingerprint, "LSH")) {
             for (Vector datum : data) {

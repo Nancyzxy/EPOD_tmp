@@ -1,4 +1,4 @@
-package main;
+package framework;
 
 import be.tarsos.lsh.Vector;
 import utils.Constants;
@@ -8,13 +8,13 @@ import java.util.HashMap;
 import java.util.Set;
 
 public class EdgeNodeNetwork {
-    public static ArrayList<EdgeNode> edgeNodes = new ArrayList<>();
-    public static HashMap<Integer, Device> edgeDeviceHashMap = new HashMap<>();
+    public static HashMap<Integer, Device> deviceHashMap = new HashMap<>();
+    public static HashMap<Integer, EdgeNode> nodeHashMap = new HashMap<>();
     public static ArrayList<Thread> threads=new ArrayList<>();
 
     public static EdgeNode createEdgeNode(){
         EdgeNode edgeNode = new EdgeNode();
-        edgeNodes.add(edgeNode);
+        nodeHashMap.put(edgeNode.hashCode(),edgeNode);
         return edgeNode;
     }
 
@@ -24,7 +24,7 @@ public class EdgeNodeNetwork {
             ArrayList<Integer> devices = new ArrayList<>();
             for (int j=0;j<dn;j++){
                 Device device = edgeDeviceFactory.createEdgeDevice(i*dn+j);
-                edgeDeviceHashMap.put(device.hashCode(),device);
+                deviceHashMap.put(device.hashCode(),device);
                 device.setNearestNode(node);
                 devices.add(device.hashCode());
             }
@@ -40,13 +40,13 @@ public class EdgeNodeNetwork {
         System.out.println("dn/nn: "+Constants.dn+"/"+Constants.nn);
         System.out.println("R/K/W/S: "+Constants.R+"/"+Constants.K+"/"+Constants.W+"/"+Constants.S);
         System.out.println("# of windows: "+(Constants.nW));
-        for (EdgeNode node : edgeNodes) {
+        for (EdgeNode node : nodeHashMap.values()) {
             node.active = true;
             Thread t1 = new Thread(node);
             threads.add(t1);
             t1.start();
         }
-        for (Device device : edgeDeviceHashMap.values()) {
+        for (Device device : deviceHashMap.values()) {
             device.active = true;
             Thread t2 = new Thread(device);
             threads.add(t2);
@@ -63,7 +63,7 @@ public class EdgeNodeNetwork {
             }
             ArrayList<Thread> arrayList = new ArrayList<>();
             long start = System.currentTimeMillis();
-            for (Device device : edgeDeviceHashMap.values()) {
+            for (Device device : deviceHashMap.values()) {
                 int finalItr = itr;
                 Thread t = new Thread(() -> {
                     try {
@@ -87,10 +87,10 @@ public class EdgeNodeNetwork {
     }
 
     public static void stopNetwork() throws IOException, InterruptedException {
-        for (EdgeNode node : edgeNodes) {
+        for (EdgeNode node : nodeHashMap.values()) {
             node.close();
         }
-        for (Device device : edgeDeviceHashMap.values()) {
+        for (Device device : deviceHashMap.values()) {
             device.close();
         }
         System.out.println("Ended!");

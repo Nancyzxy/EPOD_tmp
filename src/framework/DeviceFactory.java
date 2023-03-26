@@ -1,4 +1,4 @@
-package main;
+package framework;
 
 import be.tarsos.lsh.Index;
 import be.tarsos.lsh.families.EuclidianHashFamily;

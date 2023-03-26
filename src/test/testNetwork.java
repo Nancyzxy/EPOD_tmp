@@ -1,7 +1,7 @@
 package test;
 
-import main.DeviceFactory;
-import main.EdgeNodeNetwork;
+import framework.DeviceFactory;
+import framework.EdgeNodeNetwork;
 import utils.Constants;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
