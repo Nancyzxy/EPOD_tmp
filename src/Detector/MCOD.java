@@ -1,6 +1,5 @@
 package Detector;
 
-
 import dataStructure.MCO;
 
 import java.util.*;
@@ -13,7 +12,7 @@ import utils.Constants;
 
 public class MCOD extends Detector {
     public static HashMap<ArrayList<?>, MCO> map_to_MCO;
-    public static ArrayList<MCO> internal_dataList;
+    public static Map<Integer, ArrayList<MCO>> internal_dataList;
 
     //--------------------------------------------------------------------------------
     public static HashMap<MCO, ArrayList<MCO>> filled_clusters; //{d.center(d.arrivalTime), cluster}
@@ -28,7 +27,7 @@ public class MCOD extends Detector {
     public MCOD(Device device) {
         super(device);
         map_to_MCO = new HashMap<>();
-        internal_dataList = new ArrayList<>();
+        internal_dataList = new LinkedHashMap<>();
         filled_clusters = new HashMap<>();
         unfilled_clusters = new HashMap<>();
         mtree = new MTreeClass();
@@ -42,24 +41,22 @@ public class MCOD extends Detector {
     @Override
     public void detectOutlier(List<Vector> data) {
         // 1.去除过期点
-        HashSet<Vector> result = new HashSet<>();
         if (Constants.S != Constants.W) {
             // 1.1 除去internal过期的点
-            for (int i = internal_dataList.size() - 1; i >= 0; i--) {
-                MCO d = internal_dataList.get(i);
-                if (d.arrivalTime <= Constants.currentSlideID - Constants.W) {
-                    //remove d from data List
-                    internal_dataList.remove(i);
+            for (Integer key : internal_dataList.keySet()) {
+                if (key <= Constants.currentSlideID - Constants.W) {
+                    for (MCO d : internal_dataList.get(key)) {
+                        if (d.isInFilledCluster) {
+                            removeFromFilledCluster(d);
+                        } else
+                            removeFromUnfilledCluster(d);
 
-                    //if d is in filled cluster
-                    if (d.isInFilledCluster) {
-                        removeFromFilledCluster(d);
-                    } else removeFromUnfilledCluster(d);
-
-                    //process event queue
-                    process_event_queue();
+                        //process event queue
+                        process_event_queue();
+                    }
                 }
             }
+            internal_dataList.entrySet().removeIf(entry -> entry.getKey() <= Constants.currentSlideID - Constants.W);
 
             // 1.2 除去external过期的点
             clean_expired_external_data();
@@ -78,10 +75,8 @@ public class MCOD extends Detector {
         }
 
         // 2.process new data
+        internal_dataList.put(Constants.currentSlideID, new ArrayList<>());
         data.forEach(this::processNewData);
-
-        //add result
-        result.addAll(outliers);
     }
 
     private void removeFromFilledCluster(MCO d) {
@@ -351,7 +346,7 @@ public class MCOD extends Detector {
         MCO d = new MCO(vector);
 
         //add to datalist
-        internal_dataList.add(d);
+        internal_dataList.get(Constants.currentSlideID).add(d);
 
         // 1.是否可加入filled_cluster
         MCO nearest_filled_center = findNearestCenter(d, true);
@@ -399,17 +394,13 @@ public class MCOD extends Detector {
             } else {
                 outliers.remove(inPD);
                 if (!eventQueue.contains(inPD)) {
-                    // 还是没懂这个计时
-                    long startTime3 = Utils.getCPUTime();
                     eventQueue.add(inPD);
                 }
             }
 
         } else {
             eventQueue.remove(inPD);
-            if (!outliers.contains(inPD)) {
-                outliers.add(inPD);
-            }
+            outliers.add(inPD);
         }
     }
 
@@ -513,7 +504,8 @@ public class MCOD extends Detector {
     public void check_local_outliers() {
         ArrayList<MCO> inliers = new ArrayList<>();
         for (MCO o : outliers) {
-            int reply = this.status.get(o.center);
+            // HashMap<ArrayList<?>, Integer> status;
+            int reply = this.status.get(new ArrayList<>(Arrays.asList(o.center.values)));
             //首先我们需要prunning掉被判断为安全的以及被判断成outlier的点，加入event queue，event time 设为下一个时间点
             if (reply == 2) {
                 inliers.add(o);
@@ -593,18 +585,33 @@ public class MCOD extends Detector {
 
     //todo: 根据历史记录来发送数据
     @Override
-    public Map<ArrayList<?>,List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int lastSent){
+    public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int lastSent) {
         Map<ArrayList<?>, List<Vector>> result = new HashMap<>();
-        for (ArrayList<?> bucketId : bucketIds) {
-            MCO center = map_to_MCO.get(bucketId);
-            if (filled_clusters.get(center) == null) {
-                List<Vector> list = unfilled_clusters.get(center).stream().map(c -> (Vector) c).toList();
-                result.put(bucketId, list);
-            } else {
-                List<Vector> list = filled_clusters.get(center).stream().map(c -> (Vector) c).toList();
-                result.put(bucketId, list);
+
+        for (int time = lastSent + 1; time <= Constants.currentSlideID; time++) {
+            for (MCO dataPoints : internal_dataList.get(time)) {
+                ArrayList<?> d_center = new ArrayList<>(Arrays.asList(dataPoints.center.values));
+                if (bucketIds.contains(d_center)) {
+                    if (result.containsKey(d_center))
+                        result.get(d_center).add(dataPoints);
+                    else {
+                        List<Vector> vectors = new ArrayList<>();
+                        vectors.add(dataPoints);
+                        result.put(d_center, vectors);
+                    }
+                }
             }
         }
+//        for (ArrayList<?> bucketId : bucketIds) {
+//            MCO center = map_to_MCO.get(bucketId);
+//            if (filled_clusters.get(center) == null) {
+//                List<Vector> list = unfilled_clusters.get(center).stream().map(c -> (Vector) c).toList();
+//                result.put(bucketId, list);
+//            } else {
+//                List<Vector> list = filled_clusters.get(center).stream().map(c -> (Vector) c).toList();
+//                result.put(bucketId, list);
+//            }
+//        }
         return result;
     }
 

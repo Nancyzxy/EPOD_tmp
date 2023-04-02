@@ -1,10 +1,7 @@
 package Detector;
 
-import dataStructure.MCO;
-import dataStructure.Tuple;
 import dataStructure.Vector;
 import framework.Device;
-
 import java.util.*;
 
 public abstract class Detector {
@@ -21,5 +18,5 @@ public abstract class Detector {
     //pruning + 后续处理
     public abstract void processOutliers();
 
-    public abstract Map<ArrayList<?>,List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int edgeNodeHashCode, int lastSent);
+    public abstract Map<ArrayList<?>,List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int lastSent);
 }
