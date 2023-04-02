@@ -41,7 +41,7 @@ import be.tarsos.lsh.families.DistanceComparator;
 import be.tarsos.lsh.families.DistanceMeasure;
 import be.tarsos.lsh.families.HashFamily;
 import be.tarsos.lsh.util.FileUtils;
-import dataStructure.Vector;
+import DataStructure.Vector;
 
 /**
  * Implements a Locality Sensitive Hash scheme.

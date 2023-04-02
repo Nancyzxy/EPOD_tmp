@@ -1,6 +1,6 @@
 package utils;
 
-import dataStructure.Vector;
+import DataStructure.Vector;
 import be.tarsos.lsh.families.EuclideanDistance;
 import be.tarsos.lsh.util.TestUtils;
 import java.io.BufferedWriter;

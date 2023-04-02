@@ -25,7 +25,7 @@ package be.tarsos.lsh.families;
 
 import java.io.Serializable;
 
-import dataStructure.Vector;
+import DataStructure.Vector;
 
 /**
  * A hash function can hash a vector of arbitrary dimensions to an integer

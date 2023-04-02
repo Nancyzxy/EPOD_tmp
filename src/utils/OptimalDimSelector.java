@@ -1,7 +1,7 @@
 package utils;
 
 import Detector.NETS;
-import dataStructure.Tuple;
+import DataStructure.Tuple;
 import java.util.ArrayList;
 
 public class OptimalDimSelector {

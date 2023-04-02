@@ -1,9 +1,7 @@
 package Handler;
 
-import framework.EdgeNode;
+import Framework.EdgeNode;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public abstract class Handler {
     EdgeNode node;

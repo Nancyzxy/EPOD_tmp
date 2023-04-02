@@ -1,11 +1,10 @@
 package test;
 
-import framework.DeviceFactory;
-import framework.EdgeNodeNetwork;
+import Framework.DeviceFactory;
+import Framework.EdgeNodeNetwork;
 import utils.Constants;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.Objects;
 
 public class testNetwork {
 

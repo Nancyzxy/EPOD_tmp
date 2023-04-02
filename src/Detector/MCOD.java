@@ -1,12 +1,12 @@
 package Detector;
 
 
-import dataStructure.MCO;
+import DataStructure.MCO;
 
 import java.util.*;
 
-import dataStructure.Vector;
-import framework.Device;
+import DataStructure.Vector;
+import Framework.Device;
 import mtree.utils.MTreeClass;
 import mtree.utils.Utils;
 import utils.Constants;

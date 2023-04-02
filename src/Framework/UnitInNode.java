@@ -1,4 +1,4 @@
-package framework;
+package Framework;
 
 import utils.Constants;
 

@@ -1,6 +1,6 @@
-package framework;
+package Framework;
 
-import dataStructure.Vector;
+import DataStructure.Vector;
 import utils.Constants;
 import java.io.IOException;
 import java.util.ArrayList;
