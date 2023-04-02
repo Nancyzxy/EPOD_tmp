@@ -1,10 +1,10 @@
-package framework;
+package Framework;
 
 import Detector.Detector;
 import Detector.MCOD;
 import Detector.NewNETS;
 import RPC.RPCFrame;
-import dataStructure.Vector;
+import DataStructure.Vector;
 import utils.Constants;
 import utils.DataGenerator;
 import java.util.*;
@@ -67,21 +67,22 @@ public class Device extends RPCFrame implements Runnable {
     public void clearFingerprints(){
         this.fullCellDelta = new HashMap<>();
     }
-    public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int edgeNodeHashCode){
+    public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int deviceHashCode){
         //根据历史记录来发送数据
-        int lastSent = Math.max(this.historyRecord.get(edgeNodeHashCode),Constants.currentSlideID - Constants.W);
+        int lastSent = Math.max(this.historyRecord.get(deviceHashCode),Constants.currentSlideID - Constants.W);
+        this.historyRecord.put(deviceHashCode,Constants.currentSlideID);
         return this.detector.sendData(bucketIds, lastSent);
     }
 
     public void getExternalData(HashMap<ArrayList<?>, Integer> status, HashMap<Integer,HashSet<ArrayList<?>>> result) throws InterruptedException {
         this.detector.status = status; //用来判断outliers是否需要重新计算，用在processOutliers()中
         ArrayList<Thread> threads = new ArrayList<>();
-        for (Integer edgeDeviceCode :result.keySet()) {
+        for (Integer deviceCode :result.keySet()) {
             Thread t = new Thread(() -> {
-                Object[] parameters = new Object[]{result.get(edgeDeviceCode)};
+                Object[] parameters = new Object[]{result.get(deviceCode)};
                 try {
                     Map<ArrayList<?>, List<Vector>> data = (Map<ArrayList<?>, List<Vector>>)
-                            invoke("localhost", EdgeNodeNetwork.deviceHashMap.get(edgeDeviceCode).port,
+                            invoke("localhost", EdgeNodeNetwork.deviceHashMap.get(deviceCode).port,
                                     Device.class.getMethod("sendData", HashSet.class, int.class), parameters);
                     if (this.detector.external_data.containsKey(Constants.currentSlideID)) {
                         this.detector.external_data.put(Constants.currentSlideID, Collections.synchronizedMap(new HashMap<>()));
@@ -91,7 +92,6 @@ public class Device extends RPCFrame implements Runnable {
                                 Map<ArrayList<?>, List<Vector>> map = this.detector.external_data.get(Constants.currentSlideID);
                                 if (!map.containsKey(x)) {
                                     map.put(x, Collections.synchronizedList(new ArrayList<>()));
-                                    ;
                                 }
                                 map.get(x).addAll(data.get(x));
                             }

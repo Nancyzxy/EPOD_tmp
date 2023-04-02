@@ -1,7 +1,7 @@
 package utils;
 
-import dataStructure.Vector;
-import dataStructure.Tuple;
+import DataStructure.Vector;
+import DataStructure.Tuple;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.*;

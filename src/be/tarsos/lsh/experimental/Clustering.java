@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import be.tarsos.lsh.LSH;
-import dataStructure.Vector;
+import DataStructure.Vector;
 import be.tarsos.lsh.families.DistanceMeasure;
 import be.tarsos.lsh.families.EuclideanDistance;
 

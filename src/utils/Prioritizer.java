@@ -1,6 +1,6 @@
 package utils;
 
-import dataStructure.Tuple;
+import DataStructure.Tuple;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

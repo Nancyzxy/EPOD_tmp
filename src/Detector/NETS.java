@@ -1,6 +1,6 @@
 package Detector;
-import dataStructure.Cell;
-import dataStructure.Tuple;
+import DataStructure.Cell;
+import DataStructure.Tuple;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

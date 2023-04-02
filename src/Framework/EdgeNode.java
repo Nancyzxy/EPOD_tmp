@@ -1,4 +1,4 @@
-package framework;
+package Framework;
 
 import Handler.*;
 import RPC.RPCFrame;

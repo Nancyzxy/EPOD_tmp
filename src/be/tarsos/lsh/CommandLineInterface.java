@@ -32,7 +32,7 @@ import be.tarsos.lsh.families.EuclideanDistance;
 import be.tarsos.lsh.families.EuclidianHashFamily;
 import be.tarsos.lsh.families.HashFamily;
 import be.tarsos.lsh.util.TestUtils;
-import dataStructure.Vector;
+import DataStructure.Vector;
 
 import java.util.ArrayList;
 

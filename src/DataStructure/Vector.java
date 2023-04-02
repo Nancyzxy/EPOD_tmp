@@ -21,7 +21,7 @@
 * 
 */
 
-package dataStructure;
+package DataStructure;
 import mtree.DistanceFunctions.EuclideanCoordinate;
 import java.io.Serializable;
 import java.util.Arrays;

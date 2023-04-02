@@ -1,6 +1,6 @@
 package mtree.utils;
 
-import dataStructure.Vector;
+import DataStructure.Vector;
 import mtree.*;
 import java.util.Set;
 

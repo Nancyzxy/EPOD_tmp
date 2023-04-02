@@ -1,7 +1,7 @@
 package Detector;
 
-import dataStructure.Vector;
-import framework.Device;
+import DataStructure.Vector;
+import Framework.Device;
 import java.util.*;
 
 public abstract class Detector {

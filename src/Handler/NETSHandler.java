@@ -1,6 +1,6 @@
 package Handler;
 
-import framework.EdgeNode;
+import Framework.EdgeNode;
 import utils.Constants;
 import java.util.ArrayList;
 

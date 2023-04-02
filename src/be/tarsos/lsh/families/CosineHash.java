@@ -25,7 +25,7 @@ package be.tarsos.lsh.families;
 
 import java.util.Random;
 
-import dataStructure.Vector;
+import DataStructure.Vector;
 
 public class CosineHash implements HashFunction{
 	/**

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import dataStructure.Vector;
+import DataStructure.Vector;
 
 /**
  * Makes it easy to generate random test data sets.

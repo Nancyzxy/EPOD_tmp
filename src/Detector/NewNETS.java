@@ -1,16 +1,16 @@
 package Detector;
 
-import dataStructure.Vector;
-import dataStructure.Cell;
-import dataStructure.Tuple;
-import framework.Device;
+import DataStructure.Vector;
+import DataStructure.Cell;
+import DataStructure.Tuple;
+import Framework.Device;
 import utils.Constants;
 
 import java.util.*;
 
+@SuppressWarnings("unchecked")
 public class NewNETS extends Detector {
 	public boolean subDimFlag;
-	public HashMap<Integer, HashMap<ArrayList<?>,ArrayList<Vector>>> localDataBucket; //TODO: 加上 SlideID
 	public double neighCellIdxDist;
 	public double neighCellFullDimIdxDist;
 	public double[] maxValues;
@@ -94,11 +94,11 @@ public class NewNETS extends Detector {
 			}
 			
 			subDimLength = new double[Constants.subDim];
-			double[] subDimgapCount = new double[Constants.subDim];
+			double[] subDimGapCount = new double[Constants.subDim];
 			for(int i = 0;i<Constants.subDim;i++) {
 				subDimLength[i] = Math.sqrt(Constants.R*Constants.R*subDimWeights[i]/subDimWeightsSum);
-				subDimgapCount[i] = Math.ceil(subDimSize[i]/subDimLength[i]);
-				subDimSize[i] = subDimgapCount[i]*subDimLength[i];
+				subDimGapCount[i] = Math.ceil(subDimSize[i]/subDimLength[i]);
+				subDimSize[i] = subDimGapCount[i]*subDimLength[i];
 			}
 		}
 
@@ -184,15 +184,6 @@ public class NewNETS extends Detector {
 	public void indexingSlide(ArrayList<Tuple> slideTuples){
 		slideIn = new HashMap<>();
 		fullDimCellSlideInCnt = new HashMap<>();
-		this.localDataBucket.values().forEach(
-				x -> x.forEach(y ->
-						{//TODO
-							if (y.arrivalRealTime.getTime() < (Constants.currentSlideID - Constants.W)) {
-								x.remove(y);
-							}
-						}
-				)
-		);
 		for(Tuple t:slideTuples) {
 			ArrayList<Short> fullDimCellIdx = new ArrayList<>();
 			ArrayList<Short> subDimCellIdx = new ArrayList<>();
@@ -211,11 +202,6 @@ public class NewNETS extends Detector {
 
 			t.fullDimCellIdx = fullDimCellIdx;
 			t.subDimCellIdx = subDimCellIdx;
-			//add bucket for transfer data
-			if (!this.localDataBucket.containsKey(fullDimCellIdx)){
-				this.localDataBucket.put(fullDimCellIdx,new ArrayList<>());
-			}
-			this.localDataBucket.get(fullDimCellIdx).add(t);
 
 			if(!idxEncoder.containsKey(fullDimCellIdx)) {
 				int id = idxEncoder.size();
@@ -310,14 +296,27 @@ public class NewNETS extends Detector {
 	}
 
 	@Override
+	//TODO: 需要检查正确性 尤其是transferFullIdToSubId方法
 	public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int lastSent) {
 		Map<ArrayList<?>, List<Vector>> data = new HashMap<>();
+		int index = lastSent - Constants.W;
 		for (ArrayList<?> id: bucketIds){
-			data.put(id,localDataBucket.get(id));
+			int n = idxEncoder.get(transferFullIdToSubId((ArrayList<Short>) id));
+			Cell fullCell = slides.get(index).get(n).childCells.get(((ArrayList<Short>)id));
+			ArrayList<Vector> tuples = new ArrayList<>(fullCell.tuples);
+			data.put(id,tuples);
 		}
 		return data;
 	}
 
+	public ArrayList<Short> transferFullIdToSubId(ArrayList<Short> fullId){
+		ArrayList<Short> subId = new ArrayList<Short>();
+		for (int i = 0; i<Constants.subDim; i++) {
+			Short id = (short) (Math.sqrt(Constants.subDim * 1.0/Constants.dim) *(fullId.get(i) + minValues[i]) - minValues[i]);
+			subId.add(id);
+		}
+		return subId;
+	}
 	public void getInfCellIndices() {
 		influencedCells = new HashSet<Integer>();
 		for (Integer cellIdxWin:windowCnt.keySet()) {
@@ -378,9 +377,9 @@ public class NewNETS extends Detector {
 				it.remove();
 			}
 		}
-		if(type == "NAIVE")
+		if(Objects.equals(type, "NAIVE"))
 			this.findOutlierNaive();
-		else if(type == "NETS")
+		else if(Objects.equals(type, "NETS"))
 			this.findOutlierNETS(itr);
 	}
 

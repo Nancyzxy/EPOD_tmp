@@ -25,7 +25,7 @@ package be.tarsos.lsh.families;
 
 import java.util.Comparator;
 
-import dataStructure.Vector;
+import DataStructure.Vector;
 
 /**
  * This comparator can be used to sort candidate neighbours according to their
