@@ -10,7 +10,7 @@ public class Constants {
     public static int nn = 2;
     public static int dn = 2;
     public static int nW = 500;
-    public static String methodToGenerateFingerprint = "LSH"; //"LSH" "CELLID" "MCOD"
+    public static String methodToGenerateFingerprint = "LSH"; //"LSH" "NETS" "MCOD"
     public static String dataset = "RC";
 
 

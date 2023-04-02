@@ -25,9 +25,9 @@ public class MCOD extends Detector {
     public static HashMap<MCO, Integer> rec_msg; //-1: outlier 0:not sure 1:inlier
 
     //-------------------------------------------------------------------------------------------------------
-    public static HashMap<Object, Integer> external_info;
+    public static HashMap<ArrayList<?>, Integer> external_info;//todo: object-> arraylist
     //HashMap<时间戳, HashMap<外部cluster中心点坐标,ArrayList<点>>>
-    public static HashMap<Long, HashMap<Object, ArrayList<MCO>>> external_data;
+//    public static Map<Integer, HashMap<ArrayList<Double>, ArrayList<MCO>>> external_data;
 
     public MCOD(Device device) {
         super(device);
@@ -39,8 +39,8 @@ public class MCOD extends Detector {
         outliers = new HashSet<>();
         eventQueue = new PriorityQueue<>(new MCComparator());
         rec_msg = new HashMap<>();
-        external_info = new HashMap<>();//需要synchorized吗
-        external_data = new HashMap<>();
+        external_info = new HashMap<>();
+        external_data = Collections.synchronizedMap(new HashMap<>());
     }
 
     // 预处理入口函数
@@ -453,7 +453,11 @@ public class MCOD extends Detector {
     }
 
     public void processOutliers(){
+        //        external_data.put()
         //pruning + 后续处理
+        update_external_info();
+        check_local_outliers();
+        this.outlierVector = outliers;
     }
     static class MCComparator implements Comparator<MCO> {
         @Override
@@ -481,21 +485,14 @@ public class MCOD extends Detector {
         }
     }
 
-    public void process_outliers(){
-        //        external_data.put()
-        update_external_info();
-        check_local_outliers();
-        this.outlierVector = outliers;
-    }
-
     public void clean_expired_external_data() {
-        for (HashMap<Object, ArrayList<MCO>> time_value : external_data.values()) {
-            for (ArrayList<MCO> time_cluster_value : time_value.values()) {
-                for (MCO mco : time_cluster_value) {
-                    if (mco.arrivalTime <= Constants.currentSlideID - Constants.W) {
-                        time_cluster_value.remove(mco);
-                        int cnt = external_info.get(mco.center.values);
-                        external_info.put(mco.center.values, cnt - 1);
+        for (Map<ArrayList<?>, List<Vector>> time_value : external_data.values()) {
+            for (ArrayList<?> key: time_value.keySet()){
+                for (Vector vector: time_value.get(key)){
+                    if (vector.arrivalTime<= Constants.currentSlideID - Constants.W){
+                        time_value.get(key).remove(vector);//todo: 统一remove
+                        int cnt = external_info.get(key);
+                        external_info.put(key, cnt - 1);
                     }
                 }
             }
@@ -504,16 +501,18 @@ public class MCOD extends Detector {
 
     //更新external_info至最新状态
     public void update_external_info() {
-        HashMap<Object, ArrayList<MCO>> last_arrive_data = external_data.get(Constants.currentSlideID);
-        for (ArrayList<MCO> data : last_arrive_data.values()) {
-            for (MCO mco : data) {
-                int cnt = external_info.get(mco.center.values);
-                external_info.put(mco.center.values, cnt + 1);
+        Map<ArrayList<?>, List<Vector>> last_arrive_data = external_data.get(Constants.currentSlideID);
+        for (ArrayList<?> key : last_arrive_data.keySet()) {
+            if (!external_info.containsKey(key)){
+                external_info.put(key,0);
             }
+            int cnt = external_info.get(key);
+            external_info.put(key, cnt + last_arrive_data.get(key).size());
         }
     }
 
     //先写着后面再提取公共函数
+    //todo: need checking
     public void check_local_outliers() {
         ArrayList<MCO> inliers = new ArrayList<>();
         for (MCO o : outliers) {
@@ -531,10 +530,10 @@ public class MCOD extends Detector {
                 int sum = 0;
                 boolean flag = false;
                 ArrayList<MCO> cluster3R_2 = new ArrayList<>();
-                for (Map.Entry<Object, Integer> entry : external_info.entrySet()) {
+                for (Map.Entry<ArrayList<?>, Integer> entry : external_info.entrySet()) {
                     Object key = entry.getKey();
                     Integer value = entry.getValue();
-                    MCO c = map_to_MCO.get(key); //不知道有没有问题
+                    MCO c = map_to_MCO.get(key); //不知道有没有问题 直接算距离 不要mtree
                     if (mtree.getDistanceFunction().calculate(c, o) < Constants.R / 2) {
                         sum += value;
                         if (sum >= Constants.K) {
@@ -552,7 +551,7 @@ public class MCOD extends Detector {
 
                 if (!flag) {
                     for (MCO c : cluster3R_2) {
-                        sum += external_info.get(c.center.values);
+                        sum += external_info.get(c.center.values);//todo
                     }
                     //否则，在所有3R/2内cluster（外部）的点，若和本地相加小于k，则判断成为Outlier,
                     if (sum < Constants.K) {
@@ -564,13 +563,14 @@ public class MCOD extends Detector {
                             o.last_calculate_time = Constants.K - Constants.W;
                         }
                         while (o.last_calculate_time <= Constants.currentSlideID) {
-                            //HashMap<Object, ArrayList<MCO>>
-                            HashMap<Object, ArrayList<MCO>> cur_data = external_data.get(o.last_calculate_time);
+                            //HashMap<ArrayList<Double>,, ArrayList<MCO>> //todo
+                            Map<ArrayList<?>, List<Vector>> cur_data = external_data.get(o.last_calculate_time);
                             if (cur_data != null) {
                                 for (MCO c : cluster3R_2) {
-                                    ArrayList<MCO> cur_cluster_data = cur_data.get(c.center.values);
+                                    List<?> cur_cluster_data = cur_data.get(new ArrayList<>(Arrays.asList(c.center.values)));//TODO: 怕有bug
                                     if (cur_cluster_data != null) {
-                                        for (MCO mco : cur_cluster_data) {
+                                        for (Object obj : cur_cluster_data) {
+                                            MCO mco = (MCO) obj;
                                             if (mtree.getDistanceFunction().calculate(mco, o) < Constants.R) {
                                                 if (isSameSlide(o, mco) <= 0) {
                                                     o.numberOfSucceeding++;
@@ -593,15 +593,17 @@ public class MCOD extends Detector {
     }
 
     @Override
-    public HashMap<ArrayList<?>, List<? extends Vector>> sendData(HashSet<ArrayList<?>> bucketIds){
-        HashMap<ArrayList<?>, List<? extends Vector>> result = new HashMap<>();
+    public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds){
+        Map<ArrayList<?>, List<Vector>> result = new HashMap<>();
         for (ArrayList<?> bucketId : bucketIds) {
             MCO center = map_to_MCO.get(bucketId);
             if (filled_clusters.get(center) == null) {
-                result.put(bucketId, unfilled_clusters.get(center));
+                List<Vector> list =unfilled_clusters.get(center).stream().map(c -> (Vector)c).toList();
+                result.put(bucketId, list);
             }
             else {
-                result.put(bucketId, filled_clusters.get(center));
+                List<Vector> list =filled_clusters.get(center).stream().map(c -> (Vector)c).toList();
+                result.put(bucketId, list);
             }
         }
         return result;

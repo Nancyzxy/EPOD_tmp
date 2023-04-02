@@ -12,8 +12,8 @@ import java.util.*;
 public class NewNETS extends Detector {
 	public boolean subDimFlag;
 
-	public Map<ArrayList<?>,ArrayList<Tuple>> externalData;
-	public HashMap<ArrayList<?>,ArrayList<Tuple>> localDataBucket; //TODO: 加上 SlideID
+//	public Map<Integer, HashMap<ArrayList<?>,ArrayList<Tuple>>> externalData;
+	public HashMap<ArrayList<?>,ArrayList<Vector>> localDataBucket; //TODO: 加上 SlideID
 	public double neighCellIdxDist;
 	public double neighCellFullDimIdxDist;
 	public double[] maxValues;
@@ -41,7 +41,6 @@ public class NewNETS extends Detector {
 
 	public NewNETS(int random, Device device) {
 		super(device);
-		this.externalData = Collections.synchronizedMap(new HashMap<>());
 		this.subDimFlag = Constants.dim != Constants.subDim;
 		this.random = random;
 //		this.neighCellIdxDist = Math.sqrt(subDim)*2;
@@ -316,8 +315,8 @@ public class NewNETS extends Detector {
 	}
 
 	@Override
-	public HashMap<ArrayList<?>, List<? extends Vector>> sendData(HashSet<ArrayList<?>> bucketIds) {
-		HashMap<ArrayList<?>, List<? extends Vector>> data = new HashMap<>();
+	public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds) {
+		Map<ArrayList<?>, List<Vector>> data = new HashMap<>();
 		for (ArrayList<?> id: bucketIds){
 			data.put(id,localDataBucket.get(id));
 		}

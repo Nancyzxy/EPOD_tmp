@@ -8,7 +8,7 @@ public class MCO extends Vector {
     public boolean isCenter;
     public MCO center;
     public long ev; //记录min数量的最早preceeding的exp time, 如果safe了记为0
-    public long last_calculate_time;
+    public int last_calculate_time; //指的是slideID
 
     public ArrayList<Integer> exps;
     public int numberOfSucceeding;

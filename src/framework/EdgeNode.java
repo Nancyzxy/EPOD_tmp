@@ -15,7 +15,7 @@ public class EdgeNode extends RPCFrame implements Runnable {
         this.unitsStatusMap = Collections.synchronizedMap(new HashMap<>());
         this.unitResultInfo = Collections.synchronizedMap(new HashMap<>());
         this.count= new AtomicInteger(0);
-        if (Objects.equals(Constants.methodToGenerateFingerprint, "CELLID")) {
+        if (Objects.equals(Constants.methodToGenerateFingerprint, "NETS")) {
             this.handler = new NETSHandler(this);
         }else if (Objects.equals(Constants.methodToGenerateFingerprint,"MCOD")){
             this.handler = new MCODHandler(this);
@@ -68,7 +68,7 @@ public class EdgeNode extends RPCFrame implements Runnable {
                 Thread t = new Thread(() -> {
                     try {
                         Object[] parameters = new Object[]{unSafeUnits, this.hashCode()};
-                        invoke("localhost", node.port, EdgeNode.class.getMethod("handle", List.class, int.class),parameters);
+                        invoke("localhost", node.port, EdgeNode.class.getMethod("compareAndSend", List.class, int.class),parameters);
                     } catch (Throwable e) {
                         e.printStackTrace();
                         throw new RuntimeException(e);
@@ -107,8 +107,32 @@ public class EdgeNode extends RPCFrame implements Runnable {
         }
     }
 
-    public void handle(List<ArrayList<Short>> unSateUnits,int edgeNodeHash){
-        this.handler.handle(unSateUnits, edgeNodeHash);
+    public void compareAndSend(List<ArrayList<Short>> unSateUnits,int edgeNodeHash){
+        ArrayList<Thread> threads = new ArrayList<>();
+        for (ArrayList<Short> unit:unSateUnits){
+            Thread t = new Thread(()->{
+                List<UnitInNode> unitInNodeList = unitsStatusMap.values().stream()
+                        .filter(x -> x.isUpdated.get(this.hashCode())==1)
+                        .filter(x -> this.handler.neighboringSet(unit,x.unitID)).toList();
+                unitInNodeList.forEach(x -> x.isUpdated.put(this.hashCode(),0)); // TODO: CHECK whether is right
+                Object[] parameters = new Object[]{unit, unitInNodeList};
+                try {
+                    invoke("localhost", EdgeNodeNetwork.nodeHashMap.get(edgeNodeHash).port,
+                            EdgeNode.class.getMethod("collectFromNode", ArrayList.class, List.class), parameters);
+                } catch (Throwable e) {
+                    throw new RuntimeException(e);
+                };
+            });
+            threads.add(t);
+        }
+
+        for (Thread t:threads){
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void collectFromNode(ArrayList<Short> unitID, List<UnitInNode> unitInNodeList){

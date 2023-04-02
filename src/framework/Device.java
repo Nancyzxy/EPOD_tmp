@@ -9,6 +9,8 @@ import dataStructure.Tuple;
 import dataStructure.Vector;
 import utils.Constants;
 import utils.DataGenerator;
+
+import java.lang.reflect.Array;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
@@ -34,7 +36,7 @@ public class Device extends RPCFrame implements Runnable {
         this.port = new Random().nextInt(50000)+10000;
         this.deviceId = deviceId;
         this.dataGenerator = new DataGenerator(deviceId);
-        if (Objects.equals(Constants.methodToGenerateFingerprint, "CELLID")){
+        if (Objects.equals(Constants.methodToGenerateFingerprint, "NETS")){
             this.detector = new NewNETS(0,this);
         } else if (Objects.equals(Constants.methodToGenerateFingerprint, "MCOD")) {
             this.detector = new MCOD(this);
@@ -74,7 +76,7 @@ public class Device extends RPCFrame implements Runnable {
     public void clearFingerprints(){
         this.fullCellDelta = new HashMap<>();
     }
-    public HashMap<ArrayList<?>,List<? extends Vector>> sendData(HashSet<ArrayList<?>> bucketIds){
+    public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds){
         return this.detector.sendData(bucketIds);
     }
 
@@ -87,16 +89,19 @@ public class Device extends RPCFrame implements Runnable {
                 Thread t =new Thread(()->{
                     Object[] parameters = new Object[]{result.get(edgeDeviceCode)};
                     try {
-                        HashMap<ArrayList<?>, List<Tuple>> data = (HashMap<ArrayList<?>, List<Tuple>>)
+                        Map<ArrayList<?>, List<Vector>> data = (Map<ArrayList<?>, List<Vector>>)
                                 invoke("localhost", EdgeNodeNetwork.deviceHashMap.get(edgeDeviceCode).port,
                                         Device.class.getMethod("sendData", HashSet.class), parameters);
-                        NewNETS newNETS = (NewNETS) this.detector;
+                        if (this.detector.external_data.containsKey(Constants.currentSlideID)) {
+                            this.detector.external_data.put(Constants.currentSlideID, Collections.synchronizedMap(new HashMap<>()));
+                        }
                         data.keySet().forEach(
                                 x -> {
-                                    if (!newNETS.externalData.containsKey(x)){
-                                        newNETS.externalData.put(x,new ArrayList<>());
+                                    Map<ArrayList<?>, List<Vector>> map = this.detector.external_data.get(Constants.currentSlideID);
+                                    if (!map.containsKey(x)){
+                                        map.put(x,Collections.synchronizedList(new ArrayList<>()));
 ;                                    }
-                                    newNETS.externalData.get(x).addAll(data.get(x));
+                                    map.get(x).addAll(data.get(x));
                                 }
                         );
                     } catch (Throwable e) {

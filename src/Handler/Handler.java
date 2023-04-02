@@ -1,7 +1,6 @@
 package Handler;
 
 import framework.EdgeNode;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +10,6 @@ public abstract class Handler {
     public Handler(EdgeNode node){
         this.node = node;
     }
-    public abstract void handle(List<ArrayList<Short>> unSateUnits, int nodeHashCode);
 
     public abstract boolean neighboringSet(ArrayList<?> c1, ArrayList<?> c2);
 }
