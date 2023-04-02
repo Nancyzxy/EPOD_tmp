@@ -83,35 +83,34 @@ public class Device extends RPCFrame implements Runnable {
     public void getExternalData(HashMap<ArrayList<?>, Integer> status,HashMap<Integer,HashSet<ArrayList<?>>> result) throws InterruptedException {
         this.status = status;
         ArrayList<Thread> threads = new ArrayList<>();
-        for (Integer edgeDeviceCode :EdgeNodeNetwork.deviceHashMap.keySet()){
-            if (this.hashCode() == edgeDeviceCode) continue;
-            if (result.containsKey(edgeDeviceCode)){
-                Thread t =new Thread(()->{
-                    Object[] parameters = new Object[]{result.get(edgeDeviceCode)};
-                    try {
-                        Map<ArrayList<?>, List<Vector>> data = (Map<ArrayList<?>, List<Vector>>)
-                                invoke("localhost", EdgeNodeNetwork.deviceHashMap.get(edgeDeviceCode).port,
-                                        Device.class.getMethod("sendData", HashSet.class), parameters);
-                        if (this.detector.external_data.containsKey(Constants.currentSlideID)) {
-                            this.detector.external_data.put(Constants.currentSlideID, Collections.synchronizedMap(new HashMap<>()));
-                        }
-                        data.keySet().forEach(
-                                x -> {
-                                    Map<ArrayList<?>, List<Vector>> map = this.detector.external_data.get(Constants.currentSlideID);
-                                    if (!map.containsKey(x)){
-                                        map.put(x,Collections.synchronizedList(new ArrayList<>()));
-;                                    }
-                                    map.get(x).addAll(data.get(x));
-                                }
-                        );
-                    } catch (Throwable e) {
-                        e.printStackTrace();
+        for (Integer edgeDeviceCode :result.keySet()) {
+            Thread t = new Thread(() -> {
+                Object[] parameters = new Object[]{result.get(edgeDeviceCode)};
+                try {
+                    Map<ArrayList<?>, List<Vector>> data = (Map<ArrayList<?>, List<Vector>>)
+                            invoke("localhost", EdgeNodeNetwork.deviceHashMap.get(edgeDeviceCode).port,
+                                    Device.class.getMethod("sendData", HashSet.class), parameters);
+                    if (this.detector.external_data.containsKey(Constants.currentSlideID)) {
+                        this.detector.external_data.put(Constants.currentSlideID, Collections.synchronizedMap(new HashMap<>()));
                     }
-                });
-                threads.add(t);
-                t.start();
-            }
+                    data.keySet().forEach(
+                            x -> {
+                                Map<ArrayList<?>, List<Vector>> map = this.detector.external_data.get(Constants.currentSlideID);
+                                if (!map.containsKey(x)) {
+                                    map.put(x, Collections.synchronizedList(new ArrayList<>()));
+                                    ;
+                                }
+                                map.get(x).addAll(data.get(x));
+                            }
+                    );
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+            });
+            threads.add(t);
+            t.start();
         }
+
         for (Thread t:threads){
             t.join();
         }

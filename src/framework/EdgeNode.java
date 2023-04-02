@@ -94,7 +94,7 @@ public class EdgeNode extends RPCFrame implements Runnable {
         for (ArrayList<?> UnitID: unitResultInfo.keySet()){
             //add up all point count
             List<UnitInNode> list = unitResultInfo.get(UnitID);
-            Optional<UnitInNode> exist = list.stream().filter(x->x.unitID == UnitID && (x.pointCnt > Constants.K)).findAny();
+            Optional<UnitInNode> exist = list.stream().filter(x->x.unitID.equals(UnitID) && (x.pointCnt > Constants.K)).findAny();
             if (exist.isPresent()){
                 if (exist.get().pointCnt>Constants.K){
                     unitsStatusMap.get(UnitID).isSafe = 2;
@@ -118,7 +118,7 @@ public class EdgeNode extends RPCFrame implements Runnable {
                 Object[] parameters = new Object[]{unit, unitInNodeList};
                 try {
                     invoke("localhost", EdgeNodeNetwork.nodeHashMap.get(edgeNodeHash).port,
-                            EdgeNode.class.getMethod("collectFromNode", ArrayList.class, List.class), parameters);
+                            EdgeNode.class.getMethod("sendFromNode", ArrayList.class, List.class), parameters);
                 } catch (Throwable e) {
                     throw new RuntimeException(e);
                 };
@@ -135,18 +135,22 @@ public class EdgeNode extends RPCFrame implements Runnable {
         }
     }
 
-    public void collectFromNode(ArrayList<Short> unitID, List<UnitInNode> unitInNodeList){
+    public void sendFromNode(ArrayList<?> unitID, List<UnitInNode> unitInNodeList) {
+        if (!unitResultInfo.containsKey(unitID)) {
+            unitResultInfo.put(unitID, unitInNodeList);
+            return;
+        }
         unitInNodeList.forEach(
-            x ->{
-                for (UnitInNode unitInNode : unitResultInfo.get(unitID)){
-                    if (unitInNode.equals(x)){
-                        unitInNode.updateCount(x.pointCnt);
-                        unitInNode.belongedDevices.addAll(x.belongedDevices);
-                        return;
+                x -> {
+                    for (UnitInNode unitInNode : unitResultInfo.get(unitID)) {
+                        if (unitInNode.equals(x)) {
+                            unitInNode.updateCount(x.pointCnt);
+                            unitInNode.belongedDevices.addAll(x.belongedDevices);
+                            return;
+                        }
                     }
+                    unitResultInfo.get(unitID).add(x);
                 }
-                unitResultInfo.put(unitID,unitInNodeList);
-            }
         );
     }
 
