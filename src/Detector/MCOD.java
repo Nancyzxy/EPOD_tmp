@@ -1,7 +1,9 @@
 package Detector;
 
 import DataStructure.MCO;
+
 import java.util.*;
+
 import DataStructure.Vector;
 import Framework.Device;
 import mtree.utils.MTreeClass;
@@ -10,7 +12,6 @@ import utils.Constants;
 public class MCOD extends Detector {
     public static HashMap<ArrayList<?>, MCO> map_to_MCO;
     public static Map<Integer, ArrayList<MCO>> internal_dataList;
-
     //--------------------------------------------------------------------------------
     public static HashMap<MCO, ArrayList<MCO>> filled_clusters; //{d.center(d.arrivalTime), cluster}
     public static HashMap<MCO, ArrayList<MCO>> unfilled_clusters;
@@ -64,7 +65,6 @@ public class MCOD extends Detector {
             external_data.clear();
             filled_clusters.clear();
             unfilled_clusters.clear();
-//            dataList_set.clear();
             eventQueue.clear();
             mtree = null;
             mtree = new MTreeClass();
@@ -120,11 +120,8 @@ public class MCOD extends Detector {
     private void resetObject(MCO o, boolean isInFilledCluster) {
         o.ev = 0;
         o.exps.clear();
-//        o.Rmc.clear();
         o.numberOfSucceeding = 0;
         o.isInFilledCluster = isInFilledCluster;
-        //        o.isCenter = o.isCenter;
-        //        o.lastCalculated =
     }
 
     // 对于Unfilled cluster里的一个点d，更新它自己的前继后继和unfilled clusters里的前后继
@@ -133,7 +130,6 @@ public class MCOD extends Detector {
             //去除自己cluster,避免重复计算
             if (fromShrinkCluster && center == d.center) continue;
 
-//            MCO center = dataList_set.get(center_id);
             // 如果center中心离d 3R/2以内，检查这个unfilled cluster里的所有点
             if (mtree.getDistanceFunction().calculate(center, d) <= 3 * Constants.R / 2) {
                 ArrayList<MCO> unfilled_cluster = unfilled_clusters.get(center);
@@ -309,16 +305,6 @@ public class MCOD extends Detector {
         }
     }
 
-    public int isSameSlide(Vector o1, Vector o2) {
-        if ((o1.arrivalTime - 1) / Constants.S == (o2.arrivalTime - 1) / Constants.S) {
-            return 0;
-        } else if ((o1.arrivalTime - 1) / Constants.S < (o2.arrivalTime - 1) / Constants.S) {
-            return -1;
-        } else {
-            return 1;
-        }
-    }
-
     public MCO findNearestCenter(MCO d, boolean filled) {
         HashMap<MCO, ArrayList<MCO>> cluster;
         if (filled) cluster = filled_clusters;
@@ -378,11 +364,8 @@ public class MCOD extends Detector {
         while (inPD.exps.size() > Constants.K - inPD.numberOfSucceeding && inPD.exps.size() > 0) {
             inPD.exps.remove(0);
         }
-        if (inPD.exps.size() > 0) {
-            inPD.ev = inPD.exps.get(0);
-        } else {
-            inPD.ev = 0;
-        }
+        if (inPD.exps.size() > 0) inPD.ev = inPD.exps.get(0);
+        else inPD.ev = 0;
 
         if (inPD.exps.size() + inPD.numberOfSucceeding >= Constants.K) {
             if (inPD.numberOfSucceeding >= Constants.K) {
@@ -390,11 +373,8 @@ public class MCOD extends Detector {
                 outliers.remove(inPD);
             } else {
                 outliers.remove(inPD);
-                if (!eventQueue.contains(inPD)) {
-                    eventQueue.add(inPD);
-                }
+                if (!eventQueue.contains(inPD)) eventQueue.add(inPD);
             }
-
         } else {
             eventQueue.remove(inPD);
             outliers.add(inPD);
@@ -405,65 +385,32 @@ public class MCOD extends Detector {
         MCO x = eventQueue.peek();
 
         while (x != null && x.ev <= Constants.currentSlideID) {
-
             x = eventQueue.poll();
             while (x.exps.get(0) <= Constants.currentSlideID) {
                 x.exps.remove(0);
                 if (x.exps.isEmpty()) {
                     x.ev = 0;
                     break;
-                } else {
+                } else
                     x.ev = x.exps.get(0);
-
-                }
             }
-            if (x.exps.size() + x.numberOfSucceeding < Constants.K) {
+            if (x.exps.size() + x.numberOfSucceeding < Constants.K)
                 outliers.add(x);
-
-            } else if (x.numberOfSucceeding < Constants.K && x.exps.size() + x.numberOfSucceeding >= Constants.K) {
+            else if (x.numberOfSucceeding < Constants.K && x.exps.size() + x.numberOfSucceeding >= Constants.K)
                 eventQueue.add(x);
-            }
 
             x = eventQueue.peek();
-
         }
     }
 
     public void processOutliers() {
-        //pruning + 后续处理
         update_external_info();
         check_local_outliers();
         this.outlierVector = outliers;
     }
 
-    static class MCComparator implements Comparator<MCO> {
-        @Override
-        public int compare(MCO o1, MCO o2) {
-            if (o1.ev < o2.ev) {
-                return -1;
-            } else if (o1.ev == o2.ev) {
-                return 0;
-            } else {
-                return 1;
-            }
-        }
-    }
-
-    static class MCComparatorArrivalTime implements Comparator<MCO> {
-        @Override
-        public int compare(MCO o1, MCO o2) {
-            if (o1.arrivalTime < o2.arrivalTime) {
-                return -1;
-            } else if (o1.arrivalTime == o2.arrivalTime) {
-                return 0;
-            } else {
-                return 1;
-            }
-        }
-    }
-
-    //public Map<Integer, Map<ArrayList<?>, List<Vector>>> external_data;
     public void clean_expired_external_data() {
+        //Map<Integer, Map<ArrayList<?>, List<Vector>>> external_data;
         for (Map<ArrayList<?>, List<Vector>> time_value : external_data.values()) {
             for (ArrayList<?> key : time_value.keySet()) {
 
@@ -516,11 +463,9 @@ public class MCOD extends Detector {
                 int sum = 0;
                 boolean flag = false;
                 ArrayList<ArrayList<?>> cluster3R_2 = new ArrayList<>();
-                //HashMap<ArrayList<?>, Integer> external_info
                 for (Map.Entry<ArrayList<?>, Integer> entry : external_info.entrySet()) {
                     ArrayList<?> key = entry.getKey();
                     Integer value = entry.getValue();
-//                    MCO c = map_to_MCO.get(key); //不知道有没有问题 直接算距离 不要mtree
                     double distance = distance(key, o.center.values);
                     if (distance <= Constants.R / 2) {
                         sum += value;
@@ -542,12 +487,9 @@ public class MCOD extends Detector {
                     for (ArrayList<?> c : cluster3R_2) {
                         sum += external_info.get(c);
                     }
-                    //否则，在所有3R/2内cluster（外部）的点，若和本地相加小于k，则判断成为Outlier,
-                    if (sum < Constants.K) {
-                        continue;
-                    }
-                    //注意，在本地存储外来点时按照arrivalTime存，本地点的pre和succ包括本地邻居和部分外来邻居。并且需要记录上次计算的arrivaltime信息（last_calculated），在下次需要寻找邻居时，在arrivaltime+1及以后继续寻找并更新pre，succ
-                    else {
+                    //在所有3R/2内cluster（外部）的点，若和本地相加小于k，则判断成为Outlier,不做任何操作
+                    //否则
+                    if (sum >= Constants.K) {
                         if (o.last_calculate_time == -1 || o.last_calculate_time < Constants.K - Constants.W) {
                             o.last_calculate_time = Constants.K - Constants.W;
                         }
@@ -580,7 +522,6 @@ public class MCOD extends Detector {
         }
     }
 
-    //todo: 根据历史记录来发送数据
     @Override
     public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int lastSent) {
         Map<ArrayList<?>, List<Vector>> result = new HashMap<>();
@@ -599,16 +540,6 @@ public class MCOD extends Detector {
                 }
             }
         }
-//        for (ArrayList<?> bucketId : bucketIds) {
-//            MCO center = map_to_MCO.get(bucketId);
-//            if (filled_clusters.get(center) == null) {
-//                List<Vector> list = unfilled_clusters.get(center).stream().map(c -> (Vector) c).toList();
-//                result.put(bucketId, list);
-//            } else {
-//                List<Vector> list = filled_clusters.get(center).stream().map(c -> (Vector) c).toList();
-//                result.put(bucketId, list);
-//            }
-//        }
         return result;
     }
 
@@ -627,4 +558,57 @@ public class MCOD extends Detector {
         }
         return Math.sqrt(sum);
     }
+
+    static class MCComparator implements Comparator<MCO> {
+        @Override
+        public int compare(MCO o1, MCO o2) {
+            return Long.compare(o1.ev, o2.ev);
+        }
+    }
+
+    static class MCComparatorArrivalTime implements Comparator<MCO> {
+        @Override
+        public int compare(MCO o1, MCO o2) {
+            return Integer.compare(o1.arrivalTime, o2.arrivalTime);
+        }
+    }
+
+    public int isSameSlide(Vector o1, Vector o2) {
+        return Integer.compare((o1.arrivalTime - 1) / Constants.S, (o2.arrivalTime - 1) / Constants.S);
+    }
+
+//    static class MCComparator implements Comparator<MCO> {
+//        @Override
+//        public int compare(MCO o1, MCO o2) {
+//            if (o1.ev < o2.ev) {
+//                return -1;
+//            } else if (o1.ev == o2.ev) {
+//                return 0;
+//            } else {
+//                return 1;
+//            }
+//        }
+//    }
+//
+//    static class MCComparatorArrivalTime implements Comparator<MCO> {
+//        @Override
+//        public int compare(MCO o1, MCO o2) {
+//            if (o1.arrivalTime < o2.arrivalTime) {
+//                return -1;
+//            } else if (o1.arrivalTime == o2.arrivalTime) {
+//                return 0;
+//            } else {
+//                return 1;
+//            }
+//        }
+//    }
+//public int isSameSlide(Vector o1, Vector o2) {
+//    if ((o1.arrivalTime - 1) / Constants.S == (o2.arrivalTime - 1) / Constants.S) {
+//        return 0;
+//    } else if ((o1.arrivalTime - 1) / Constants.S < (o2.arrivalTime - 1) / Constants.S) {
+//        return -1;
+//    } else {
+//        return 1;
+//    }
+//}
 }
