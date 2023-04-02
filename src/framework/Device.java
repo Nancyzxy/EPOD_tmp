@@ -17,7 +17,6 @@ public class Device extends RPCFrame implements Runnable {
     public DataGenerator dataGenerator;
     public EdgeNode nearestNode;
     public Detector detector;
-    public HashMap<ArrayList<?>, Integer> status;
     public HashMap<Integer,Integer> historyRecord; //用来记录每个device的上次发送的历史记录，deviceID->slideID
 
 
@@ -70,11 +69,12 @@ public class Device extends RPCFrame implements Runnable {
     }
     public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int edgeNodeHashCode){
         //根据历史记录来发送数据
-        return this.detector.sendData(bucketIds, edgeNodeHashCode);
+        int lastSent = Math.max(this.historyRecord.get(edgeNodeHashCode),Constants.currentSlideID - Constants.W);
+        return this.detector.sendData(bucketIds, edgeNodeHashCode, lastSent);
     }
 
     public void getExternalData(HashMap<ArrayList<?>, Integer> status, HashMap<Integer,HashSet<ArrayList<?>>> result) throws InterruptedException {
-        this.status = status; //用来判断outliers是否需要重新计算，用在processOutliers()中
+        this.detector.status = status; //用来判断outliers是否需要重新计算，用在processOutliers()中
         ArrayList<Thread> threads = new ArrayList<>();
         for (Integer edgeDeviceCode :result.keySet()) {
             Thread t = new Thread(() -> {

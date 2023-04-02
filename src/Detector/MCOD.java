@@ -598,7 +598,7 @@ public class MCOD extends Detector {
 
     //todo: 根据历史记录来发送数据
     @Override
-    public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int edgeNodeHashCode) {
+    public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int edgeNodeHashCode, int lastSent) {
         Map<ArrayList<?>, List<Vector>> result = new HashMap<>();
         for (ArrayList<?> bucketId : bucketIds) {
             MCO center = map_to_MCO.get(bucketId);
