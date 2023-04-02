@@ -292,19 +292,33 @@ public class NewNETS extends Detector {
 
 	public void processOutliers(){
 		this.outlierVector = outliers;
-		//pruning + 后续处理
+		//首先检查outliers中是否有属于安全cell的点
+		Iterator<Tuple> it = outliers.iterator();
+		while (it.hasNext()) {
+			Tuple outlier = it.next();
+			if (status.get(outlier.fullDimCellIdx) == 2) {
+				it.remove();
+			}
+		}
 	}
 
 	@Override
 	//TODO: 需要检查正确性 尤其是transferFullIdToSubId方法
 	public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int lastSent) {
 		Map<ArrayList<?>, List<Vector>> data = new HashMap<>();
-		int index = lastSent - Constants.W;
-		for (ArrayList<?> id: bucketIds){
-			int n = idxEncoder.get(transferFullIdToSubId((ArrayList<Short>) id));
-			Cell fullCell = slides.get(index).get(n).childCells.get(((ArrayList<Short>)id));
-			ArrayList<Vector> tuples = new ArrayList<>(fullCell.tuples);
-			data.put(id,tuples);
+		for (int time = lastSent + 1; time <= Constants.currentSlideID; time ++){
+			int index = time - Constants.currentSlideID + Constants.W;
+			for (ArrayList<?> id: bucketIds){
+				int n = idxEncoder.get(transferFullIdToSubId((ArrayList<Short>) id));
+				Cell fullCell = slides.get(index).get(n).childCells.get(((ArrayList<Short>)id));
+				ArrayList<Vector> tuples = new ArrayList<>(fullCell.tuples);
+				if (data.containsKey(id)) {
+					data.get(id).addAll(tuples);
+				}
+				else {
+					data.put(id, tuples);
+				}
+			}
 		}
 		return data;
 	}
