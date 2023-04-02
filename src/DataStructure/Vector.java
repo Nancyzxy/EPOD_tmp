@@ -42,7 +42,7 @@ public class Vector implements Serializable,Comparable<Vector>,EuclideanCoordina
 	/**
 	 * Values are stored here.
 	 */
-	public Double[] values;
+	public double[] values;
 	public final int hashCode;
 	public int arrivalTime;
 	public Date arrivalRealTime;
@@ -57,10 +57,10 @@ public class Vector implements Serializable,Comparable<Vector>,EuclideanCoordina
 	 * @param dimensions The number of dimensions.
 	 */
 	public Vector(int dimensions) {
-		this(null,new Double[dimensions]);
+		this(null,new double[dimensions]);
 	}
 
-	public Vector(Double... values){
+	public Vector(double... values){
 		this.values = values;
 		this.hashCode = generateHashCode(values);
 	}
@@ -73,7 +73,7 @@ public class Vector implements Serializable,Comparable<Vector>,EuclideanCoordina
 		this(other.getKey(),Arrays.copyOf(other.values, other.values.length));
 	}
         
-	public Vector(Double[] v, int arrivalTime){
+	public Vector(double[] v, int arrivalTime){
             this.values = v;
             this.arrivalTime = arrivalTime;
             this.hashCode = generateHashCode(v);
@@ -84,7 +84,7 @@ public class Vector implements Serializable,Comparable<Vector>,EuclideanCoordina
 	 * @param key The key of the vector.
 	 * @param values The values of the vector.
 	 */
-	public Vector(String key, Double[] values){
+	public Vector(String key, double[] values){
 		this.values = values;
 		this.key = key;
 		this.hashCode = generateHashCode(values);
@@ -101,7 +101,7 @@ public class Vector implements Serializable,Comparable<Vector>,EuclideanCoordina
 		return values[index];
 	}
 
-	public int generateHashCode(Double[] values){
+	public int generateHashCode(double[] values){
 		int hashCode2 = 1;
 		for(double value : values) {
 			hashCode2 = 31*hashCode2 + (int)value + (new Random()).nextInt(100000);

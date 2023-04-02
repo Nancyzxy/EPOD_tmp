@@ -44,7 +44,7 @@ public class DataGenerator {
                 int id = 0;
                 while (line != null) {
                     String[] atts = line.split(",");
-                    Double[] d = new Double[atts.length - 1];
+                    double[] d = new double[atts.length - 1];
                     for (int i = 1; i < atts.length; i++) {
                         d[i - 1] = Double.parseDouble(atts[i]) + (new Random()).nextDouble() / 10000000;
                     }

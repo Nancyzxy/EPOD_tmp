@@ -84,8 +84,8 @@ public class MCOD extends Detector {
             filled_clusters.put(d.center, cluster);
             check_shrink(d.center);
         }
-        Integer origin = this.device.fullCellDelta.get(new ArrayList<>(Arrays.asList(d.center.values)));
-        this.device.fullCellDelta.put(new ArrayList<>(Arrays.asList(d.center.values)), origin - 1);
+        Integer origin = this.device.fullCellDelta.get(transferToArrayList(d.center.values));
+        this.device.fullCellDelta.put(transferToArrayList(d.center.values), origin - 1);
     }
 
     private void removeFromUnfilledCluster(MCO d) {
@@ -94,11 +94,11 @@ public class MCOD extends Detector {
             cluster.remove(d);
             if (cluster.size() == 0) {
                 unfilled_clusters.remove(d.center);
-                this.device.fullCellDelta.put(new ArrayList<>(Arrays.asList(d.center.values)), Integer.MIN_VALUE);
+                this.device.fullCellDelta.put(transferToArrayList(d.center.values), Integer.MIN_VALUE);
             } else {
                 unfilled_clusters.put(d.center, cluster);
-                Integer origin = this.device.fullCellDelta.get(new ArrayList<>(Arrays.asList(d.center.values)));
-                this.device.fullCellDelta.put(new ArrayList<>(Arrays.asList(d.center.values)), origin - 1);
+                Integer origin = this.device.fullCellDelta.get(transferToArrayList(d.center.values));
+                this.device.fullCellDelta.put(transferToArrayList(d.center.values), origin - 1);
             }
         }
         if (d.numberOfSucceeding + d.exps.size() < Constants.K) {
@@ -198,8 +198,8 @@ public class MCOD extends Detector {
         unfilled_clusters.put(nearest_center, cluster);
 
         //update fullCellDelta
-        Integer origin = this.device.fullCellDelta.get(new ArrayList<>(Arrays.asList(d.center.values)));
-        this.device.fullCellDelta.put(new ArrayList<>(Arrays.asList(d.center.values)), origin + 1);
+        Integer origin = this.device.fullCellDelta.get(transferToArrayList(d.center.values));
+        this.device.fullCellDelta.put(transferToArrayList(d.center.values), origin + 1);
 
         //这两步顺序不能换，因为是在update_info_filled里checkInlier(d)
         //update self and others secceeding and preceeding in unfilled_cluster
@@ -220,7 +220,7 @@ public class MCOD extends Detector {
         cluster.add(d);
         unfilled_clusters.put(d, cluster);
 
-        this.device.fullCellDelta.put(new ArrayList<>(Arrays.asList(d.center.values)), 1);
+        this.device.fullCellDelta.put(transferToArrayList(d.center.values), 1);
 
         update_info_unfilled(d, false);
         update_info_filled(d);
@@ -279,8 +279,8 @@ public class MCOD extends Detector {
         filled_clusters.put(nearest_center, cluster);
 
         // update finger print
-        Integer origin = this.device.fullCellDelta.get(new ArrayList<>(Arrays.asList(d.center.values)));
-        this.device.fullCellDelta.put(new ArrayList<>(Arrays.asList(d.center.values)), origin + 1);
+        Integer origin = this.device.fullCellDelta.get(transferToArrayList(d.center.values));
+        this.device.fullCellDelta.put(transferToArrayList(d.center.values), origin + 1);
 
         //update for points in PD that has Rmc list contains center
         // filled 里的自己不用存succeeding和preceeding，只用更新别人
@@ -543,7 +543,7 @@ public class MCOD extends Detector {
         return result;
     }
 
-    public double distance(ArrayList<?> a, Double[] b) {
+    public double distance(ArrayList<?> a, double[] b) {
         double sum = 0;
         for (int i = 0; i < a.size(); i++) {
             sum += Math.pow((double) a.get(i) - b[i], 2);
@@ -551,7 +551,7 @@ public class MCOD extends Detector {
         return Math.sqrt(sum);
     }
 
-    public double distance(Double[] a, Double[] b) {
+    public double distance(double[] a, double[] b) {
         double sum = 0;
         for (int i = 0; i < a.length; i++) {
             sum += Math.pow(a[i] - b[i], 2);
@@ -575,6 +575,14 @@ public class MCOD extends Detector {
 
     public int isSameSlide(Vector o1, Vector o2) {
         return Integer.compare((o1.arrivalTime - 1) / Constants.S, (o2.arrivalTime - 1) / Constants.S);
+    }
+
+    public ArrayList<?> transferToArrayList(double[] a) {
+        ArrayList<Double> result = new ArrayList<>();
+        for (double d : a) {
+            result.add(d);
+        }
+        return result;
     }
 
 //    static class MCComparator implements Comparator<MCO> {

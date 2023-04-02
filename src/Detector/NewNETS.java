@@ -340,7 +340,7 @@ public class NewNETS extends Detector {
 			for (Map.Entry<ArrayList<?>,List<Vector>> entry:neighbors.entrySet()){
 				List<Vector> neighbor = entry.getValue();
 				for (Vector v: neighbor){
-					if (neighboringTupleSet1(v.values, outlier.value, Constants.R)){
+					if (neighboringTupleSet(v.values, outlier.value, Constants.R)){
 						if(entry.getKey() == outlier.fullDimCellIdx) {
 							outlier.nn ++ ;
 						}else if (v.arrivalTime /Constants.S < outlier.slideID){
@@ -611,16 +611,6 @@ public class NewNETS extends Detector {
 		return true;
 	}
 
-	public boolean neighboringTupleSet1(Double[] v1, double[] v2, double threshold) {
-
-		double ss = 0;
-		threshold *= threshold;
-		for (int i = 0; i < v2.length; i++) {
-			ss += Math.pow((v1[i] - v2[i]), 2);
-			if (ss > threshold) return false;
-		}
-		return true;
-	}
 	public double neighboringSetDist(ArrayList<Short> c1, ArrayList<Short> c2) {
 		double ss = 0;
 		double cellIdxDist = (c1.size() == Constants.dim ? neighCellFullDimIdxDist : neighCellIdxDist);
