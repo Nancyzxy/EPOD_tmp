@@ -7,8 +7,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class EdgeNode extends RPCFrame implements Runnable {
     public ArrayList<Integer> edgeDevices;
-    public Map<ArrayList<Short>,List<UnitInNode>> unitResultInfo; //primly used for pruning
-    public Map<ArrayList<Short>, UnitInNode> unitsStatusMap; // used to maintain the status of the unit in a node
+    public Map<ArrayList<?>,List<UnitInNode>> unitResultInfo; //primly used for pruning
+    public Map<ArrayList<?>, UnitInNode> unitsStatusMap; // used to maintain the status of the unit in a node
     public Handler handler;
     public EdgeNode(){
         this.port = new Random().nextInt(50000)+10000;
@@ -52,11 +52,11 @@ public class EdgeNode extends RPCFrame implements Runnable {
                 unitInNode.updateSafeness();
             }
             //本地结果 TODO
-            List<ArrayList<Short>> unSafeUnits =
+            List<ArrayList<?>> unSafeUnits =
                     unitsStatusMap.keySet().stream().filter(key -> unitsStatusMap.get(key).isSafe != 2).toList();
-            for (ArrayList<Short> unsafeUnit:unSafeUnits){
+            for (ArrayList<?> unsafeUnit:unSafeUnits){
                 List<UnitInNode> unitInNodeList = unitsStatusMap.values().stream().filter(x -> x.isUpdated.get(this.hashCode())==1)
-                        .filter(x -> NETSHandler.neighboringSet(unsafeUnit,x.unitID)).toList();
+                        .filter(x -> this.handler.neighboringSet(unsafeUnit,x.unitID)).toList();
                 unitResultInfo.put(unsafeUnit,unitInNodeList);
             }
 
@@ -91,7 +91,7 @@ public class EdgeNode extends RPCFrame implements Runnable {
 
     public void pruning(){
         //update UnitInNode update
-        for (ArrayList<Short> UnitID: unitResultInfo.keySet()){
+        for (ArrayList<?> UnitID: unitResultInfo.keySet()){
             //add up all point count
             List<UnitInNode> list = unitResultInfo.get(UnitID);
             Optional<UnitInNode> exist = list.stream().filter(x->x.unitID == UnitID && (x.pointCnt > Constants.K)).findAny();

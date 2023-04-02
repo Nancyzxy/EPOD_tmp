@@ -3,12 +3,12 @@ package Handler;
 import framework.EdgeNode;
 import framework.EdgeNodeNetwork;
 import framework.UnitInNode;
+import utils.Constants;
 import java.util.ArrayList;
 import java.util.List;
-import RPC.RPCFrame;
-import utils.Constants;
 
 public class NETSHandler extends Handler{
+
     public NETSHandler(EdgeNode node) {
         super(node);
     }
@@ -43,12 +43,16 @@ public class NETSHandler extends Handler{
 
     }
 
-    public static boolean neighboringSet(ArrayList<Short> c1, ArrayList<Short> c2) {
+    public boolean neighboringSet(ArrayList<?> c1, ArrayList<?> c2) {
         double ss = 0;
-        double cellIdxDist = Math.sqrt(Constants.dim)*2;
+        double neighCellIdxDist = Math.sqrt(Constants.subDim)*2;
+        double neighCellFullDimIdxDist = Math.sqrt(Constants.dim)*2;
+        double cellIdxDist = (c1.size() == Constants.dim? neighCellFullDimIdxDist : neighCellIdxDist);
         double threshold =cellIdxDist*cellIdxDist;
         for(int k = 0; k<c1.size(); k++) {
-            ss += Math.pow((c1.get(k) - c2.get(k)),2);
+            short x1 = (short) c1.get(k);
+            short x2 = (short) c2.get(k);
+            ss += Math.pow(x1-x2,2);
             if (ss >= threshold) return false;
         }
         return true;

@@ -606,10 +606,4 @@ public class MCOD extends Detector {
         }
         return result;
     }
-    @Override
-    public boolean neighboringSet(ArrayList<?> c1, ArrayList<?> c2) {
-        // 1.看使用环境，如果是map_to_MCO有的，可以映射回原点用distance.calculate
-        // 2.暴力计算
-        return true;
-    }
 }

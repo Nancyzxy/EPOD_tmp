@@ -42,6 +42,6 @@ public class UnitInNode {
     @Override
     public boolean equals(Object obj) {
         UnitInNode unitInNode = (UnitInNode) obj;
-        return this.unitID == unitInNode.unitID;
+        return this.unitID.equals(unitInNode.unitID);
     }
 }

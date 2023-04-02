@@ -1,5 +1,7 @@
 package utils;
 
+import java.util.Objects;
+
 public class Constants {
 //    public static boolean withTime = true;
 
@@ -16,6 +18,7 @@ public class Constants {
 
     public static double R = -1;// distance threshold, default=6.5(HPC), 115(EM), 1.9(TAO), 0.45(STK), 0.028(GAU), 525(FC), 2.75(GAS), 5(RC)
     public static int dim = -1; // dimension, default = 7(HPC), 16(EM), 55(FC), 3(TAO), 10(GAS),1(STK)
+    public static int subDim = -1;
     public static int S = -1; // sliding size, default = 500(FC, TAO), 5000(Otherwise)
     public static int W = -1; // Window size, default = 10000(FC, TAO), 100000(Otherwise)
     public static int nS = -1;
@@ -51,27 +54,51 @@ public class Constants {
         if (dataset.contains("FC")) {
             R = 525;
             dim = 55;
+            if (Objects.equals(methodToGenerateFingerprint, "NETS")){
+                subDim = 1;
+            }
         } else if (dataset.contains("TAO")) {
             R = 1.9;
             dim = 3;
+            if (Objects.equals(methodToGenerateFingerprint, "NETS")){
+                subDim = 1;
+            }
         } else if (dataset.contains("EM")) {
             R = 115;
             dim = 16;
+            if (Objects.equals(methodToGenerateFingerprint, "NETS")){
+                subDim = 1;
+            }
         } else if (dataset.contains("STK")) {
             R = 0.45;
             dim = 1;
+            if (Objects.equals(methodToGenerateFingerprint, "NETS")){
+                subDim = 1;
+            }
         } else if (dataset.contains("GAU")) {
             R = 0.028;
             dim = 1;
+            if (Objects.equals(methodToGenerateFingerprint, "NETS")){
+                subDim = 1;
+            }
         } else if (dataset.contains("HPC")) {
             R = 6.5;
             dim = 7;
+            if (Objects.equals(methodToGenerateFingerprint, "NETS")){
+                subDim = 1;
+            }
         } else if (dataset.contains("GAS")) {
             R = 2.75;
             dim = 10;
+            if (Objects.equals(methodToGenerateFingerprint, "NETS")){
+                subDim = 1;
+            }
         } else if (dataset.contains("RC")){
             R = 4;
             dim = 5;
+            if (Objects.equals(methodToGenerateFingerprint, "NETS")){
+                subDim = 1;
+            }
         }
     }
 }

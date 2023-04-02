@@ -12,4 +12,6 @@ public abstract class Handler {
         this.node = node;
     }
     public abstract void handle(List<ArrayList<Short>> unSateUnits, int nodeHashCode);
+
+    public abstract boolean neighboringSet(ArrayList<?> c1, ArrayList<?> c2);
 }
