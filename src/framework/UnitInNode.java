@@ -39,8 +39,12 @@ public class UnitInNode {
         this.pointCnt += cnt;
     }
 
+    /**
+     * @description if the two object has the same unitID, then we judge them as equal
+     */
     @Override
     public boolean equals(Object obj) {
+        if (obj.getClass()!=this.getClass())return false;
         UnitInNode unitInNode = (UnitInNode) obj;
         return this.unitID.equals(unitInNode.unitID);
     }

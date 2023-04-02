@@ -87,7 +87,6 @@ public class RPCFrame implements Runnable {
         Socket socket = new Socket("localhost", this.port);
         socket.close();
         Thread.sleep(10);
-//        System.out.println(this.server.isClosed());
     }
 
 }

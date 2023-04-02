@@ -4,7 +4,6 @@ import Detector.Detector;
 import Detector.MCOD;
 import Detector.NewNETS;
 import RPC.RPCFrame;
-import be.tarsos.lsh.Index;
 import dataStructure.Vector;
 import utils.Constants;
 import utils.DataGenerator;
@@ -45,7 +44,7 @@ public class Device extends RPCFrame implements Runnable {
         this.detector.detectOutlier(this.rawData);
 
         //step2: ÉÏ´«Ö¸ÎÆ
-        if(itr>Constants.nS-1) {
+        if(itr>=Constants.nS-1) {
             sendAggFingerprints(fullCellDelta);
         }
 
