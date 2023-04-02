@@ -182,7 +182,7 @@ public class EdgeNode extends RPCFrame implements Runnable {
 
                 // 2 该向哪个device要什么数据
                 list = unitsStatusMap.values().stream().filter(
-                        x -> (x.belongedDevices.contains(edgeDeviceCode) && (x.isSafe == 1))).toList();
+                        x -> (x.belongedDevices.contains(edgeDeviceCode) && (x.isSafe == 1))).toList(); //只有不安全的unit才需要向其他device要数据
                 HashMap<Integer, HashSet<ArrayList<Short>>> result = new HashMap<>();
                 for (UnitInNode unitInNode : list) {
                     unitResultInfo.get(unitInNode.unitID).forEach(

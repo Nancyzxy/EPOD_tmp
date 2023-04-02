@@ -18,6 +18,7 @@ public class Device extends RPCFrame implements Runnable {
     public EdgeNode nearestNode;
     public Detector detector;
     public HashMap<ArrayList<?>, Integer> status;
+    public HashMap<Integer,Integer> historyRecord; //用来记录每个device的上次发送的历史记录，deviceID->slideID
 
 
     public Device(int deviceId) {
@@ -30,6 +31,10 @@ public class Device extends RPCFrame implements Runnable {
             this.detector = new MCOD(this);
         }
         this.fullCellDelta = new HashMap<>();
+        this.historyRecord = new HashMap<>();
+        for (int deviceHashCode : EdgeNodeNetwork.deviceHashMap.keySet()) {
+            this.historyRecord.put(deviceHashCode,0);
+        }
     }
 
     public Set<? extends Vector> detectOutlier(int itr) throws Throwable {
@@ -64,11 +69,12 @@ public class Device extends RPCFrame implements Runnable {
         this.fullCellDelta = new HashMap<>();
     }
     public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int edgeNodeHashCode){
+        //根据历史记录来发送数据
         return this.detector.sendData(bucketIds, edgeNodeHashCode);
     }
 
-    public void getExternalData(HashMap<ArrayList<?>, Integer> status,HashMap<Integer,HashSet<ArrayList<?>>> result) throws InterruptedException {
-        this.status = status;
+    public void getExternalData(HashMap<ArrayList<?>, Integer> status, HashMap<Integer,HashSet<ArrayList<?>>> result) throws InterruptedException {
+        this.status = status; //用来判断outliers是否需要重新计算，用在processOutliers()中
         ArrayList<Thread> threads = new ArrayList<>();
         for (Integer edgeDeviceCode :result.keySet()) {
             Thread t = new Thread(() -> {
@@ -76,7 +82,7 @@ public class Device extends RPCFrame implements Runnable {
                 try {
                     Map<ArrayList<?>, List<Vector>> data = (Map<ArrayList<?>, List<Vector>>)
                             invoke("localhost", EdgeNodeNetwork.deviceHashMap.get(edgeDeviceCode).port,
-                                    Device.class.getMethod("sendData", HashSet.class), parameters);
+                                    Device.class.getMethod("sendData", HashSet.class, int.class), parameters);
                     if (this.detector.external_data.containsKey(Constants.currentSlideID)) {
                         this.detector.external_data.put(Constants.currentSlideID, Collections.synchronizedMap(new HashMap<>()));
                     }
