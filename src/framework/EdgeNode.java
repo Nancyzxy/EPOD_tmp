@@ -112,9 +112,9 @@ public class EdgeNode extends RPCFrame implements Runnable {
         for (ArrayList<Short> unit:unSateUnits){
             Thread t = new Thread(()->{
                 List<UnitInNode> unitInNodeList = unitsStatusMap.values().stream()
-                        .filter(x -> x.isUpdated.get(this.hashCode())==1)
+                        .filter(x -> x.isUpdated.get(edgeNodeHash)==1)
                         .filter(x -> this.handler.neighboringSet(unit,x.unitID)).toList();
-                unitInNodeList.forEach(x -> x.isUpdated.put(this.hashCode(),0)); // TODO: CHECK whether is right
+                unitInNodeList.forEach(x -> x.isUpdated.put(edgeNodeHash,0)); // TODO: CHECK whether is right
                 Object[] parameters = new Object[]{unit, unitInNodeList};
                 try {
                     invoke("localhost", EdgeNodeNetwork.nodeHashMap.get(edgeNodeHash).port,

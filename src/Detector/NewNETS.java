@@ -8,7 +8,6 @@ import utils.Constants;
 
 import java.util.*;
 
-@SuppressWarnings("unchecked")
 public class NewNETS extends Detector {
 	public boolean subDimFlag;
 
