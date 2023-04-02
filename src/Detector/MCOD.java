@@ -11,9 +11,9 @@ import utils.Constants;
 
 public class MCOD extends Detector {
     public static HashMap<ArrayList<?>, MCO> map_to_MCO;
-    public static Map<Integer, ArrayList<MCO>> internal_dataList;
+    public static Map<Integer, ArrayList<MCO>> internal_dataList; // {slideId, MCO}
     //--------------------------------------------------------------------------------
-    public static HashMap<MCO, ArrayList<MCO>> filled_clusters; //{d.center(d.arrivalTime), cluster}
+    public static HashMap<MCO, ArrayList<MCO>> filled_clusters; // {d.center, cluster}
     public static HashMap<MCO, ArrayList<MCO>> unfilled_clusters;
     // 全局的--------------------------------------------------------------
     public static MTreeClass mtree;
@@ -39,22 +39,21 @@ public class MCOD extends Detector {
     @Override
     public void detectOutlier(List<Vector> data) {
         // 1.去除过期点
-        if (Constants.S != Constants.W) {
+        if (Constants.S != Constants.nS) {
             // 1.1 除去internal过期的点
             for (Integer key : internal_dataList.keySet()) {
-                if (key <= Constants.currentSlideID - Constants.W) {
+                if (key <= Constants.currentSlideID - Constants.nS) {
                     for (MCO d : internal_dataList.get(key)) {
                         if (d.isInFilledCluster) {
                             removeFromFilledCluster(d);
-                        } else
+                        } else {
                             removeFromUnfilledCluster(d);
-
-                        //process event queue
+                        }
                         process_event_queue();
                     }
                 }
             }
-            internal_dataList.entrySet().removeIf(entry -> entry.getKey() <= Constants.currentSlideID - Constants.W);
+            internal_dataList.entrySet().removeIf(entry -> entry.getKey() <= Constants.currentSlideID - Constants.nS);
 
             // 1.2 除去external过期的点
             clean_expired_externalData();
@@ -66,7 +65,6 @@ public class MCOD extends Detector {
             filled_clusters.clear();
             unfilled_clusters.clear();
             eventQueue.clear();
-            mtree = null;
             mtree = new MTreeClass();
             outliers.clear();
         }
@@ -84,29 +82,42 @@ public class MCOD extends Detector {
             filled_clusters.put(d.center, cluster);
             check_shrink(d.center);
         }
-        Integer origin = this.device.fullCellDelta.get(transferToArrayList(d.center.values));
-        this.device.fullCellDelta.put(transferToArrayList(d.center.values), origin - 1);
+        unfilled_clusters.put(d.center, cluster);
+        //TODO: 提取fingerprint更新的部分
+        ArrayList<?> key = transferToArrayList(d.center.values);
+        if (!this.device.fullCellDelta.containsKey(key)) {
+            this.device.fullCellDelta.put(key, 0);
+        }
+        int origin = this.device.fullCellDelta.get(key);
+        this.device.fullCellDelta.put(key, origin - 1);
     }
 
     private void removeFromUnfilledCluster(MCO d) {
         ArrayList<MCO> cluster = unfilled_clusters.get(d.center);
         if (cluster != null) {
             cluster.remove(d);
+            //TODO: 提取fingerprint更新的部分
+            ArrayList<?> key = transferToArrayList(d.center.values);
             if (cluster.size() == 0) {
                 unfilled_clusters.remove(d.center);
-                this.device.fullCellDelta.put(transferToArrayList(d.center.values), Integer.MIN_VALUE);
+                this.device.fullCellDelta.put(key, Integer.MIN_VALUE);
             } else {
                 unfilled_clusters.put(d.center, cluster);
-                Integer origin = this.device.fullCellDelta.get(transferToArrayList(d.center.values));
-                this.device.fullCellDelta.put(transferToArrayList(d.center.values), origin - 1);
+                if (!this.device.fullCellDelta.containsKey(key)) {
+                    this.device.fullCellDelta.put(key, 0);
+                }
+                int origin = this.device.fullCellDelta.get(key);
+                this.device.fullCellDelta.put(key, origin - 1);
             }
         }
+        // remove outlier中过期的点
         if (d.numberOfSucceeding + d.exps.size() < Constants.K) {
             outliers.remove(d);
         }
 
+        //remove outlier中点的过期的前继
         outliers.forEach((data) -> {
-            while (data.exps.size() > 0 && data.exps.get(0) <= d.arrivalTime + Constants.W) {
+            while (data.exps.size() > 0 && data.exps.get(0) <= d.slideID + Constants.nS) {
                 data.exps.remove(0);
                 if (data.exps.isEmpty()) {
                     data.ev = 0;
@@ -127,7 +138,7 @@ public class MCOD extends Detector {
     // 对于Unfilled cluster里的一个点d，更新它自己的前继后继和unfilled clusters里的前后继
     private void update_info_unfilled(MCO d, boolean fromShrinkCluster) {
         for (MCO center : unfilled_clusters.keySet()) {
-            //去除自己cluster,避免重复计算
+            // 当fromFulledCluster并且遍历到这个shrink的cluster时，不需要重复计算
             if (fromShrinkCluster && center == d.center) continue;
 
             // 如果center中心离d 3R/2以内，检查这个unfilled cluster里的所有点
@@ -136,26 +147,30 @@ public class MCOD extends Detector {
                 for (MCO point : unfilled_cluster) {
                     if (point != d && mtree.getDistanceFunction().calculate(point, d) <= Constants.R) {
                         if (isSameSlide(point, d) == -1) {
-                            //is preceeding neighbor
-                            d.exps.add(point.arrivalTime + Constants.W);
+                            //p在d前面
+                            d.exps.add(point.slideID + Constants.nS);
                             if (!fromShrinkCluster) {
+                                // 如果是旧的点，那么point.numberOfSucceeding已经包含了这个d
                                 point.numberOfSucceeding++;
                             }
                         } else if (isSameSlide(point, d) == 0) {
+                            //p和d在同一个slide
                             d.numberOfSucceeding++;
                             if (!fromShrinkCluster) {
                                 point.numberOfSucceeding++;
                             }
                         } else {
-                            //对应一个filled_cluster边unfilled而言
+                            //p在d后面
+                            //对应一个filled_cluster变unfilled而言
                             d.numberOfSucceeding++;
                             if (!fromShrinkCluster) {
-                                point.exps.add(d.arrivalTime + Constants.W);
+                                point.exps.add(d.slideID + Constants.nS);
                             }
                         }
 
-                        //just keep k-numberofSucceedingNeighbor
+                        //just keep k-numberOfSucceedingNeighbor
                         if (!fromShrinkCluster) {
+                            //对于from shrink的点，point其实没有更新
                             checkInlier(point);
                         }
                     }
@@ -167,17 +182,17 @@ public class MCOD extends Detector {
     //d这个点在filled_cluster里找邻居更新信息
     private void update_info_filled(MCO d) {
         for (MCO center : filled_clusters.keySet()) {
-//            MCO center = dataList_set.get(center_id);
             // 如果center中心离d 3R/2以内，检查这个filled cluster里的所有点
             if (mtree.getDistanceFunction().calculate(center, d) <= 3 * Constants.R / 2) {
                 ArrayList<MCO> filled_cluster = filled_clusters.get(center);
                 for (MCO point : filled_cluster) {
                     if (mtree.getDistanceFunction().calculate(point, d) <= Constants.R) {
                         if (isSameSlide(d, point) <= 0) {
+                            //p is succeeding neighbor
                             d.numberOfSucceeding++;
                         } else {
-                            //p is preceeding neighbor
-                            d.exps.add(point.arrivalTime + Constants.W);
+                            //p is preceding neighbor
+                            d.exps.add(point.slideID + Constants.nS);
                         }
                     }
                 }
@@ -198,11 +213,15 @@ public class MCOD extends Detector {
         unfilled_clusters.put(nearest_center, cluster);
 
         //update fullCellDelta
-        Integer origin = this.device.fullCellDelta.get(transferToArrayList(d.center.values));
-        this.device.fullCellDelta.put(transferToArrayList(d.center.values), origin + 1);
+        //TODO: 提取fingerprint更新的部分
+        if (this.device.fullCellDelta.containsKey(transferToArrayList(d.center.values))){
+            this.device.fullCellDelta.put(transferToArrayList(d.center.values), this.device.fullCellDelta.get(transferToArrayList(d.center.values)) + 1);
+        } else {
+            this.device.fullCellDelta.put(transferToArrayList(d.center.values), 1);
+        }
 
         //这两步顺序不能换，因为是在update_info_filled里checkInlier(d)
-        //update self and others secceeding and preceeding in unfilled_cluster
+        //update self and others succeeding and preceding in unfilled_cluster
         update_info_unfilled(d, false);
         //find neighbors in filled clusters (3R/2)
         update_info_filled(d);
@@ -214,7 +233,7 @@ public class MCOD extends Detector {
         d.isCenter = true;
         d.isInFilledCluster = false;
         d.center = d;
-        map_to_MCO.put(new ArrayList<>(Arrays.asList(d.values)), d);
+        map_to_MCO.put(transferToArrayList(d.values), d);
 
         ArrayList<MCO> cluster = new ArrayList<>();
         cluster.add(d);
@@ -224,14 +243,11 @@ public class MCOD extends Detector {
 
         update_info_unfilled(d, false);
         update_info_filled(d);
-
-        check_filled(d); //以防K=1
     }
 
     private void check_filled(MCO center) {
         ArrayList<MCO> cluster = unfilled_clusters.get(center);
-        if (cluster.size() >= Constants.K) {
-//            MCO center = dataList_set.get(center_id);
+        if (cluster.size() > Constants.K) {
             unfilled_clusters.remove(center);
             filled_clusters.put(center, cluster);
             cluster.forEach(p -> {
@@ -244,20 +260,20 @@ public class MCOD extends Detector {
 
     private void check_shrink(MCO center) {
         ArrayList<MCO> cluster = filled_clusters.get(center);
-        if (cluster.size() < Constants.K) {
-            //更新cluster的状态
+        if (cluster.size() <= Constants.K) {
+            // 表明变成了unfilled cluster，更新cluster的状态
             filled_clusters.remove(center);
             unfilled_clusters.put(center, cluster);
 
             //更新cluster里点的状态
-            cluster.sort(new MCComparatorArrivalTime());
+            cluster.sort(new Detector.MCOD.MCComparatorSlideId());
             for (int i = 0; i < cluster.size(); i++) {
                 MCO o = cluster.get(i);
                 resetObject(o, false);
-                //先处理下自己cluster里的,算preceeding和secceeding
+                //先处理下自己cluster里的,算preceding和succeeding
                 for (int j = 0; j < i; j++) {
                     MCO n = cluster.get(j);
-                    o.exps.add(n.arrivalTime + Constants.W);
+                    o.exps.add(n.slideID + Constants.nS);
                 }
                 o.numberOfSucceeding = cluster.size() - 1 - i;
 
@@ -278,14 +294,18 @@ public class MCOD extends Detector {
         cluster.add(d);
         filled_clusters.put(nearest_center, cluster);
 
-        // update finger print
-        Integer origin = this.device.fullCellDelta.get(transferToArrayList(d.center.values));
-        this.device.fullCellDelta.put(transferToArrayList(d.center.values), origin + 1);
+        // update fingerprint
+        // TODO: 提取出来
+        if (this.device.fullCellDelta.containsKey(transferToArrayList(d.center.values))) {
+            Integer origin = this.device.fullCellDelta.get(transferToArrayList(d.center.values));
+            this.device.fullCellDelta.put(transferToArrayList(d.center.values), origin + 1);
+        } else {
+            this.device.fullCellDelta.put(transferToArrayList(d.center.values), 1);
+        }
 
         //update for points in PD that has Rmc list contains center
-        // filled 里的自己不用存succeeding和preceeding，只用更新别人
+        // filled 里的自己不用存succeeding和preceding，只用更新unfilled里的点的邻居
         for (MCO center : unfilled_clusters.keySet()) {
-//            MCO center = dataList_set.get(center_id);
             // 如果center中心离d 3R/2以内，检查这个unfilled cluster里的所有点
             if (mtree.getDistanceFunction().calculate(center, d) <= 3 * Constants.R / 2) {
                 ArrayList<MCO> unfilled_cluster = unfilled_clusters.get(center);
@@ -293,8 +313,9 @@ public class MCOD extends Detector {
                     if (mtree.getDistanceFunction().calculate(point, d) <= Constants.R) {
                         //好像没有这种情况了？
                         if (isSameSlide(d, point) == -1) {
-                            point.exps.add(d.arrivalTime + Constants.W);
-                        } else if (isSameSlide(d, point) >= 0) {
+                            //TODO： 看看这里究竟能不能进来
+                            point.exps.add(d.slideID + Constants.nS);
+                        } else {
                             point.numberOfSucceeding++;
                         }
                         //check if point become inlier
@@ -334,7 +355,7 @@ public class MCOD extends Detector {
         // 1.是否可加入filled_cluster
         MCO nearest_filled_center = findNearestCenter(d, true);
         double min_distance = Double.MAX_VALUE;
-        if (nearest_filled_center != null) { //found neareast cluster
+        if (nearest_filled_center != null) { //found the nearest cluster
             min_distance = mtree.getDistanceFunction().calculate(nearest_filled_center, d);
         }
         //assign to cluster if min distance <= R/2
@@ -344,7 +365,7 @@ public class MCOD extends Detector {
             // 2.是否可加入unfilled_cluster
             MCO nearest_unfilled_center_id = findNearestCenter(d, false);
             min_distance = Double.MAX_VALUE;
-            if (nearest_unfilled_center_id != null) { //found neareast cluster
+            if (nearest_unfilled_center_id != null) { //found the nearest cluster
                 min_distance = mtree.getDistanceFunction().calculate(nearest_unfilled_center_id, d);
             }
             if (min_distance <= Constants.R / 2) {
@@ -417,8 +438,7 @@ public class MCOD extends Detector {
                 Iterator<Vector> iterator = time_value.get(key).iterator();//实例化迭代器
                 while (iterator.hasNext()) {
                     Vector v = iterator.next();//读取当前集合数据元素
-                    if (v.arrivalTime <= Constants.currentSlideID - Constants.W) {
-                        //all.remove(str);//使用集合当中的remove方法对当前迭代器当中的数据元素值进行删除操作(注:此操作将会破坏整个迭代器结构)使得迭代器在接下来将不会起作用
+                    if (v.slideID <= Constants.currentSlideID - Constants.nS) {
                         int cnt = external_info.get(key);
                         if (cnt == 1) {
                             external_info.remove(key);
@@ -490,8 +510,8 @@ public class MCOD extends Detector {
                     //在所有3R/2内cluster（外部）的点，若和本地相加小于k，则判断成为Outlier,不做任何操作
                     //否则
                     if (sum >= Constants.K) {
-                        if (o.last_calculate_time == -1 || o.last_calculate_time < Constants.K - Constants.W) {
-                            o.last_calculate_time = Constants.K - Constants.W;
+                        if (o.last_calculate_time == -1 || o.last_calculate_time < Constants.K - Constants.nS) {
+                            o.last_calculate_time = Constants.K - Constants.nS;
                         }
                         while (o.last_calculate_time <= Constants.currentSlideID) {
                             Map<ArrayList<?>, List<Vector>> cur_data = externalData.get(o.last_calculate_time);
@@ -507,7 +527,7 @@ public class MCOD extends Detector {
                                                 o.numberOfSucceeding++;
                                             } else {
                                                 //p is preceeding neighbor
-                                                o.exps.add(v.arrivalTime + Constants.W);
+                                                o.exps.add(v.slideID + Constants.nS);
                                             }
                                         }
                                     }
@@ -566,15 +586,15 @@ public class MCOD extends Detector {
         }
     }
 
-    static class MCComparatorArrivalTime implements Comparator<MCO> {
+    static class MCComparatorSlideId implements Comparator<MCO> {
         @Override
         public int compare(MCO o1, MCO o2) {
-            return Integer.compare(o1.arrivalTime, o2.arrivalTime);
+            return Integer.compare(o1.slideID, o2.slideID);
         }
     }
 
     public int isSameSlide(Vector o1, Vector o2) {
-        return Integer.compare((o1.arrivalTime - 1) / Constants.S, (o2.arrivalTime - 1) / Constants.S);
+        return Integer.compare(o1.slideID, o2.slideID);
     }
 
     public ArrayList<?> transferToArrayList(double[] a) {

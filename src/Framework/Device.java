@@ -44,7 +44,9 @@ public class Device extends RPCFrame implements Runnable {
         this.rawData = dataGenerator.getTimeBasedIncomingData(currentRealTime, Constants.S*10);
 
         //step1: 产生指纹 + 本地先检测出outliers
-        clearFingerprints();
+        if (itr > Constants.nS -1){
+            clearFingerprints();
+        }
         this.detector.detectOutlier(this.rawData);
 
         //step2: 上传指纹
@@ -69,7 +71,7 @@ public class Device extends RPCFrame implements Runnable {
     }
     public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int deviceHashCode){
         //根据历史记录来发送数据
-        int lastSent = Math.max(this.historyRecord.get(deviceHashCode),Constants.currentSlideID - Constants.W);
+        int lastSent = Math.max(this.historyRecord.get(deviceHashCode),Constants.currentSlideID - Constants.nS);
         this.historyRecord.put(deviceHashCode,Constants.currentSlideID);
         return this.detector.sendData(bucketIds, lastSent);
     }

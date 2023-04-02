@@ -25,6 +25,7 @@ public class DataGenerator {
         Vector d = dataQueue.peek();
         while (d != null && d.arrivalRealTime.compareTo(currentTime) >= 0
                 && d.arrivalRealTime.compareTo(endTime) < 0) {
+            d.slideID = Constants.currentSlideID;
             results.add(d);
             dataQueue.poll();
             d = dataQueue.peek();

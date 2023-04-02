@@ -1,5 +1,7 @@
 package DataStructure;
 
+import utils.Constants;
+
 import java.util.ArrayList;
 
 public class MCO extends Vector {
@@ -7,7 +9,7 @@ public class MCO extends Vector {
     public boolean isInFilledCluster;
     public boolean isCenter;
     public MCO center;
-    public long ev; //记录min数量的最早preceding的exp time, 如果safe了记为0
+    public int ev; //记录min数量的最早preceding的exp的slide ID , 如果safe了记为0
     public int last_calculate_time; //指的是slideID
 
     public ArrayList<Integer> exps;
@@ -17,6 +19,7 @@ public class MCO extends Vector {
 
     public MCO(Vector d) {
         super();
+        this.slideID = Constants.currentSlideID;
         this.arrivalTime = d.arrivalTime;
         this.values = d.values;
         center = null;

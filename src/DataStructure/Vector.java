@@ -45,6 +45,7 @@ public class Vector implements Serializable,Comparable<Vector>,EuclideanCoordina
 	public double[] values;
 	public final int hashCode;
 	public int arrivalTime;
+	public int slideID;
 	public Date arrivalRealTime;
       
 	/**
@@ -73,11 +74,11 @@ public class Vector implements Serializable,Comparable<Vector>,EuclideanCoordina
 		this(other.getKey(),Arrays.copyOf(other.values, other.values.length));
 	}
         
-	public Vector(double[] v, int arrivalTime){
-            this.values = v;
-            this.arrivalTime = arrivalTime;
-            this.hashCode = generateHashCode(v);
-        }
+//	public Vector(double[] v, int arrivalTime){
+//            this.values = v;
+////            this.arrivalTime = arrivalTime;
+//            this.hashCode = generateHashCode(v);
+//        }
 	
 	/**
 	 * Creates a vector with the values and a key

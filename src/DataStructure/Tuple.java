@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 public class Tuple extends Vector {
 		public int id;
-		public int slideID;
 		public double[] value;
 		public int nn;
 		public int nnIn; //number of neighbors inside the same cell

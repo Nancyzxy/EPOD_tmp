@@ -123,7 +123,7 @@ public class NewNETS extends Detector {
 				value[j] = datum.values[i];
 				j++;
 			}
-			Tuple tuple = new Tuple(datum.arrivalTime, datum.arrivalTime / Constants.S, value);
+			Tuple tuple = new Tuple(datum.slideID, Constants.currentSlideID, value);
 			newSlide.add(tuple);
 		}
 		return newSlide;
@@ -343,7 +343,7 @@ public class NewNETS extends Detector {
 					if (neighboringTupleSet(v.values, outlier.value, Constants.R)){
 						if(entry.getKey() == outlier.fullDimCellIdx) {
 							outlier.nn ++ ;
-						}else if (v.arrivalTime /Constants.S < outlier.slideID){
+						}else if (v.slideID  < outlier.slideID){
 							outlier.nnUnSafeOut ++;
 						}else {
 							outlier.nnSafeOut ++;
@@ -362,7 +362,7 @@ public class NewNETS extends Detector {
 	public void removeExpiredExternalData(){
 		for (Map<ArrayList<?>, List<Vector>> x: this.externalData.values()){
 			for (List<Vector> y: x.values()){
-				y.removeIf(data -> data.arrivalTime <= Constants.currentSlideID - Constants.W);
+				y.removeIf(data -> data.slideID <= Constants.currentSlideID - Constants.nS);
 			}
 		}
 	}
@@ -371,7 +371,7 @@ public class NewNETS extends Detector {
 	public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int lastSent) {
 		Map<ArrayList<?>, List<Vector>> data = new HashMap<>();
 		for (int time = lastSent + 1; time <= Constants.currentSlideID; time++) {
-			int index = time - Constants.currentSlideID + Constants.W;
+			int index = time - Constants.currentSlideID + Constants.nS - 1;
 			for (ArrayList<?> id : bucketIds) {
 				int n = idxEncoder.get(transferFullIdToSubId((ArrayList<Short>) id));
 				Cell fullCell = slides.get(index).get(n).childCells.get(((ArrayList<Short>) id));
