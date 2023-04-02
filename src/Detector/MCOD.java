@@ -1,9 +1,7 @@
 package Detector;
 
 import DataStructure.MCO;
-
 import java.util.*;
-
 import DataStructure.Vector;
 import Framework.Device;
 import mtree.utils.MTreeClass;
@@ -454,13 +452,14 @@ public class MCOD extends Detector {
 
     //更新external_info至最新状态
     public void update_external_info() {
-        Map<ArrayList<?>, List<Vector>> last_arrive_data = externalData.get(Constants.currentSlideID);
-        for (ArrayList<?> key : last_arrive_data.keySet()) {
+        // Map<Integer, Map<ArrayList<?>, List<Vector>>> externalData;
+        Map<ArrayList<?>, List<Vector>> current_arrive_data = externalData.get(Constants.currentSlideID);
+        for (ArrayList<?> key : current_arrive_data.keySet()) {
             if (!external_info.containsKey(key)) {
                 external_info.put(key, 0);
             }
             int cnt = external_info.get(key);
-            external_info.put(key, cnt + last_arrive_data.get(key).size());
+            external_info.put(key, cnt + current_arrive_data.get(key).size());
         }
     }
 
@@ -469,11 +468,11 @@ public class MCOD extends Detector {
         ArrayList<MCO> inliers = new ArrayList<>();
         for (MCO o : outliers) {
             // HashMap<ArrayList<?>, Integer> status;
-            int reply = this.status.get(new ArrayList<>(Arrays.asList(o.center.values)));
-            //首先我们需要prunning掉被判断为安全的以及被判断成outlier的点，加入event queue，event time 设为下一个时间点
+            int reply = this.status.get(transferToArrayList(o.center.values));
+            //首先我们需要pruning掉被判断为安全的以及被判断成outlier的点，加入event queue，event time 设为下一个时间点
             if (reply == 2) {
                 inliers.add(o);
-                // 是在device端就确定为inlier的情况,没有精确的最早的neighbor过期的时间 更新不了相应proceding和succeeding
+                // 是在device端就确定为inlier的情况,没有精确的最早的neighbor过期的时间 更新不了相应proceeding和succeeding
                 o.ev = Constants.currentSlideID + 1;
                 eventQueue.add(o);
             }
