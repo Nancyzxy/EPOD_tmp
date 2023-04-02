@@ -1,35 +1,24 @@
 package framework;
 
 import Detector.Detector;
-import Detector.NewNETS;
 import Detector.MCOD;
+import Detector.NewNETS;
 import RPC.RPCFrame;
 import be.tarsos.lsh.Index;
-import dataStructure.Tuple;
 import dataStructure.Vector;
 import utils.Constants;
 import utils.DataGenerator;
-
-import java.lang.reflect.Array;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
 public class Device extends RPCFrame implements Runnable {
     public int deviceId;
-    private int numberOfHashTables;
-    public Index index;
     public List<Vector> rawData = new ArrayList<>();
-
-    public HashMap<ArrayList<?>,Integer> fullCellDelta; //fingerprint 
-    public Map<Long,List<Vector>> allRawDataList;
+    public HashMap<ArrayList<?>,Integer> fullCellDelta; //fingerprint
     public DataGenerator dataGenerator;
     public EdgeNode nearestNode;
     public Detector detector;
-
     public HashMap<ArrayList<?>, Integer> status;
-
-    /* used for LSH method */
-    public Map<Long,List<Vector>> aggFingerprints;
 
 
     public Device(int deviceId) {
@@ -42,7 +31,6 @@ public class Device extends RPCFrame implements Runnable {
             this.detector = new MCOD(this);
         }
         this.fullCellDelta = new HashMap<>();
-        this.allRawDataList = Collections.synchronizedMap(new HashMap<>());
     }
 
     public Set<? extends Vector> detectOutlier(int itr) throws Throwable {
@@ -118,39 +106,5 @@ public class Device extends RPCFrame implements Runnable {
 
     public void setNearestNode(EdgeNode nearestNode) {
         this.nearestNode = nearestNode;
-    }
-
-    // Below methods are only used in LSH
-    public void generateAggFingerprints(List<Vector> data) {
-
-        if (Objects.equals(Constants.methodToGenerateFingerprint, "LSH")) {
-            for (Vector datum : data) {
-                for (int j = 0; j < this.numberOfHashTables; j++) {
-                    long bucketId = index.getHashTable().get(j).getHashValue(datum);
-                    if (!aggFingerprints.containsKey(bucketId)) {
-                        aggFingerprints.put(bucketId, Collections.synchronizedList(new ArrayList<Vector>()));
-                        allRawDataList.put(bucketId, Collections.synchronizedList(new ArrayList<Vector>()));
-                    }
-                    aggFingerprints.get(bucketId).add(datum);
-                    allRawDataList.get(bucketId).add(datum);
-                }
-            }
-        }
-    }
-
-    public int getNumberOfHashTables() {
-        return numberOfHashTables;
-    }
-
-    public void setNumberOfHashTables(int numberOfHashTables) {
-        this.numberOfHashTables = numberOfHashTables;
-    }
-
-    public Index getIndex() {
-        return index;
-    }
-
-    public void setIndex(Index index) {
-        this.index = index;
     }
 }

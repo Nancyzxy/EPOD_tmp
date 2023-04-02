@@ -34,7 +34,7 @@ import java.util.Random;
  * 
  * @author Joren Six
  */
-public class Vector  implements Serializable,Comparable<Vector>,EuclideanCoordinate {
+public class Vector implements Serializable,Comparable<Vector>,EuclideanCoordinate {
 	
 	private static final long serialVersionUID = 5169504339456492327L;
 
