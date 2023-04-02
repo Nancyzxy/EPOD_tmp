@@ -70,7 +70,7 @@ public class Device extends RPCFrame implements Runnable {
     public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int edgeNodeHashCode){
         //根据历史记录来发送数据
         int lastSent = Math.max(this.historyRecord.get(edgeNodeHashCode),Constants.currentSlideID - Constants.W);
-        return this.detector.sendData(bucketIds, edgeNodeHashCode, lastSent);
+        return this.detector.sendData(bucketIds, lastSent);
     }
 
     public void getExternalData(HashMap<ArrayList<?>, Integer> status, HashMap<Integer,HashSet<ArrayList<?>>> result) throws InterruptedException {
