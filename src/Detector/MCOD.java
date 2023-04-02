@@ -24,7 +24,7 @@ public class MCOD extends Detector {
     public static PriorityQueue<MCO> eventQueue;
     //---------------------------------------------------------------------------------------------
     //E2D
-    public static HashMap<MCO, Integer> rec_msg; //-1: outlier 0:not sure 1:inlier
+//    public static HashMap<MCO, Integer> rec_msg; //-1: outlier 0:not sure 1:inlier
 
     //-------------------------------------------------------------------------------------------------------
     public static HashMap<ArrayList<?>, Integer> external_info;
@@ -38,7 +38,6 @@ public class MCOD extends Detector {
         mtree = new MTreeClass();
         outliers = new HashSet<>();
         eventQueue = new PriorityQueue<>(new MCComparator());
-        rec_msg = new HashMap<>();
         external_info = new HashMap<>();
         external_data = Collections.synchronizedMap(new HashMap<>());
     }
@@ -518,7 +517,7 @@ public class MCOD extends Detector {
     public void check_local_outliers() {
         ArrayList<MCO> inliers = new ArrayList<>();
         for (MCO o : outliers) {
-            int reply = rec_msg.get(o.center);
+            int reply = this.status.get(o.center);
             //首先我们需要prunning掉被判断为安全的以及被判断成outlier的点，加入event queue，event time 设为下一个时间点
             if (reply == 2) {
                 inliers.add(o);
