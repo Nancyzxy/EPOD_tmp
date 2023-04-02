@@ -17,6 +17,8 @@ public class Tuple extends Vector {
 		public int lastNNSlideID;
 		public ArrayList<Short> subDimCellIdx;
 		public ArrayList<Short> fullDimCellIdx;
+
+		public int last_calculate_time;
 		
 		public Tuple(int id, int slideID, double[] value) {
 			this.id = id;
@@ -25,6 +27,7 @@ public class Tuple extends Vector {
 			this.unSafeOutNeighbors = new HashMap<Integer, Integer>();
 			this.lastNNSlideID = -1;
 			this.safeness = false;
+			this.last_calculate_time = -1;
 		}
 		
 		public int getNN() {

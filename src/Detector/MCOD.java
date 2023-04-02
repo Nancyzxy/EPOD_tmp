@@ -32,7 +32,7 @@ public class MCOD extends Detector {
         outliers = new HashSet<>();
         eventQueue = new PriorityQueue<>(new MCComparator());
         external_info = new HashMap<>();
-        external_data = Collections.synchronizedMap(new HashMap<>());
+        externalData = Collections.synchronizedMap(new HashMap<>());
     }
 
     // 预处理入口函数
@@ -57,12 +57,12 @@ public class MCOD extends Detector {
             internal_dataList.entrySet().removeIf(entry -> entry.getKey() <= Constants.currentSlideID - Constants.W);
 
             // 1.2 除去external过期的点
-            clean_expired_external_data();
+            clean_expired_externalData();
 
         } else {
             internal_dataList.clear();
             external_info.clear();
-            external_data.clear();
+            externalData.clear();
             filled_clusters.clear();
             unfilled_clusters.clear();
             eventQueue.clear();
@@ -409,9 +409,9 @@ public class MCOD extends Detector {
         this.outlierVector = outliers;
     }
 
-    public void clean_expired_external_data() {
-        //Map<Integer, Map<ArrayList<?>, List<Vector>>> external_data;
-        for (Map<ArrayList<?>, List<Vector>> time_value : external_data.values()) {
+    public void clean_expired_externalData() {
+        //Map<Integer, Map<ArrayList<?>, List<Vector>>> externalData;
+        for (Map<ArrayList<?>, List<Vector>> time_value : externalData.values()) {
             for (ArrayList<?> key : time_value.keySet()) {
 
                 Iterator<Vector> iterator = time_value.get(key).iterator();//实例化迭代器
@@ -434,7 +434,7 @@ public class MCOD extends Detector {
 
     //更新external_info至最新状态
     public void update_external_info() {
-        Map<ArrayList<?>, List<Vector>> last_arrive_data = external_data.get(Constants.currentSlideID);
+        Map<ArrayList<?>, List<Vector>> last_arrive_data = externalData.get(Constants.currentSlideID);
         for (ArrayList<?> key : last_arrive_data.keySet()) {
             if (!external_info.containsKey(key)) {
                 external_info.put(key, 0);
@@ -494,7 +494,7 @@ public class MCOD extends Detector {
                             o.last_calculate_time = Constants.K - Constants.W;
                         }
                         while (o.last_calculate_time <= Constants.currentSlideID) {
-                            Map<ArrayList<?>, List<Vector>> cur_data = external_data.get(o.last_calculate_time);
+                            Map<ArrayList<?>, List<Vector>> cur_data = externalData.get(o.last_calculate_time);
                             if (cur_data != null) {
                                 // 对每一个3R/2内的邻居
                                 for (ArrayList<?> c : cluster3R_2) {

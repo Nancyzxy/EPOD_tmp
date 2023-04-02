@@ -6,12 +6,12 @@ import java.util.*;
 
 public abstract class Detector {
     public Set<? extends Vector> outlierVector; // This field is only used to return to the global network
-    public Map<Integer, Map<ArrayList<?>, List<Vector>>> external_data;
+    public Map<Integer, Map<ArrayList<?>, List<Vector>>> externalData;
     public HashMap<ArrayList<?>, Integer> status;
     Device device;
     public Detector(Device device){
         this.device = device;
-        this.external_data = Collections.synchronizedMap(new HashMap<>());//TODO:命名风格统一
+        this.externalData = Collections.synchronizedMap(new HashMap<>());
     }
     public abstract void detectOutlier(List<Vector> data);
 

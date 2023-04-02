@@ -84,12 +84,12 @@ public class Device extends RPCFrame implements Runnable {
                     Map<ArrayList<?>, List<Vector>> data = (Map<ArrayList<?>, List<Vector>>)
                             invoke("localhost", EdgeNodeNetwork.deviceHashMap.get(deviceCode).port,
                                     Device.class.getMethod("sendData", HashSet.class, int.class), parameters);
-                    if (this.detector.external_data.containsKey(Constants.currentSlideID)) {
-                        this.detector.external_data.put(Constants.currentSlideID, Collections.synchronizedMap(new HashMap<>()));
+                    if (this.detector.externalData.containsKey(Constants.currentSlideID)) {
+                        this.detector.externalData.put(Constants.currentSlideID, Collections.synchronizedMap(new HashMap<>()));
                     }
                     data.keySet().forEach(
                             x -> {
-                                Map<ArrayList<?>, List<Vector>> map = this.detector.external_data.get(Constants.currentSlideID);
+                                Map<ArrayList<?>, List<Vector>> map = this.detector.externalData.get(Constants.currentSlideID);
                                 if (!map.containsKey(x)) {
                                     map.put(x, Collections.synchronizedList(new ArrayList<>()));
                                 }
