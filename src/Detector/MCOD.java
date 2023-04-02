@@ -22,11 +22,7 @@ public class MCOD extends Detector {
     public static MTreeClass mtree;
     public static HashSet<MCO> outliers;
     public static PriorityQueue<MCO> eventQueue;
-    //---------------------------------------------------------------------------------------------
-    //E2D
-//    public static HashMap<MCO, Integer> rec_msg; //-1: outlier 0:not sure 1:inlier
 
-    //-------------------------------------------------------------------------------------------------------
     public static HashMap<ArrayList<?>, Integer> external_info;
 
     public MCOD(Device device) {
@@ -597,7 +593,7 @@ public class MCOD extends Detector {
 
     //todo: 根据历史记录来发送数据
     @Override
-    public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int edgeNodeHashCode, int lastSent) {
+    public Map<ArrayList<?>,List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int lastSent){
         Map<ArrayList<?>, List<Vector>> result = new HashMap<>();
         for (ArrayList<?> bucketId : bucketIds) {
             MCO center = map_to_MCO.get(bucketId);
