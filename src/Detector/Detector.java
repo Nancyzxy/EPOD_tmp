@@ -1,10 +1,7 @@
 package Detector;
 
-import dataStructure.MCO;
-import dataStructure.Tuple;
 import dataStructure.Vector;
 import framework.Device;
-
 import java.util.*;
 
 public abstract class Detector {

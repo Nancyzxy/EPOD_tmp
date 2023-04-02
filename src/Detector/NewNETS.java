@@ -10,9 +10,7 @@ import java.util.*;
 
 public class NewNETS extends Detector {
 	public boolean subDimFlag;
-
-//	public Map<Integer, HashMap<ArrayList<?>,ArrayList<Tuple>>> externalData;
-	public HashMap<ArrayList<?>,ArrayList<Vector>> localDataBucket; //TODO: 加上 SlideID
+	public HashMap<Integer, HashMap<ArrayList<?>,ArrayList<Vector>>> localDataBucket; //TODO: 加上 SlideID
 	public double neighCellIdxDist;
 	public double neighCellFullDimIdxDist;
 	public double[] maxValues;
