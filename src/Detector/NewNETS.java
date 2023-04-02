@@ -312,7 +312,7 @@ public class NewNETS extends Detector {
 	}
 
 	@Override
-	public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int edgeNodeHashCode, int lastSent) {
+	public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int deviceHashCode, int lastSent) {
 		Map<ArrayList<?>, List<Vector>> data = new HashMap<>();
 		for (ArrayList<?> id: bucketIds){
 			data.put(id,localDataBucket.get(id));
