@@ -81,31 +81,22 @@ public class MCOD extends Detector {
             check_shrink(d.center);
         }
         unfilled_clusters.put(d.center, cluster);
-        //TODO: 提取fingerprint更新的部分
+
         ArrayList<?> key = transferToArrayList(d.center.values);
-        if (!this.device.fullCellDelta.containsKey(key)) {
-            this.device.fullCellDelta.put(key, 0);
-        }
-        int origin = this.device.fullCellDelta.get(key);
-        this.device.fullCellDelta.put(key, origin - 1);
+        update_fingerprint(key,false);
     }
 
     private void removeFromUnfilledCluster(MCO d) {
         ArrayList<MCO> cluster = unfilled_clusters.get(d.center);
         if (cluster != null) {
             cluster.remove(d);
-            //TODO: 提取fingerprint更新的部分
             ArrayList<?> key = transferToArrayList(d.center.values);
             if (cluster.size() == 0) {
                 unfilled_clusters.remove(d.center);
-                this.device.fullCellDelta.put(key, Integer.MIN_VALUE);
+                this.device.fullCellDelta.put(key, Integer.MIN_VALUE); //不管有没有这个key，都可以实现覆盖效果
             } else {
                 unfilled_clusters.put(d.center, cluster);
-                if (!this.device.fullCellDelta.containsKey(key)) {
-                    this.device.fullCellDelta.put(key, 0);
-                }
-                int origin = this.device.fullCellDelta.get(key);
-                this.device.fullCellDelta.put(key, origin - 1);
+                update_fingerprint(key,false);
             }
         }
         // remove outlier中过期的点
@@ -211,12 +202,8 @@ public class MCOD extends Detector {
         unfilled_clusters.put(nearest_center, cluster);
 
         //update fullCellDelta
-        //TODO: 提取fingerprint更新的部分
-        if (this.device.fullCellDelta.containsKey(transferToArrayList(d.center.values))){
-            this.device.fullCellDelta.put(transferToArrayList(d.center.values), this.device.fullCellDelta.get(transferToArrayList(d.center.values)) + 1);
-        } else {
-            this.device.fullCellDelta.put(transferToArrayList(d.center.values), 1);
-        }
+        ArrayList<?> key = transferToArrayList(d.center.values);
+        update_fingerprint(key, true);
 
         //这两步顺序不能换，因为是在update_info_filled里checkInlier(d)
         //update self and others succeeding and preceding in unfilled_cluster
@@ -293,13 +280,8 @@ public class MCOD extends Detector {
         filled_clusters.put(nearest_center, cluster);
 
         // update fingerprint
-        // TODO: 提取出来
-        if (this.device.fullCellDelta.containsKey(transferToArrayList(d.center.values))) {
-            Integer origin = this.device.fullCellDelta.get(transferToArrayList(d.center.values));
-            this.device.fullCellDelta.put(transferToArrayList(d.center.values), origin + 1);
-        } else {
-            this.device.fullCellDelta.put(transferToArrayList(d.center.values), 1);
-        }
+        ArrayList<?> key = transferToArrayList(d.center.values);
+        update_fingerprint(key, true);
 
         //update for points in PD that has Rmc list contains center
         // filled 里的自己不用存succeeding和preceding，只用更新unfilled里的点的邻居
@@ -602,6 +584,15 @@ public class MCOD extends Detector {
             result.add(d);
         }
         return result;
+    }
+
+    public void update_fingerprint(ArrayList<?> key, boolean isAdd) {
+        if (!this.device.fullCellDelta.containsKey(key)) {
+            this.device.fullCellDelta.put(key, 0);
+        }
+        int origin = this.device.fullCellDelta.get(key);
+        int delta = isAdd ? 1 : -1;
+        this.device.fullCellDelta.put(key, origin + delta);
     }
 
 //    static class MCComparator implements Comparator<MCO> {
