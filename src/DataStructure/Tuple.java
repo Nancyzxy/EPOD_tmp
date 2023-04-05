@@ -34,7 +34,7 @@ public class Tuple extends Vector {
 			return nn;
 		}
 		
-		public void removeOutdatedNNUnsafeOut(long itr, int nS) {
+		public void removeOutdatedNNUnsafeOut(int itr, int nS) {
 			Iterator<Integer> it = unSafeOutNeighbors.keySet().iterator();
 			
 			while (it.hasNext()) {

@@ -44,9 +44,9 @@ public class Vector implements Serializable,Comparable<Vector>,EuclideanCoordina
 	 */
 	public double[] values;
 	public final int hashCode;
-	public int arrivalTime;
+	public int arrivalTime; //arrival order, used in the count-based window
 	public int slideID;
-	public Date arrivalRealTime;
+	public Date arrivalRealTime; // arrival timestamp, used in the time-based window
       
 	/**
 	 * An optional key, identifier for the vector.
