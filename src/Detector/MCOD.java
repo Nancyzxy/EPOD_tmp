@@ -1,7 +1,9 @@
 package Detector;
 
 import DataStructure.MCO;
+
 import java.util.*;
+
 import DataStructure.Vector;
 import Framework.Device;
 import mtree.utils.MTreeClass;
@@ -83,7 +85,7 @@ public class MCOD extends Detector {
         unfilled_clusters.put(d.center, cluster);
 
         ArrayList<?> key = transferToArrayList(d.center.values);
-        update_fingerprint(key,false);
+        update_fingerprint(key, false);
     }
 
     private void removeFromUnfilledCluster(MCO d) {
@@ -96,7 +98,7 @@ public class MCOD extends Detector {
                 this.device.fullCellDelta.put(key, Integer.MIN_VALUE); //不管有没有这个key，都可以实现覆盖效果
             } else {
                 unfilled_clusters.put(d.center, cluster);
-                update_fingerprint(key,false);
+                update_fingerprint(key, false);
             }
         }
         // remove outlier中过期的点
@@ -251,7 +253,7 @@ public class MCOD extends Detector {
             unfilled_clusters.put(center, cluster);
 
             //更新cluster里点的状态
-            cluster.sort(new Detector.MCOD.MCComparatorSlideId());
+            cluster.sort(new MCComparatorSlideId());
             for (int i = 0; i < cluster.size(); i++) {
                 MCO o = cluster.get(i);
                 resetObject(o, false);
@@ -412,9 +414,9 @@ public class MCOD extends Detector {
 
     public void clean_expired_externalData() {
         //Map<Integer, Map<ArrayList<?>, List<Vector>>> externalData;
+        externalData.remove(Constants.currentSlideID - Constants.nS);
         for (Map<ArrayList<?>, List<Vector>> time_value : externalData.values()) {
             for (ArrayList<?> key : time_value.keySet()) {
-
                 Iterator<Vector> iterator = time_value.get(key).iterator();//实例化迭代器
                 while (iterator.hasNext()) {
                     Vector v = iterator.next();//读取当前集合数据元素
@@ -427,6 +429,9 @@ public class MCOD extends Detector {
                         }
                         iterator.remove();
                     }
+                }
+                if (time_value.get(key).size() == 0) {
+                    time_value.remove(key);
                 }
             }
         }
@@ -447,81 +452,85 @@ public class MCOD extends Detector {
 
     //todo: need checking
     public void check_local_outliers() {
-        ArrayList<MCO> inliers = new ArrayList<>();
-        for (MCO o : outliers) {
+        Iterator<MCO> iterator = outliers.iterator();//实例化迭代器
+        outlierLoop:
+        while (iterator.hasNext()) {
+            MCO o = iterator.next();//读取当前集合数据元素
             // HashMap<ArrayList<?>, Integer> status;
             int reply = this.status.get(transferToArrayList(o.center.values));
             //首先我们需要pruning掉被判断为安全的以及被判断成outlier的点，加入event queue，event time 设为下一个时间点
             if (reply == 2) {
-                inliers.add(o);
+                iterator.remove();
                 // 是在device端就确定为inlier的情况,没有精确的最早的neighbor过期的时间 更新不了相应proceeding和succeeding
                 o.ev = Constants.currentSlideID + 1;
                 eventQueue.add(o);
             }
             //确定为outlier的点不用做操作
             //不确定的点：
+            // 从离他1/2R中的cluster的点之和是否大于K，如果大于K，加入event queue，event time 设为下一个时间点
+            // 如果不大于K，从离他3/2R中的cluster的点之和是否小于K，如果小于，则就是outlier
+            // 如果大于K，就进行具体的距离计算，更新pre，succeeding,last_calculated_time
             else if (reply == 1) {
-                int sum = 0;
-                boolean flag = false;
+                int sumOfNeighbor = 0;
                 ArrayList<ArrayList<?>> cluster3R_2 = new ArrayList<>();
                 for (Map.Entry<ArrayList<?>, Integer> entry : external_info.entrySet()) {
                     ArrayList<?> key = entry.getKey();
                     Integer value = entry.getValue();
                     double distance = distance(key, o.center.values);
                     if (distance <= Constants.R / 2) {
-                        sum += value;
+                        sumOfNeighbor += value;
                         // 只是先对外部的点进行pruning,未加上内部数据
-                        if (sum >= Constants.K) {
-                            inliers.add(o);
+                        if (sumOfNeighbor >= Constants.K) {
+                            iterator.remove();
                             o.ev = Constants.currentSlideID + 1;
                             eventQueue.add(o);
-                            flag = true;
-                            break;
+                            continue outlierLoop;
                         }
                     } else if (distance <= Constants.R * 3 / 2) {
                         cluster3R_2.add(key);
                     }
                 }
-                inliers.forEach(i -> outliers.remove(i));
 
-                if (!flag) {
-                    for (ArrayList<?> c : cluster3R_2) {
-                        sum += external_info.get(c);
+                for (ArrayList<?> c : cluster3R_2) {
+                    sumOfNeighbor += external_info.get(c);
+                }
+                //在所有3R/2内cluster（外部）的点，若和本地相加小于k，则判断成为Outlier,不做任何操作
+                //否则
+                if (sumOfNeighbor >= Constants.K) {
+                    if (o.last_calculate_time == -1 || o.last_calculate_time <= Constants.currentSlideID - Constants.nS) {
+                        o.last_calculate_time = Constants.currentSlideID - Constants.nS + 1;
                     }
-                    //在所有3R/2内cluster（外部）的点，若和本地相加小于k，则判断成为Outlier,不做任何操作
-                    //否则
-                    if (sum >= Constants.K) {
-                        if (o.last_calculate_time == -1 || o.last_calculate_time < Constants.K - Constants.nS) {
-                            o.last_calculate_time = Constants.K - Constants.nS;
-                        }
-                        while (o.last_calculate_time <= Constants.currentSlideID) {
-                            Map<ArrayList<?>, List<Vector>> cur_data = externalData.get(o.last_calculate_time);
-                            if (cur_data != null) {
-                                // 对每一个3R/2内的邻居
-                                for (ArrayList<?> c : cluster3R_2) {
-                                    // 在当前的时间点看是否有此cluster
-                                    List<Vector> cur_cluster_data = cur_data.get(c);
-                                    // 如果有
-                                    for (Vector v : cur_cluster_data) {
-                                        if (distance(v.values, o.values) <= Constants.R) {
-                                            if (isSameSlide(o, v) <= 0) {
-                                                o.numberOfSucceeding++;
-                                            } else {
-                                                //p is preceeding neighbor
-                                                o.exps.add(v.slideID + Constants.nS);
-                                            }
+                    while (o.last_calculate_time <= Constants.currentSlideID) {
+                        Map<ArrayList<?>, List<Vector>> cur_data = externalData.get(o.last_calculate_time);
+                        if (cur_data != null) {
+                            // 对每一个3R/2内的邻居
+                            for (ArrayList<?> c : cluster3R_2) {
+                                // 在当前的时间点看是否有此cluster
+                                List<Vector> cur_cluster_data = cur_data.get(c);
+                                // 如果有
+                                for (Vector v : cur_cluster_data) {
+                                    if (distance(v.values, o.values) <= Constants.R) {
+                                        if (isSameSlide(o, v) <= 0) {
+                                            o.numberOfSucceeding++;
+                                        } else {
+                                            //p is preceding neighbor
+                                            o.exps.add(v.slideID + Constants.nS);
                                         }
                                     }
                                 }
                             }
-                            o.last_calculate_time++;
-                            checkInlier(o);
+                        }
+                        o.last_calculate_time++;
+                        checkInlier(o);
+                        if (o.numberOfSucceeding + o.exps.size() >= Constants.K) {
+                            continue outlierLoop;
                         }
                     }
                 }
             }
         }
     }
+
 
     @Override
     public Map<ArrayList<?>, List<Vector>> sendData(HashSet<ArrayList<?>> bucketIds, int lastSent) {
