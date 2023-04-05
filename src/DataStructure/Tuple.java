@@ -45,10 +45,4 @@ public class Tuple extends Vector {
 				}
 			}
 		}
-		
-		public void truncate() {
-			this.unSafeOutNeighbors.clear();
-		}
-		
-		
 	}

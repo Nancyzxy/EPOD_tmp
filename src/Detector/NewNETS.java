@@ -254,6 +254,7 @@ public class NewNETS extends Detector {
     public void calcNetChange(ArrayList<Tuple> slideTuples, int itr) {
         this.indexingSlide(slideTuples);
 
+        removeExpiredExternalData();
         /* Slide out */
         if (itr > Constants.nS - 1) {
             slideOut = slides.poll();
@@ -314,60 +315,78 @@ public class NewNETS extends Detector {
     }
 
     public void processOutliers() {
-        removeExpiredExternalData();
         //首先检查outliers中是否有属于安全cell的点
-
         Iterator<Tuple> it = outliers.iterator();
         OutlierLoop:
         while (it.hasNext()) {
             Tuple outlier = it.next();
             if (status.get(outlier.fullDimCellIdx) == 2) {
                 it.remove();
+                continue OutlierLoop;
             }
 
-            HashMap<ArrayList<?>, List<Vector>> neighbors = new HashMap<>();
+            HashMap<Integer, HashMap<ArrayList<?>, List<Vector>>> candNeighborByTime = new HashMap<>();
             if (status.get(outlier.fullDimCellIdx) == 1) {
-                //先找出所有external 中的邻居cell
+                //不确定的点：
+                // 从离他3/2R中的cell的点之和是否小于K，如果小于，则就是outlier
+                // 如果大于K，就进行具体的距离计算，不更新nn，更新unSafeout，safeout，把点放入unSafeOutNeighbors，
+                // last_calculated_time
                 int sumOfNeighbor = 0;
-                for (Map<ArrayList<?>, List<Vector>> x : this.externalData.values()) {
-                    Iterator<ArrayList<?>> iterator = x.keySet().iterator();
-                    while (iterator.hasNext()) {
-                        ArrayList<?> cellId = iterator.next();
+                int sumOfNN = 0;
+                //public Map<Integer, Map<ArrayList<?>, List<Vector>>> externalData;
+                for (int time : this.externalData.keySet()) {//每个时间点的cells
+                    HashMap<ArrayList<?>, List<Vector>> candNeighbor = new HashMap<>();
+                    Map<ArrayList<?>, List<Vector>> x = this.externalData.get(time);
+                    for (ArrayList<?> cellId : x.keySet()) {
                         double[] cellCenter = new double[Constants.dim];
                         for (int j = 0; j < Constants.dim; j++) {
                             cellCenter[j] = minValues[j] + (short) cellId.get(j) * dimLength[j] + dimLength[j] / 2;
                         }
                         if (neighboringTupleSet(outlier.value, cellCenter, 1.5 * Constants.R)) {
-                            sumOfNeighbor += x.get(cellId).size();
-                            if (!neighbors.containsKey(cellId)) {
-                                neighbors.put(cellId, new ArrayList<>());
+                            if (outlier.fullDimCellIdx == cellId) {
+                                sumOfNN += x.get(cellId).size();
+                            } else {
+                                if (!candNeighbor.containsKey(cellId)) {
+                                    candNeighbor.put(cellId, new ArrayList<>());
+                                }
+                                candNeighbor.get(cellId).addAll(x.get(cellId));
                             }
-                            neighbors.get(cellId).addAll(x.get(cellId));
+                            sumOfNeighbor += x.get(cellId).size();
                         }
                     }
+                    candNeighborByTime.put(time, candNeighbor);
                 }
                 if (sumOfNeighbor < Constants.K) {
-                    it.remove();
                     continue OutlierLoop;
                 }
-            }
-            //进行具体的距离计算
-            int need = Constants.K - outlier.getNN();
-            for (Map.Entry<ArrayList<?>, List<Vector>> entry : neighbors.entrySet()) {
-                List<Vector> neighbor = entry.getValue();
-                for (Vector v : neighbor) {
-                    if (neighboringTupleSet(v.values, outlier.value, Constants.R)) {
-                        if (entry.getKey() == outlier.fullDimCellIdx) {
-                            outlier.nn++;
-                        } else if (v.slideID < outlier.slideID) {
-                            outlier.nnUnSafeOut++;
-                        } else {
-                            outlier.nnSafeOut++;
+
+                //进行具体的距离计算
+                int need = Constants.K - outlier.getNN() - sumOfNN;
+                if (outlier.last_calculate_time == -1 || outlier.last_calculate_time <= Constants.currentSlideID - Constants.nS) {
+                    outlier.last_calculate_time = Constants.currentSlideID - Constants.nS + 1;
+                }
+                while (outlier.last_calculate_time <= Constants.currentSlideID) {
+                    HashMap<ArrayList<?>, List<Vector>> candiNeighbors = candNeighborByTime.get(outlier.last_calculate_time);
+                    for (ArrayList<?> cellId : candiNeighbors.keySet()) {
+                        List<Vector> cluster = candiNeighbors.get(cellId);
+                        for (Vector v : cluster) {
+                            if (neighboringTupleSet(v.values, outlier.value, Constants.R)) {
+                                if (v.slideID < outlier.slideID) {
+                                    outlier.nnUnSafeOut++;
+                                    if (!outlier.unSafeOutNeighbors.containsKey(v.slideID)) {
+                                        outlier.unSafeOutNeighbors.put(v.slideID, 0);
+                                    }
+                                    outlier.unSafeOutNeighbors.put(v.slideID, outlier.unSafeOutNeighbors.get(v.slideID) + 1);
+                                } else {
+                                    outlier.nnSafeOut++;
+                                }
+                                need--;
+                            }
                         }
-                        need--;
-                        if (need == 0) {
-                            continue OutlierLoop;
-                        }
+                    }
+                    outlier.last_calculate_time++;
+                    if (need <= 0) {
+                        continue OutlierLoop;
                     }
                 }
             }
@@ -376,9 +395,26 @@ public class NewNETS extends Detector {
     }
 
     public void removeExpiredExternalData() {
-        for (Map<ArrayList<?>, List<Vector>> x : this.externalData.values()) {
-            for (List<Vector> y : x.values()) {
-                y.removeIf(data -> data.slideID <= Constants.currentSlideID - Constants.nS);
+        //public Map<Integer, Map<ArrayList<?>, List<Vector>>> externalData;
+        //移除过期时间传送过来的数据
+        externalData.remove(Constants.currentSlideID - Constants.nS);
+
+        Iterator<Integer> it_time = externalData.keySet().iterator();
+        while (it_time.hasNext()) {
+            //每个时间点
+            Integer time = it_time.next();
+            Map<ArrayList<?>, List<Vector>> clusters = externalData.get(time);
+            Iterator<ArrayList<?>> it_cluster = clusters.keySet().iterator();
+            while (it_cluster.hasNext()) {
+                //每个cluster
+                ArrayList<?> key = it_cluster.next();
+                clusters.get(key).removeIf(v -> v.slideID <= Constants.currentSlideID - Constants.nS);
+                if (clusters.get(key).size() == 0) {
+                    it_cluster.remove();
+                }
+            }
+            if (externalData.get(time).size() == 0) {
+                it_time.remove();
             }
         }
     }

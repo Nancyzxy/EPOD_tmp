@@ -414,12 +414,22 @@ public class MCOD extends Detector {
 
     public void clean_expired_externalData() {
         //Map<Integer, Map<ArrayList<?>, List<Vector>>> externalData;
+        // 去除上个过期时间的所有点
         externalData.remove(Constants.currentSlideID - Constants.nS);
-        for (Map<ArrayList<?>, List<Vector>> time_value : externalData.values()) {
-            for (ArrayList<?> key : time_value.keySet()) {
-                Iterator<Vector> iterator = time_value.get(key).iterator();//实例化迭代器
-                while (iterator.hasNext()) {
-                    Vector v = iterator.next();//读取当前集合数据元素
+
+        Iterator<Integer> it_time = externalData.keySet().iterator();
+        while (it_time.hasNext()){
+            //每个时间点
+            Integer time = it_time.next();
+            Map<ArrayList<?>, List<Vector>> clusters = externalData.get(time);
+            Iterator<ArrayList<?>> it_cluster = clusters.keySet().iterator();
+            while (it_cluster.hasNext()) {
+                //每个cluster
+                ArrayList<?> key = it_cluster.next();
+                Iterator<Vector> it_vector = clusters.get(key).iterator();//实例化迭代器
+                while (it_vector.hasNext()) {
+                    //每个vector
+                    Vector v = it_vector.next();//读取当前集合数据元素
                     if (v.slideID <= Constants.currentSlideID - Constants.nS) {
                         int cnt = external_info.get(key);
                         if (cnt == 1) {
@@ -427,12 +437,15 @@ public class MCOD extends Detector {
                         } else {
                             external_info.put(key, cnt - 1);
                         }
-                        iterator.remove();
+                        it_vector.remove();
                     }
                 }
-                if (time_value.get(key).size() == 0) {
-                    time_value.remove(key);
+                if (clusters.get(key).size() == 0) {
+                   it_cluster.remove();
                 }
+            }
+            if (externalData.get(time).size()==0){
+                it_time.remove();
             }
         }
     }
@@ -450,7 +463,6 @@ public class MCOD extends Detector {
         }
     }
 
-    //todo: need checking
     public void check_local_outliers() {
         Iterator<MCO> iterator = outliers.iterator();//实例化迭代器
         outlierLoop:
